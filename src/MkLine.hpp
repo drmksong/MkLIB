@@ -2,13 +2,7 @@
 #ifndef MkLineH
 #define MkLineH
 
-#ifdef __BCPLUSPLUS__
-#ifdef _MSC_VER
-#undef _MSC_VER
-#endif
-#endif
-
-#include "math.h"
+#include <cmath>
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkMatrix.hpp"

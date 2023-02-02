@@ -7,9 +7,6 @@
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
 #include "MkTriangle.hpp"
-#ifdef __BCPLUSPLUS__
-#include "MkPaintBox.h"
-#endif
 
 // It is used for only 2 dimensional geometry operation
 // I should upgrade this for 3 dimensional...
@@ -54,17 +51,11 @@ public:
         return FCircleArea;
     }
     MkPoint &operator[](int);
-#ifdef __BCPLUSPLUS__
-    AnsiString ClassName()
-    {
-        return AnsiString("MkCircle");
-    }
-#else
+
     std::string ClassName()
     {
         return std::string("MkCircle");
     }
-#endif
 
     bool isCircle()
     {
@@ -173,17 +164,12 @@ public:
     MkPoint &EndPoint() { return FEndPoint; };
     MkPoint &operator[](int);
     MkLine &operator()(int);
-#ifdef __BCPLUSPLUS__
-    AnsiString ClassName()
-    {
-        return AnsiString("MkArc");
-    }
-#else
+
     std::string ClassName()
     {
         return std::string("MkArc");
     }
-#endif
+    
     MkArc &operator=(MkArc &ra);
 
 #ifdef __BCPLUSPLUS__

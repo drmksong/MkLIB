@@ -4,7 +4,6 @@
 namespace Mk
 {
   int Delta=10;
-
 }
 
 bool is_eq(double i, double j)
@@ -36,14 +35,14 @@ double max(double x, double y)
 #endif
 
 #if !defined(_MSC_VER) && !defined(_WINDOWS_)
-void dull(const char *__format, ...)
+void dull(const std::string __format, ...)
 {
   printf("dull is called\n");
   return;
 }
 #endif
 
-void dumprintf(const char *__format, ...)
+void dumprintf(const std::string __format, ...)
 {
   return;
 }
@@ -71,9 +70,9 @@ int delta(int a, int b)
   return (a == b) ? 1 : 0;
 }
 
-bool ExtractFileExt(char *ext, char *str)
+bool ExtractFileExt(std::string &ext, std::string &str)
 {
-  char *e, s[256];
+  std::string e, s[256];
   e = strchr(str, '.');
   strcpy(ext, e);
   sprintf(s, "Extension of %s is %s\n", str, ext);
@@ -84,7 +83,7 @@ bool ExtractFileExt(char *ext, char *str)
     return false;
 }
 
-bool TrimLeft(char *&dest, char *src)
+bool TrimLeft(std::string &dest, std::string src)
 {
   if (!src)
     return false;
@@ -96,9 +95,9 @@ bool TrimLeft(char *&dest, char *src)
     return false;
 }
 
-bool ExtractStr(char *des, int n, char *src)
+bool ExtractStr(std::string des, int n, std::string src)
 {
-  char *s, *e;
+  std::string s, *e;
   int len, c = 0;
 
   *des = '\0';
@@ -129,7 +128,7 @@ bool ExtractStr(char *des, int n, char *src)
   return true;
 }
 
-bool ToLower(char *str)
+bool ToLower(std::string str)
 {
   int len;
   char c;
@@ -146,7 +145,7 @@ bool ToLower(char *str)
   return true;
 }
 
-bool ToUpper(char *str)
+bool ToUpper(std::string str)
 {
   int len;
   char c;
@@ -163,18 +162,18 @@ bool ToUpper(char *str)
   return true;
 }
 
-bool ToOnlyAlpha(char *&dest, char *src)
+bool ToOnlyAlpha(std::string &dest, std::string src)
 {
   return false;
 }
-bool RemoveAnd(char *&dest, char *src)
+bool RemoveAnd(std::string &dest, std::string src)
 {
   return false;
 }
 
-bool CompSub(char *str, char *txt)
+bool CompSub(std::string str, std::string txt)
 {
-  char *a, *b;
+  std::string a, *b;
   int len;
 
   if (!strlen(str))
@@ -207,10 +206,10 @@ bool CompSub(char *str, char *txt)
   delete b;
 }
 
-int NumOfParam(char *str)
+int NumOfParam(std::string str)
 {
   int n = 0;
-  char *s, *e;
+  std::string s, *e;
   int len;
 
   s = e = str;
@@ -226,7 +225,7 @@ int NumOfParam(char *str)
   return n;
 }
 
-int NumOfParen(char *str)
+int NumOfParen(std::string str)
 {
   int i, nl = 0, nr = 0;
   for (i = 0; i < strlen(str); i++)
@@ -242,9 +241,9 @@ int NumOfParen(char *str)
     return -1;
 }
 
-bool ExtractFromParen(char *str, int n, double &x, double &y)
+bool ExtractFromParen(std::string str, int n, double &x, double &y)
 {
-  char *sp = NULL, *ep = NULL;
+  std::string sp = NULL, *ep = NULL;
   int i, j = 0, nl = 0, nr = 0;
 
   x = 0;
@@ -276,7 +275,7 @@ bool ExtractFromParen(char *str, int n, double &x, double &y)
   return true;
 }
 
-char *ShortSteelName(char *str)
+std::string ShortSteelName(std::string str)
 {
   int i, pos, len;
   static char res[256];
@@ -284,7 +283,7 @@ char *ShortSteelName(char *str)
   return res;
 }
 
-bool IsNumber(char *str)
+bool IsNumber(std::string str)
 {
   if (!strlen(str))
     return false;

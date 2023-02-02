@@ -85,10 +85,10 @@ double max(double x, double y);
 #endif
 
 #if !defined(_MSC_VER) && !defined(_WINDOWS_)
-void dull(const char *__format, ...);
+void dull(const std::string __format, ...);
 #endif
 
-void dumprintf(const char *__format, ...);
+void dumprintf(const std::string __format, ...);
 
 void swap(int &x, int &y);
 void swap(double &x, double &y);
@@ -98,33 +98,27 @@ void Swap(TObject *Sender, int i, int j);
 #endif
 
 int delta(int a, int b);
-bool ExtractFileExt(char *ext, char *str); // ext must have a memory
-bool TrimLeft(char *&dest, char *src);
-bool ExtractStr(char *des, int n, char *src);
-bool ToLower(char *str);
-bool ToUpper(char *str);
+bool ExtractFileExt(std::string &ext, std::string &str); // ext must have a memory
+bool TrimLeft(std::string &dest, std::string src);
+bool ExtractStr(std::string des, int n, std::string src);
+bool ToLower(std::string str);
+bool ToUpper(std::string str);
 
-#ifdef __BCPLUSPLUS__
-bool ToOnlyAlpha(AnsiString &dest, AnsiString &src);
-bool RemoveAnd(AnsiString &dest, AnsiString &src);
-#else
-bool ToOnlyAlpha(char *&dest, char *src);
-bool RemoveAnd(char *&dest, char *src);
-#endif
 
-bool CompSub(char *str, char *txt);
-int NumOfParam(char *str);
-int NumOfParen(char *str);
-bool ExtractFromParen(char *str, int n, double &x, double &y);
+bool ToOnlyAlpha(std::string &dest, std::string src);
+bool RemoveAnd(std::string &dest, std::string src);
 
-#ifdef __BCPLUSPLUS__
-bool IsNumber(AnsiString str);
-AnsiString ShortSteelName(AnsiString str);
-#else
-char *ShortSteelName(char *str);
-#endif
 
-bool IsNumber(char *str);
+bool CompSub(std::string str, std::string txt);
+int NumOfParam(std::string str);
+int NumOfParen(std::string str);
+bool ExtractFromParen(std::string str, int n, double &x, double &y);
+
+
+std::string ShortSteelName(std::string str);
+
+
+bool IsNumber(std::string str);
 
 double ShapeFun1(double x, double l);
 double ShapeFun2(double x, double l);

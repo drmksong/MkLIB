@@ -7,15 +7,6 @@
 
 #include "MkLine.hpp"
 
-#ifdef __BCPLUSPLUS__
-#include <Dialogs.hpp>
-#include "MkPaintBox.h"
-#endif
-
-#if defined(_MSC_VER) && defined(_WINDOWS_)
-#include "MkPaint.h"
-#endif
-
 extern MkPoint NullPoint;
 MkLine NullLine(NullPoint, NullPoint);
 MkLines NullLines(0);

@@ -9,14 +9,7 @@
 #include "MkMisc.hpp"
 // #include "MkSparseMatrix.h"
 
-#ifdef __BCPLUSPLUS__
-// #include <vcl.h>
-// #include <conio.h>
-#endif
-
 #define M_PI 3.14159265358979323846
-
-// class TRealPoint;
 
 template <class T>
 class MkMatrix4
@@ -130,15 +123,10 @@ public:
         return rm_t;
     }
 
-#ifdef __BCPLUSPLUS__
-    void Out(TMemo *);
-#endif
     void Out(char *);
 };
 
 typedef MkMatrix4<double> MkMatrix4_d;
-// template <class T>
-// class MkMatrix<T>;
 
 template <class T>
 class MkVector
@@ -252,9 +240,6 @@ public:
         return v_t;
     }
 
-#ifdef __BCPLUSPLUS__
-    void Out(TMemo *);
-#endif
     void Out(char *);
 
     class Alloc
@@ -388,9 +373,7 @@ public:
 
     MkMatrix<T> &operator=(MkMatrix<T> &);
     T &operator()(int i, int j);
-#ifdef __BCPLUSPLUS__
-    void Out(TMemo *);
-#endif
+
     void Out(char *);
 
     class Alloc

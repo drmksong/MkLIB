@@ -17,17 +17,12 @@ protected:
 public:
   MkCube();
   MkCube(MkPoint &rp);
-#ifdef __BCPLUSPLUS__
-  AnsiString ClassName()
-  {
-    return AnsiString("MkCube");
-  };
-#else
+
   std::string ClassName()
   {
     return std::string("MkCube");
   };
-#endif
+
   void SetCenter(MkPoint &center)
   {
     FCenter = center;
