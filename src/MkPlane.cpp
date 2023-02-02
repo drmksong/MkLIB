@@ -2608,6 +2608,7 @@ MkPoint &MkPennyJoint::CalcIntPnt(MkLine &rl)
    else
       return NullPoint;
 }
+
 MkPoint &MkPennyJoint::CalcIntPnt(MkLine &&rl)
 {
    static MkPoint pnt;
