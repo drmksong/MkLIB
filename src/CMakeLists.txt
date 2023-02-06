@@ -20,7 +20,7 @@ SET (SRC_FILES
         MkMatrix.cpp
         MkMisc.cpp 
         MkPlane.cpp
-        MkPoint.cpp 
+        MkPoint_test.cpp 
         MkPointData.cpp 
         MkPolygon.cpp
         MkRect.cpp

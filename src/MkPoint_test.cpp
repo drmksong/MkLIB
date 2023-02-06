@@ -5,7 +5,7 @@
 //
 // Copyright (c) 1999 Myung Kyu Song, ESCO Consultant Co., Ltd.
 // Copyright (c) 2023 Myung Kyu Song, Hanyang University
-#include "MkPoint.hpp"
+#include "MkPoint_test.hpp"
 //-----------------------------------------------------------------------------
 MkPoint NullPoint(0, 0, 0);
 MkPoints NullPoints(0);
