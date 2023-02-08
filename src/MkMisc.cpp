@@ -3,7 +3,7 @@
 
 namespace Mk
 {
-  int Delta=10;
+  int Delta = 10;
 }
 
 bool is_eq(double i, double j)
@@ -70,73 +70,83 @@ int delta(int a, int b)
   return (a == b) ? 1 : 0;
 }
 
-bool ExtractFileExt(std::string &ext, std::string &str)
+bool ExtractFileExt(std::string &ext, const std::string &str)
 {
-  std::string e, s[256];
-  e = strchr(str, '.');
-  strcpy(ext, e);
-  sprintf(s, "Extension of %s is %s\n", str, ext);
-  MkDebug(s);
-  if (e)
+  auto pos = str.find('.');
+  auto e = str.substr(pos);
+
+  ext = std::move(e);
+
+  // sprintf(s, "Extension of %s is %s\n", str.c_str(), ext.c_str());
+  std::string s;
+  s = "Extension of ";
+  s += str + std::string("is ") + ext;
+  // s = std::string("Extension of ") + str + std::string("is ") + ext + std::endl;
+
+  MkDebug(s.c_str());
+  if (ext.size() != 0)
     return true;
   else
     return false;
 }
 
-bool TrimLeft(std::string &dest, std::string src)
+bool TrimLeft(std::string &dest, const std::string src)
 {
-  if (!src)
+  if (src.size() == 0)
     return false;
-  for (dest = src; *dest == ' ' || *dest == '\t'; dest++)
-    ;
-  if (dest)
+
+  const std::string WHITESPACE = " \n\r\t\f\v";
+
+  size_t start = src.find_first_not_of(WHITESPACE);
+  dest = (start == std::string::npos) ? std::move("") : std::move(src.substr(start));
+
+  if (dest.size() != 0)
     return true;
   else
     return false;
 }
 
-bool ExtractStr(std::string des, int n, std::string src)
-{
-  std::string s, *e;
-  int len, c = 0;
+// bool ExtractStr(std::string des, int n, const std::string src)
+// {
+//   std::string s, e;
+//   int len, c = 0;
 
-  *des = '\0';
-  s = e = src;
-  while (n > c && e)
-  {
-    s = e;
-    TrimLeft(e, s);
-    len = strlen(e);
-    s = e;
-    e = strchr(s, ' ');
-    c++;
-  }
+//   *des = '\0';
+//   s = e = src;
+//   while (n > c && e)
+//   {
+//     s = e;
+//     TrimLeft(e, s);
+//     len = strlen(e);
+//     s = e;
+//     e = strchr(s, ' ');
+//     c++;
+//   }
 
-  if (!e)
-    return false;
+//   if (!e)
+//     return false;
 
-  TrimLeft(e, e);
-  strcpy(des, e);
-  e = strchr(des, ' ');
+//   TrimLeft(e, e);
+//   strcpy(des, e);
+//   e = strchr(des, ' ');
 
-  if (e == NULL)
-    return false;
-  else if (*e == '\0')
-    return false;
-  else if (*e == ' ')
-    *e = '\0';
-  return true;
-}
+//   if (e == NULL)
+//     return false;
+//   else if (*e == '\0')
+//     return false;
+//   else if (*e == ' ')
+//     *e = '\0';
+//   return true;
+// }
 
 bool ToLower(std::string str)
 {
-  int len;
   char c;
-  len = strlen(str);
-  if (len <= 0)
+
+  if (str.size() <= 0)
     return false;
 
-  for (int i = 0; i < len && str[i]; i++)
+  for (int i = 0; i < str.size() && str[i]; i++)
   {
     c = str[i];
     str[i] = tolower(c);
@@ -147,13 +157,12 @@ bool ToLower(std::string str)
 
 bool ToUpper(std::string str)
 {
-  int len;
   char c;
-  len = strlen(str);
-  if (len <= 0)
+
+  if (str.size() <= 0)
     return false;
 
-  for (int i = 0; i < len && str[i]; i++)
+  for (int i = 0; i < str.size() && str[i]; i++)
   {
     c = str[i];
     str[i] = toupper(c);
@@ -162,118 +171,121 @@ bool ToUpper(std::string str)
   return true;
 }
 
-bool ToOnlyAlpha(std::string &dest, std::string src)
-{
-  return false;
-}
-bool RemoveAnd(std::string &dest, std::string src)
-{
-  return false;
-}
+// bool ToOnlyAlpha(std::string &dest, std::string src)
+// {
+//   return false;
+// }
+// bool RemoveAnd(std::string &dest, std::string src)
+// {
+//   return false;
+// }
 
-bool CompSub(std::string str, std::string txt)
-{
-  std::string a, *b;
-  int len;
+// bool CompSub(std::string str, std::string txt)
+// {
+//   std::string a, *b;
+//   int len;
 
-  if (!strlen(str))
-    return false;
-  if (!strlen(txt))
-    return false;
+//   if (!strlen(str))
+//     return false;
+//   if (!strlen(txt))
+//     return false;
 
-  len = strlen(str);
-  len = min(len, strlen(txt));
+//   len = strlen(str);
+//   len = min(len, strlen(txt));
 
-  a = new char[len + 1];
-  if (!a)
-    return false;
-  b = new char[len + 1];
-  if (!b)
-  {
-    delete a;
-    return false;
-  }
+//   a = new char[len + 1];
+//   if (!a)
+//     return false;
+//   b = new char[len + 1];
+//   if (!b)
+//   {
+//     delete a;
+//     return false;
+//   }
 
-  strncpy(a, str, len);
-  strncpy(b, txt, len);
+//   strncpy(a, str, len);
+//   strncpy(b, txt, len);
 
-  ToLower(a);
-  ToLower(b);
+//   ToLower(a);
+//   ToLower(b);
 
-  return !strcmp(a, b);
+//   return !strcmp(a, b);
 
-  delete a;
-  delete b;
-}
+//   delete a;
+//   delete b;
+// }
 
-int NumOfParam(std::string str)
-{
-  int n = 0;
-  std::string s, *e;
-  int len;
+// int NumOfParam(std::string str)
+// {
+//   int n = 0;
+//   std::string s, *e;
+//   int len;
 
-  s = e = str;
-  while (e)
-  {
-    s = e;
-    TrimLeft(e, s);
-    len = strlen(e);
-    s = e;
-    e = strchr(s, ' ');
-    n++;
-  }
-  return n;
-}
+//   s = e = str;
+//   while (e)
+//   {
+//     s = e;
+//     TrimLeft(e, s);
+//     len = strlen(e);
+//     s = e;
+//     e = strchr(s, ' ');
+//     n++;
+//   }
+//   return n;
+// }
 
-int NumOfParen(std::string str)
-{
-  int i, nl = 0, nr = 0;
-  for (i = 0; i < strlen(str); i++)
-  {
-    if (str[i] == '(')
-      nl++;
-    if (str[i] == ')')
-      nr++;
-  }
-  if (nl == nr)
-    return nl;
-  else
-    return -1;
-}
+// int NumOfParen(std::string str)
+// {
+//   int i, nl = 0, nr = 0;
+//   for (i = 0; i < str.size(); i++)
+//   {
+//     if (str[i] == '(')
+//       nl++;
+//     if (str[i] == ')')
+//       nr++;
+//   }
+//   if (nl == nr)
+//     return nl;
+//   else
+//     return -1;
+// }
 
-bool ExtractFromParen(std::string str, int n, double &x, double &y)
-{
-  std::string sp = NULL, *ep = NULL;
-  int i, j = 0, nl = 0, nr = 0;
+// bool ExtractFromParen(std::string str, int n, double &x, double &y)
+// {
+//   std::string sp, ep;
+//   int i, j = 0, nl = 0, nr = 0;
 
-  x = 0;
-  y = 0;
-  for (i = 0; i < strlen(str); i++)
-  {
-    if (str[i] == '(')
-    {
-      if (n == nl)
-        sp = str + i + 1;
-      nl++;
-    }
-    if (str[i] == ')')
-    {
-      if (n == nr)
-      {
-        while (str[i - j] != ' ' && str[i - j] != ',')
-          j++;
-        if (str[i - j] == ' ' || str[i - j] == ',')
-          ep = str + i - j;
-      }
-      nr++;
-    }
-  }
-  if (!sp || !ep)
-    return false;
-  sscanf(sp, "%f ", &x);
-  sscanf(ep, "%f ", &y);
-  return true;
-}
+//   x = 0;
+//   y = 0;
+
+//   for (i = 0; i < str.size(); i++)
+//   {
+//     if (str[i] == '(')
+//     {
+//       if (n == nl)
+//         sp = str + i + 1;
+//       nl++;
+//     }
+//     if (str[i] == ')')
+//     {
+//       if (n == nr)
+//       {
+//         while (str[i - j] != ' ' && str[i - j] != ',')
+//           j++;
+//         if (str[i - j] == ' ' || str[i - j] == ',')
+//           ep = str + i - j;
+//       }
+//       nr++;
+//     }
+
+//   }
+//   if (sp.size() == 0 || ep.size() == 0)
+//     return false;
+
+//   sscanf(sp.c_str(), "%f ", &x);
+//   sscanf(ep.c_str(), "%f ", &y);
+//   return true;
+// }
 
 std::string ShortSteelName(std::string str)
 {
@@ -285,17 +297,32 @@ std::string ShortSteelName(std::string str)
 
 bool IsNumber(std::string str)
 {
-  if (!strlen(str))
+  if (!str.size())
     return false;
-  if (!strcmp(str, "-"))
+
+  if (!str.compare("-"))
     return false;
-  for (int i = 0; i < strlen(str); i++)
+
+  for (char const &c : str)
   {
-    if (!isdigit(str[i]) && str[i] != '-' && str[i] != '.')
+    if (std::isdigit(c) == 0)
       return false;
   }
   return true;
 }
+
+// bool IsNumber(std::string str)
+// {
+//   if (!strlen(str))
+//     return false;
+//   !str.compare("-") if (!strcmp(str, "-")) return false;
+//   for (int i = 0; i < strlen(str); i++)
+//   {
+//     if (!isdigit(str[i]) && str[i] != '-' && str[i] != '.')
+//       return false;
+//   }
+//   return true;
+// }
 
 double ShapeFun1(double x, double l)
 {

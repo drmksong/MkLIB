@@ -35,11 +35,12 @@ private:
   int FDimension;
   int FI, FJ, FK;
   T Zero;
-  boost::shared_ptr<T[]> F;
+
   // T *F;
   long sz_x, sz_y, sz_z;
 
 public:
+  boost::shared_ptr<T[]> F;
   MkArray(int, int, int);
   MkArray(int, int);
   MkArray(int);
@@ -49,13 +50,15 @@ public:
   void Initialize(int s_x, int s_y, int s_z);
   void Initialize(int s_x, int s_y);
   void Initialize(int s_x);
-  void CopyFrom(MkArray<T> value);
 
   T &operator()(int, int, int);
-  T &operator()(int, int);
+  T &operator()( int&,  int&);
+  T &operator()(int&&, int&&);
   T &operator()(int);
   T &operator[](int i) { return operator()(i); }
-  MkArray<T> &operator=(MkArray<T> &a);
+  MkArray<T> &operator=(const MkArray<T> &a);
+  MkArray<T> &operator=(MkArray<T> &&a);
+
   MkArray<T> &operator+=(MkArray<T> &a);
   MkArray<T> &operator-=(MkArray<T> &a);
   MkArray<T> &operator*=(T a);
@@ -97,7 +100,7 @@ public:
 
     return c;
   }
-  
+
   friend MkArray<T> &operator*(MkArray<T> &a, T b)
   {
     static MkArray<T> c;
@@ -123,9 +126,9 @@ public:
     return c;
   }
 
-  long getSzX() { return sz_x; }
-  long getSzY() { return sz_y; }
-  long getSzZ() { return sz_z; }
+  long getSzX() const { return sz_x; } 
+  long getSzY() const { return sz_y; }
+  long getSzZ() const { return sz_z; }
 
   class Alloc
   {

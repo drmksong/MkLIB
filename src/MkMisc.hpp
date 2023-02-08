@@ -1,6 +1,8 @@
 //---------------------------------------------------------------------------
 #ifndef MkMiscH
 #define MkMiscH
+#include <iostream>
+#include <string>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -98,25 +100,21 @@ void Swap(TObject *Sender, int i, int j);
 #endif
 
 int delta(int a, int b);
-bool ExtractFileExt(std::string &ext, std::string &str); // ext must have a memory
-bool TrimLeft(std::string &dest, std::string src);
-bool ExtractStr(std::string des, int n, std::string src);
+bool ExtractFileExt(std::string &ext, const std::string &str); // ext must have a memory
+bool TrimLeft(std::string &dest, const std::string src);
 bool ToLower(std::string str);
 bool ToUpper(std::string str);
+// bool ExtractStr(std::string des, int n, const std::string src);
 
+// bool ToOnlyAlpha(std::string &dest, std::string src);
+// bool RemoveAnd(std::string &dest, std::string src);
 
-bool ToOnlyAlpha(std::string &dest, std::string src);
-bool RemoveAnd(std::string &dest, std::string src);
-
-
-bool CompSub(std::string str, std::string txt);
-int NumOfParam(std::string str);
-int NumOfParen(std::string str);
-bool ExtractFromParen(std::string str, int n, double &x, double &y);
-
+// bool CompSub(std::string str, std::string txt);
+// int NumOfParam(std::string str);
+// int NumOfParen(std::string str);
+// bool ExtractFromParen(std::string str, int n, double &x, double &y); // TODO: figure out what this is doing???
 
 std::string ShortSteelName(std::string str);
-
 
 bool IsNumber(std::string str);
 

@@ -30,7 +30,8 @@ public:
     void RotateInZ(T gamma);
     void RotateInA(T theta, T l, T m, T n);
     void Scale(T sx, T sy, T sz);
-    MkMatrix4<T> &operator=(MkMatrix4<T> &);
+    MkMatrix4<T> &operator=(const MkMatrix4<T> &);
+    MkMatrix4<T> &operator=(MkMatrix4<T> &&);
 
     T &operator()(int i, int j)
     {
@@ -140,7 +141,8 @@ public:
     MkVector();
     MkVector(int);
     MkVector(int, VectType);
-    MkVector(MkArray<T> &);
+    MkVector(const MkArray<T> &);
+    MkVector(MkArray<T> &&);
     MkVector(T, T, T);
     ~MkVector();
     void SetVector(int);
@@ -169,7 +171,8 @@ public:
 
     T &operator()(int i);
     T &operator[](int i);
-    MkVector<T> &operator=(MkVector<T> &);
+    MkVector<T> &operator=(const MkVector<T> &);
+    MkVector<T> &operator=(MkVector<T> &&);
     bool operator==(MkVector<T> &);
     bool operator!=(MkVector<T> &);
 
@@ -288,9 +291,11 @@ private:
 public:
     MkMatrix();
     MkMatrix(int, int);
-    MkMatrix(MkMatrix<T> &);
+    MkMatrix(const MkMatrix<T> &);
+    MkMatrix(MkMatrix<T> &&);
     //  MkMatrix(MkSparseMatrix &);
-    MkMatrix(MkArray<T> &);
+    MkMatrix(const MkArray<T> &);
+    MkMatrix(MkArray<T> &&);
     ~MkMatrix();
     void SetMatrix(int, int);
     void Initialize(int i, int j) { SetMatrix(i, j); }
@@ -371,7 +376,7 @@ public:
         return v_t;
     }
 
-    MkMatrix<T> &operator=(MkMatrix<T> &);
+    MkMatrix<T> &operator=(const MkMatrix<T> &);
     T &operator()(int i, int j);
 
     void Out(char *);

@@ -113,12 +113,8 @@ bool array_test()
 //     BOOST_TEST(a != MkPoint(3, 1, 1));
 // }
 
-int main()
+void point_tst2()
 {
-
-    // point_test();
-    // array_test();
-
     MkPoint a(1, 1, 1);
     const MkPoint b(1, 1, 1);
     MkPoint c(2, 1, 1);
@@ -136,6 +132,45 @@ int main()
     // printf("a == b? ,2 %s\n", (MkPoint(1, 1, 1) == b) ? "true" : "false");
     // printf("a == b? ,3 %s\n", (a != MkPoint(1, 1, 1)) ? "true" : "false");
     // printf("a == b? ,4 %s\n", (a != b) ? "true" : "false");
+}
+
+void arr_test_move_op()
+{
+
+    MkArray<int> a;
+    MkArray<int> b(5, 10);
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            b(i, j) = i + j;
+        }
+    }
+
+    printf("before:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
+    printf("before:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+    // a = std::move(b);
+    a = (b);
+    printf("after:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
+    printf("after:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            printf("a(%d,%d) = %d\n", i, j, b(i, j));
+        }
+    }
+}
+
+int main()
+{
+
+    // point_test();
+    // array_test();
+
+    arr_test_move_op();
 
     return 0;
 }

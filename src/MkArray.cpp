@@ -33,6 +33,7 @@ MkArray<T>::MkArray(int s_x, int s_y, int s_z)
 
   try
   {
+    MkDebug("MkArray memory reset 1\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -67,6 +68,7 @@ MkArray<T>::MkArray(int s_x, int s_y)
 
   try
   {
+    MkDebug("MkArray memory reset 2\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -98,6 +100,7 @@ MkArray<T>::MkArray(int s_x)
 
   try
   {
+    MkDebug("MkArray memory reset 3\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -137,6 +140,7 @@ void MkArray<T>::Clear()
   sz_x = 0;
   sz_y = 0;
   sz_z = 0;
+  MkDebug("MkArray memory reset 4\n");
   F.reset();
 }
 
@@ -159,6 +163,7 @@ void MkArray<T>::Initialize(int s_x, int s_y, int s_z)
 
   try
   {
+    MkDebug("MkArray memory reset 5\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -190,6 +195,7 @@ void MkArray<T>::Initialize(int s_x, int s_y)
 
   try
   {
+    MkDebug("MkArray memory reset 6\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -219,6 +225,7 @@ void MkArray<T>::Initialize(int s_x)
 
   try
   {
+    MkDebug("MkArray memory reset 7\n");
     F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
@@ -231,51 +238,57 @@ void MkArray<T>::Initialize(int s_x)
 }
 
 template <class T>
-void MkArray<T>::CopyFrom(MkArray<T> value)
+MkArray<T> &MkArray<T>::operator=(MkArray<T> &&value)
 {
-  if (!(value.sz_x * value.sz_y * value.sz_z))
-    return;
-  if (sz_x != value.sz_x || sz_y != value.sz_y || sz_z != value.sz_z)
+
+  MkDebug("MkArry::op = move \n");
+
+  if (this != &value)
   {
-    try
-    {
-      Initialize(value.sz_x, value.sz_y, value.sz_z);
-      FDimension = value.FDimension;
-    }
-    catch (Alloc &a)
-    {
-      MkDebug("MkArray::CopyFrom thows Alloc()");
-      throw Alloc(std::string("MkArray<T>"));
-    }
+    F = std::move(value.F);
+
+    FDimension = value.FDimension;
+    FI = value.FI;
+    FJ = value.FJ;
+    FK = value.FK;
+    sz_x = value.sz_x;
+    sz_y = value.sz_y;
+    sz_z = value.sz_z;
   }
-  long sz = long(sz_x) * long(sz_y) * long(sz_z);
-  for (long i = 0; i < sz; i++)
-    F[i] = value.F[i];
+
+  return *this;
 }
 
 // it is destructive, erase the existing array
 template <class T>
-MkArray<T> &MkArray<T>::operator=(MkArray<T> &value)
+MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
 {
+  MkDebug("MkArray op = copy\n");
+  MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
+  // MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
   if (!(value.sz_x * value.sz_y * value.sz_z)) // FIXME: is it an error???
     return *this;
 
+  // MkDebug("MkArray op = copy 2. 0x%p\n", value.F);
   if (sz_x != value.sz_x || sz_y != value.sz_y || sz_z != value.sz_z)
   {
     try
     {
+      // MkDebug("MkArray op = copy 3. 0x%p\n", value.F);
       Initialize(value.sz_x, value.sz_y, value.sz_z);
       FDimension = value.FDimension;
     }
     catch (Alloc &a)
     {
-      MkDebug("MkArray::operator=() thows Alloc()");
+      // MkDebug("MkArray::operator=() thows Alloc()");
       throw Alloc(std::string("MkArray<T>"));
     }
   }
+  // MkDebug("MkArray op = copy 4. 0x%p\n", value.F);
   long sz = long(sz_x) * long(sz_y) * long(sz_z);
   for (long i = 0; i < sz; i++)
     F[i] = value.F[i];
+  MkDebug("MkArray op = copy 5. 0x%p\n", value.F);
   return *this;
 }
 
@@ -314,7 +327,29 @@ T &MkArray<T>::operator()(int i, int j, int k)
 }
 
 template <class T>
-T &MkArray<T>::operator()(int i, int j)
+T &MkArray<T>::operator()(int &i, int &j)
+{
+  if (FDimension <= 0)
+  {
+    MkDebug("Possibly Memory dosen't allocated!\n");
+    throw Alloc(std::string("MkArray<T>"));
+  }
+
+  if (i < 0 || sz_x <= i)
+  {
+    MkDebug("MkArray index out of range\n");
+    throw Range("sz_x", i);
+  }
+  if (j < 0 || sz_y <= j)
+  {
+    MkDebug("MkArray index out of range\n");
+    throw Range(std::string("sz_y"), j);
+  }
+  return F[long(i) + long(j) * sz_x];
+}
+
+template <class T>
+T &MkArray<T>::operator()(int &&i, int &&j)
 {
   if (FDimension <= 0)
   {

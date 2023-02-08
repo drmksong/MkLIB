@@ -217,7 +217,18 @@ void MkMatrix4<T>::Scale(T sx, T sy, T sz)
 }
 
 template <class T>
-MkMatrix4<T> &MkMatrix4<T>::operator=(MkMatrix4<T> &rm)
+MkMatrix4<T> &MkMatrix4<T>::operator=(const MkMatrix4<T> &rm)
+{
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            FMatrix[i][j] = rm.FMatrix[i][j];
+    FI = rm.FI;
+    FJ = rm.FJ;
+    return *this;
+}
+
+template <class T>
+MkMatrix4<T> &MkMatrix4<T>::operator=(MkMatrix4<T> &&rm)
 {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
@@ -378,11 +389,15 @@ MkVector<T>::MkVector(int sz, VectType vt)
 }
 
 template <class T>
-MkVector<T>::MkVector(MkArray<T> &b)
+MkVector<T>::MkVector(const MkArray<T> &b)
 {
-    FSize = b.getSzX();
-    FVector.CopyFrom(b);
-    FVectType = vtNone;
+    *this = std::move(b);
+}
+
+template <class T>
+MkVector<T>::MkVector(MkArray<T> &&b)
+{
+    *this = std::move(b);
 }
 
 template <class T>
@@ -498,9 +513,18 @@ T &MkVector<T>::operator[](int i)
 }
 
 template <class T>
-MkVector<T> &MkVector<T>::operator=(MkVector<T> &vect)
+MkVector<T> &MkVector<T>::operator=(const MkVector<T> &vect)
 {
-    FVector.CopyFrom(vect.FVector);
+    FVector = std::move(vect.FVector);
+    FSize = vect.FSize;
+    FVectType = vect.FVectType;
+    return *this;
+}
+
+template <class T>
+MkVector<T> &MkVector<T>::operator=(MkVector<T> &&vect)
+{
+    FVector = std::move(vect.FVector);
     FSize = vect.FSize;
     FVectType = vect.FVectType;
     return *this;
@@ -656,31 +680,45 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
 }
 
 template <class T>
-MkMatrix<T>::MkMatrix(MkMatrix<T> &tm)
+MkMatrix<T>::MkMatrix(const MkMatrix<T> &tm)
 {
-    *this = tm;
+    *this = std::move(tm);
 }
 
 template <class T>
-MkMatrix<T>::MkMatrix(MkArray<T> &fm)
+MkMatrix<T>::MkMatrix(MkMatrix<T> &&tm)
 {
-    if (fm.getSzZ() != 1)
+    *this = std::move(tm);
+}
+
+template <class T>
+MkMatrix<T>::MkMatrix(const MkArray<T> &fm)
+{
+    FMatrix = std::move(fm);
+    if (FMatrix.getSzZ() != 1)
     {
-        FMatrix.Clear();
-        FIndex.Clear();
-        FD = 0;
-        FI = FJ = 0;
-        FMatType = mtNormal;
+        MkDebug("MkMatrix::const with MkArray, z vector is not one\n");
+        exit(-1);
     }
-    else
+    FI = FMatrix.getSzX();
+    FJ = FMatrix.getSzY();
+    FD = 0;
+    FMatType = mtNormal;
+}
+
+template <class T>
+MkMatrix<T>::MkMatrix(MkArray<T> &&fm)
+{
+    FMatrix = std::move(fm);
+    if (FMatrix.getSzZ() != 1)
     {
-        FI = fm.getSzX();
-        FJ = fm.getSzY();
-        FMatrix.CopyFrom(fm);
-        FIndex.Initialize(FI);
-        FD = 0;
-        FMatType = mtNormal;
+        MkDebug("MkMatrix::const with MkArray, z vector is not one\n");
+        exit(-1);
     }
+    FI = FMatrix.getSzX();
+    FJ = FMatrix.getSzY();
+    FD = 0;
+    FMatType = mtNormal;
 }
 
 template <class T>
@@ -732,7 +770,7 @@ bool MkMatrix<T>::Transpose()
         for (int j = 0; j < FJ; j++)
             A(j, i) = FMatrix(i, j);
 
-    FMatrix.CopyFrom(A);
+    FMatrix = std::move(A);
 
     int tmp;
     tmp = FI;
@@ -906,7 +944,7 @@ bool MkMatrix<T>::GaussSeidel(MkVector<T> &X0, MkVector<T> &B) // X0 is initial 
     if (FI != FJ)
         return false;
 
-    A.CopyFrom(FMatrix);
+    A = FMatrix; // copy of array
 
     for (int i = 0; i < NN; i++)
     {
@@ -969,7 +1007,7 @@ bool MkMatrix<T>::GaussSeidelDouble(MkVector<T> &X0, MkVector<T> &B) // X0 is in
     if (FI != FJ)
         return false;
 
-    A.CopyFrom(FMatrix);
+    A = (FMatrix); // copy of array
 
     for (int i = 0; i < NN; i++)
     {
@@ -1158,10 +1196,10 @@ MkVector<T> &MkMatrix<T>::operator*=(MkVector<T> &v)
 }
 
 template <class T>
-MkMatrix<T> &MkMatrix<T>::operator=(MkMatrix<T> &m)
+MkMatrix<T> &MkMatrix<T>::operator=(const MkMatrix<T> &m)
 {
-    FMatrix.CopyFrom(m.FMatrix);
-    FIndex.CopyFrom(m.FIndex);
+    FMatrix = std::move(m.FMatrix);
+    FIndex = std::move(m.FIndex);
     FD = m.FD;
     FI = m.FI;
     FJ = m.FJ;
