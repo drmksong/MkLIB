@@ -40,7 +40,7 @@ private:
   long sz_x, sz_y, sz_z;
 
 public:
-  boost::shared_ptr<T[]> F;
+  boost::shared_ptr<T[]> F{NULL};
   MkArray(int, int, int);
   MkArray(int, int);
   MkArray(int);
@@ -52,15 +52,19 @@ public:
   void Initialize(int s_x);
 
   T &operator()(int, int, int);
-  T &operator()( int&,  int&);
-  T &operator()(int&&, int&&);
+  T &operator()(int &, int &);
+  T &operator()(int &&, int &&);
   T &operator()(int);
   T &operator[](int i) { return operator()(i); }
   MkArray<T> &operator=(const MkArray<T> &a);
   MkArray<T> &operator=(MkArray<T> &&a);
 
   MkArray<T> &operator+=(MkArray<T> &a);
+  MkArray<T> &operator+=(T &a);
+  MkArray<T> &operator+=(T &&a);
   MkArray<T> &operator-=(MkArray<T> &a);
+  MkArray<T> &operator-=(T &a);
+  MkArray<T> &operator-=(T &&a);
   MkArray<T> &operator*=(T a);
   MkArray<T> &operator/=(T a);
 
@@ -126,7 +130,7 @@ public:
     return c;
   }
 
-  long getSzX() const { return sz_x; } 
+  long getSzX() const { return sz_x; }
   long getSzY() const { return sz_y; }
   long getSzZ() const { return sz_z; }
 

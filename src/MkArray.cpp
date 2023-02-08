@@ -237,34 +237,11 @@ void MkArray<T>::Initialize(int s_x)
     F[i] = 0;
 }
 
-template <class T>
-MkArray<T> &MkArray<T>::operator=(MkArray<T> &&value)
-{
-
-  MkDebug("MkArry::op = move \n");
-
-  if (this != &value)
-  {
-    F = std::move(value.F);
-
-    FDimension = value.FDimension;
-    FI = value.FI;
-    FJ = value.FJ;
-    FK = value.FK;
-    sz_x = value.sz_x;
-    sz_y = value.sz_y;
-    sz_z = value.sz_z;
-  }
-
-  return *this;
-}
-
 // it is destructive, erase the existing array
 template <class T>
 MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
 {
   MkDebug("MkArray op = copy\n");
-  MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
   // MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
   if (!(value.sz_x * value.sz_y * value.sz_z)) // FIXME: is it an error???
     return *this;
@@ -277,6 +254,12 @@ MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
       // MkDebug("MkArray op = copy 3. 0x%p\n", value.F);
       Initialize(value.sz_x, value.sz_y, value.sz_z);
       FDimension = value.FDimension;
+      FI = value.FI;
+      FJ = value.FJ;
+      FK = value.FK;
+      sz_x = value.sz_x;
+      sz_y = value.sz_y;
+      sz_z = value.sz_z;
     }
     catch (Alloc &a)
     {
@@ -288,19 +271,57 @@ MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
   long sz = long(sz_x) * long(sz_y) * long(sz_z);
   for (long i = 0; i < sz; i++)
     F[i] = value.F[i];
-  MkDebug("MkArray op = copy 5. 0x%p\n", value.F);
+  // MkDebug("MkArray op = copy 5. 0x%p\n", value.F);
+  return *this;
+}
+
+template <class T>
+MkArray<T> &MkArray<T>::operator=(MkArray<T> &&value)
+{
+  MkDebug("MkArry::op = move ... not quitely \n");
+  // MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
+  if (!(value.sz_x * value.sz_y * value.sz_z)) // FIXME: is it an error???
+    return *this;
+
+  // MkDebug("MkArray op = copy 2. 0x%p\n", value.F);
+  if (sz_x != value.sz_x || sz_y != value.sz_y || sz_z != value.sz_z)
+  {
+    try
+    {
+      // MkDebug("MkArray op = copy 3. 0x%p\n", value.F);
+      Initialize(value.sz_x, value.sz_y, value.sz_z);
+      FDimension = value.FDimension;
+      FI = value.FI;
+      FJ = value.FJ;
+      FK = value.FK;
+      sz_x = value.sz_x;
+      sz_y = value.sz_y;
+      sz_z = value.sz_z;
+    }
+    catch (Alloc &a)
+    {
+      // MkDebug("MkArray::operator=() thows Alloc()");
+      throw Alloc(std::string("MkArray<T>"));
+    }
+  }
+  // MkDebug("MkArray op = copy 4. 0x%p\n", value.F);
+  long sz = long(sz_x) * long(sz_y) * long(sz_z);
+  for (long i = 0; i < sz; i++)
+    F[i] = value.F[i];
+  // MkDebug("MkArray op = copy 5. 0x%p\n", value.F);
   return *this;
 }
 
 template <class T>
 T &MkArray<T>::operator()(int i, int j, int k)
 {
-  if (FDimension != 3)
-  {
-    char str[256];
-    sprintf(str, "MkArray::(i,j,k) called whereas Dim is %d ", FDimension);
-    throw std::logic_error(std::string(str));
-  }
+  // Commented out on 23.02.07 as all the array is three dim
+  // if (FDimension != 3)
+  // {
+  //   char str[256];
+  //   sprintf(str, "MkArray::(i,j,k) called whereas Dim is %d ", FDimension);
+  //   throw std::logic_error(std::string(str));
+  // }
 
   if (FDimension <= 0)
   {
@@ -402,6 +423,30 @@ MkArray<T> &MkArray<T>::operator+=(MkArray<T> &a)
 }
 
 template <class T>
+MkArray<T> &MkArray<T>::operator+=(T &a)
+{
+
+  for (int i = 0; i < sz_x; i++)
+    for (int j = 0; j < sz_y; j++)
+      for (int k = 0; k < sz_z; k++)
+        (*this)(i, j, k) += a;
+
+  return *this;
+}
+
+template <class T>
+MkArray<T> &MkArray<T>::operator+=(T &&a)
+{
+
+  for (int i = 0; i < sz_x; i++)
+    for (int j = 0; j < sz_y; j++)
+      for (int k = 0; k < sz_z; k++)
+        (*this)(i, j, k) += a;
+
+  return *this;
+}
+
+template <class T>
 MkArray<T> &MkArray<T>::operator-=(MkArray<T> &a)
 {
   if (a.sz_x != sz_x || a.sz_y != sz_y || a.sz_z != sz_z)
@@ -411,6 +456,28 @@ MkArray<T> &MkArray<T>::operator-=(MkArray<T> &a)
     for (int j = 0; j < sz_y; j++)
       for (int k = 0; k < sz_z; k++)
         (*this)(i, j, k) -= a(i, j, k);
+
+  return *this;
+}
+
+template <class T>
+MkArray<T> &MkArray<T>::operator-=(T &a)
+{
+  for (int i = 0; i < sz_x; i++)
+    for (int j = 0; j < sz_y; j++)
+      for (int k = 0; k < sz_z; k++)
+        (*this)(i, j, k) -= a;
+
+  return *this;
+}
+
+template <class T>
+MkArray<T> &MkArray<T>::operator-=(T &&a)
+{
+  for (int i = 0; i < sz_x; i++)
+    for (int j = 0; j < sz_y; j++)
+      for (int k = 0; k < sz_z; k++)
+        (*this)(i, j, k) -= a;
 
   return *this;
 }
@@ -458,7 +525,7 @@ bool MkArray<T>::operator==(MkArray<T> &a)
     {
       for (k = 0; k < sz_z; k++)
       {
-        flag = flag && (fabs((*this)(i, j, j) - a(i, j, k)) < EPS);
+        flag = flag && (fabs((*this)(i, j, k) - a(i, j, k)) < EPS);
       }
     }
   }

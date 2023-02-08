@@ -139,6 +139,7 @@ void arr_test_move_op()
 
     MkArray<int> a;
     MkArray<int> b(5, 10);
+    MkArray<int> c, d(5,10);
 
     for (int i = 0; i < 5; i++)
     {
@@ -150,8 +151,18 @@ void arr_test_move_op()
 
     printf("before:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
     printf("before:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
-    // a = std::move(b);
-    a = (b);
+    a = std::move(b);
+
+    if (a == b)
+    {
+        printf("a == b \n");
+    }
+    else
+    {
+        printf("a != b \n");
+    }
+    
+    // a = (b);
     printf("after:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
     printf("after:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
 
@@ -159,8 +170,35 @@ void arr_test_move_op()
     {
         for (int j = 0; j < 10; j++)
         {
-            printf("a(%d,%d) = %d\n", i, j, b(i, j));
+            printf("b(%d,%d) = %d ", i, j, b(i, j));
         }
+        printf("\n");
+    }
+
+    c = a - b;
+
+    b(1, 1) = 10;
+    b(2, 2) = 20;
+
+    d += 5;
+    d *= 2;
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            printf("d(%d,%d) = %d ", i, j, d(i, j));
+        }
+        printf("\n");
+    }
+
+    if (a == b)
+    {
+        printf("a == b \n");
+    }
+    else
+    {
+        printf("a != b \n");
     }
 }
 
