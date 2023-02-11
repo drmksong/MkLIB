@@ -16,6 +16,8 @@ ADD_SUBDIRECTORY(tests)
 # ADD_DEFINITIONS(-DMKDEBUG)
 # ADD_LIBRARY(MkLib ${srcs})
 # ADD_EXECUTABLE(test test.cpp)
+# TARGET_LINK_LIBRARIES(test MkLib glu32 freeglut)
+# TARGET_LINK_LIBRARIES(test MkLib glu32 freeglut)
 
 
 

@@ -83,7 +83,7 @@ bool ExtractFileExt(std::string &ext, const std::string &str)
   s += str + std::string("is ") + ext;
   // s = std::string("Extension of ") + str + std::string("is ") + ext + std::endl;
 
-  MkDebug(s.c_str());
+  MkDebug("%s",s.c_str());
   if (ext.size() != 0)
     return true;
   else

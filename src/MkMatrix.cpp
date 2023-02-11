@@ -313,7 +313,7 @@ void MkMatrix4<T>::Out(char *fname)
     fp = fopen(fname, "a");
     fprintf(fp, "Output of Matrix ");
     sprintf(str, "A-th row [%10.3f %10.3f %10.3f %10.3f ]", 0.0, 1.0, 2.0, 3.0);
-    fprintf(fp, str);
+    fprintf(fp, "%s",str);
     for (int i = 0; i < 4; i++)
     {
         sprintf(str, "%d-th row [", i);
@@ -324,7 +324,7 @@ void MkMatrix4<T>::Out(char *fname)
         }
         sprintf(s, "]");
         strcat(str, s);
-        fprintf(fp, str);
+        fprintf(fp, "%s",str);
     }
     fclose(fp);
 }
@@ -350,13 +350,13 @@ MkVector<T>::MkVector(int sz)
     catch (Size s)
     {
         sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Size(0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Alloc();
     }
 
@@ -375,13 +375,13 @@ MkVector<T>::MkVector(int sz, VectType vt)
     catch (Size s)
     {
         sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Size(0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Alloc();
     }
 
@@ -480,13 +480,13 @@ void MkVector<T>::Cross(MkVector &vect, MkVector &target) // not yet finished, b
     catch (Size s)
     {
         sprintf(str, "Vector::Cross Size error of MkArray<T> size(%d)\n", s.X);
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Size(0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Alloc();
     }
 
@@ -619,7 +619,7 @@ void MkVector<T>::Out(char *fname)
     }
     sprintf(s, "]\n");
     strcat(str, s);
-    fprintf(fp, str);
+    fprintf(fp, "%s",str);
     fclose(fp);
 }
 
@@ -645,13 +645,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     catch (Size s)
     {
         sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d,%d)\n", s.X, s.Y);
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Size(0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Alloc();
     }
 
@@ -663,13 +663,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     catch (Size s)
     {
         sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d)\n", s.X);
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Size(0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
-        MkDebug(str);
+        MkDebug("%s",str);
         throw Alloc();
     }
 
@@ -1252,7 +1252,7 @@ void MkMatrix<T>::Out(char *fname)
     fprintf(fp, "Output of Matrix\n");
     sprintf(str, " n [%10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f]\n",
             0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
-    fprintf(fp, str);
+    fprintf(fp, "%s",str);
     for (int i = 0; i < GetFI(); i++)
     {
         sprintf(str, "%2d [", i);
@@ -1268,7 +1268,7 @@ void MkMatrix<T>::Out(char *fname)
         }
         sprintf(s, "]\n");
         strcat(str, s);
-        fprintf(fp, str);
+        fprintf(fp, "%s",str);
     }
     fclose(fp);
 }

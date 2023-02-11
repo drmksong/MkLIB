@@ -8,7 +8,7 @@
 #include <boost/type_traits.hpp>
 #include <cassert>
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <string>
 #include <new>

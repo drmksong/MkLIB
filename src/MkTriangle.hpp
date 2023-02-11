@@ -2,7 +2,7 @@
 #ifndef MkTriangleH
 #define MkTriangleH
 
-#include <Stdio.h>
+#include <stdio.h>
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
 #include "MkShape.hpp"

@@ -95,7 +95,7 @@ bool MkPoint::operator==(const MkPoint &rp)
    char str[256];
    sprintf(str, " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
    // MkDebug("MkPoint::operator==() is called\n");
-   MkDebug(str);
+   MkDebug("%s",str);
    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 }
 
@@ -104,7 +104,7 @@ bool MkPoint::operator==(MkPoint &&rp)
    char str[256];
    sprintf(str, "MkPoint::operator==(), rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
    // MkDebug("MkPoint::operator==() is called\n");
-   MkDebug(str);
+   MkDebug("%s",str);
    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 }
 
@@ -113,7 +113,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 //    char str[256];
 //    sprintf(str, "MkPoint::operator==(), const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
-//    MkDebug(str);
+//    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 // }
 
@@ -122,7 +122,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 //    char str[256];
 //    sprintf(str, " rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
-//    MkDebug(str);
+//    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 // }
 
@@ -131,7 +131,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 //    char str[256];
 //    sprintf(str, " original (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
-//    MkDebug(str);
+//    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 // }
 
@@ -333,7 +333,7 @@ MkPoints::MkPoints(int size, MkPoint *rps)
 {
    if (size < 0)
    {
-      MkDebug("::MkPoints - MkPoints(int size=%d)\n", sizeof(rps));
+      MkDebug("::MkPoints - MkPoints(int size=%ld)\n", sizeof(rps));
       throw(std::length_error("strange :: size is less than zero"));
    }
 
@@ -410,7 +410,7 @@ void MkPoints::Initialize(int size, MkPoint *rps)
 {
    if (size < 0)
    {
-      MkDebug("::MkPoints - MkPoints(int size=%d)\n", sizeof(rps));
+      MkDebug("::MkPoints - MkPoints(int size=%ld)\n", sizeof(rps));
       throw(std::length_error("strange :: size is less than zero"));
    }
 

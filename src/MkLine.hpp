@@ -176,9 +176,6 @@ public:
     double operator-=(MkPoint &p);
     double operator-=(MkPoint &&p);
 
-#if !defined(_MSC_VER) && !defined(_WINDOWS_) || defined(__BCPLUSPLUS__)
-    MkLine &operator=(MkLine &);
-#endif
     MkLine &operator=(MkLine &);
     MkLine &operator=(MkLine &&);
     MkLine &operator!();

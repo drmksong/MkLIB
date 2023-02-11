@@ -2121,7 +2121,7 @@ bool MkPolygon::Out(char *fname)
   fp = fopen(fname, "a");
   if (!fp)
   {
-    MkDebug(fname);
+    MkDebug("%s", fname);
     MkDebug(" is not found, so fp is null and return false\n");
     return false;
   }
@@ -2367,11 +2367,11 @@ void GetSubPolygon(double ymin, double ymax, MkPolygon &inpoly, MkPolygon &outpo
   }
 
   sprintf(str, "ymax = %10.5f, ymin = %10.5f \n", ymax, ymin);
-  MkDebug(str);
+  MkDebug("%s", str);
   for (k = 0; k < outpoly.GetSize(); k++)
   {
     sprintf(str, "%d-th point of outpolyline is (%f, %f, %f)\n", k, outpoly[k].X, outpoly[k].Y, outpoly[k].Z);
-    MkDebug(str);
+    MkDebug("%s", str);
   }
 }
 

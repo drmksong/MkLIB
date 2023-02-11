@@ -149,8 +149,8 @@ void arr_test_move_op()
         }
     }
 
-    printf("before:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
-    printf("before:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+    printf("before:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
+    printf("before:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
     a = std::move(b);
 
     if (a == b)
@@ -163,8 +163,8 @@ void arr_test_move_op()
     }
     
     // a = (b);
-    printf("after:: a %d, %d, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
-    printf("after:: b %d, %d, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+    printf("after:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
+    printf("after:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
 
     for (int i = 0; i < 5; i++)
     {

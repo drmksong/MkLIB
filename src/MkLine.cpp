@@ -1643,26 +1643,9 @@ MkLine &MkLine::Scale(double sx, double sy, double sz)
    return *this;
 }
 
-#if !defined(_MSC_VER) && !defined(_WINDOWS_) || defined(__BCPLUSPLUS__)
 MkLine &MkLine::operator=(MkLine &rl)
 {
-   MkShape::operator=((MkShape &)rl);
-   StartPoint = rl.StartPoint;
-   EndPoint = rl.EndPoint;
-   Theta = rl.Theta;
-   Length = rl.Length;
-
-   A = rl.A;
-   B = rl.B;
-   C = rl.C;
-   Tol = rl.Tol;
-   return (*this);
-}
-#endif
-
-MkLine &MkLine::operator=(MkLine &rl)
-{
-   // MkShape::operator=((MkShape &)rl); // TODO: unmark it after correct errors of MkLine
+   MkShape::operator=((MkShape &)rl); 
    StartPoint = rl.StartPoint;
    EndPoint = rl.EndPoint;
    Theta = rl.Theta;
@@ -1677,7 +1660,7 @@ MkLine &MkLine::operator=(MkLine &rl)
 
 MkLine &MkLine::operator=(MkLine &&rl)
 {
-   // MkShape::operator=(( MkShape &&)rl); // TODO: unmark it after correct errors of MkLine
+   MkShape::operator=(( MkShape &&)rl); 
    StartPoint = rl.StartPoint;
    EndPoint = rl.EndPoint;
    Theta = rl.Theta;
@@ -1753,7 +1736,7 @@ void MkLine::Out()
 {
    char str[256];
    sprintf(str, "(%10.5f,%10.5f,%10.5f)-(%10.5f,%10.5f,%10.5f)\n", StartPoint.X, StartPoint.Y, StartPoint.Z, EndPoint.X, EndPoint.Y, EndPoint.Z);
-   MkDebug(str);
+   MkDebug("%s",str);
 }
 
 #ifdef __BCPLUSPLUS__

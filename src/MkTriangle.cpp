@@ -615,7 +615,8 @@ int MkTriangles::SaveUCD(char *filename)
     fprintf(fp, "None, degree \n");
     for (i = 0; i < FSize; i++)
         for (j = 0; j < 3; j++)
-            fprintf(fp, "%5d %10.5f\n", i * 3 + j + 1, 1);
+            fprintf(fp, "%5d %10d\n", i * 3 + j + 1, 1);
+            // fprintf(fp, "%5d %10.5f\n", i * 3 + j + 1, 1);
 
     fclose(fp);
     return 0;

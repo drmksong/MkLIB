@@ -2,7 +2,7 @@
 #ifndef MkPointDataH
 #define MkPointDataH
 #include <stdio.h>
-#include <Math.h>
+#include <cmath>
 #include "MkMisc.hpp"
 #include "MkPoint.hpp"
 #include "MkArray.hpp"
