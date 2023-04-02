@@ -93,11 +93,12 @@ class MkCubes
 {
 private:
   int FSize;
-  MkCube *FCube;
+  boost::shared_ptr<MkCube[]> FCube;
 
 public:
   MkCubes();
   MkCubes(int);
+  MkCubes(MkCubes &);
   ~MkCubes();
   bool Initialize(int size);
   bool Initialize(int size, MkCube *fault);
@@ -108,6 +109,30 @@ public:
   MkCubes &operator=(MkCubes &a);
 
   int GetSize() { return FSize; };
+
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);

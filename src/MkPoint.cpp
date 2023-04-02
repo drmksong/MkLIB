@@ -382,6 +382,28 @@ MkPoints::MkPoints(int size)
    }
 }
 
+MkPoints::MkPoints(const MkPoints &rps)
+{
+   FSize = rps.FSize;
+   FCapacity = rps.FCapacity;
+
+   try
+   {
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
+   }
+
+   catch (std::bad_alloc &a)
+   {
+      MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
+      throw Alloc(a.what());
+   }
+
+   for (int i = 0; i < FSize; i++)
+      FPoint[i] = rps.FPoint[i];
+   for (int i = FSize; i < FCapacity; i++)
+      FPoint[i] = NullPoint;
+}
+
 MkPoints::~MkPoints()
 {
    FCapacity = FSize = 0;

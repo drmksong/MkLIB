@@ -26,6 +26,7 @@ SET (SRC_FILES
         MkPolygon.cpp
         MkRect.cpp
         MkShape.cpp
+        MkSphere.cpp
         MkTriangle.cpp    
     )
 

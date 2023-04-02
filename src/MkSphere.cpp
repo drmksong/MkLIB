@@ -183,7 +183,7 @@ bool MkSphere::IsInSpace(MkPoint &&pnt)
     return FRadius > CalDist(FCP, pnt);
 }
 
-MkPoint &MkSphere::GetCenter()
+MkPoint MkSphere::GetCenter()
 {
     return FCP;
 }
@@ -452,14 +452,14 @@ bool MkSphere::IsIntersect(MkLine &&rl)
 MkPoints &MkSphere::CalcIntPnts(MkLine &rl)
 {
     static MkPoints pnts;
-    pnts = *this & rl
+    pnts = *this & rl;
     return pnts;
 }
 
 MkPoints &MkSphere::CalcIntPnts(MkLine &&rl)
 {
     static MkPoints pnts;
-    pnts = *this & rl
+    pnts = *this & rl;
     return pnts;
 }
 

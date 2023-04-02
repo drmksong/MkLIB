@@ -229,7 +229,7 @@ void MkCube::Draw(MkPaint *pb)
 MkCubes::MkCubes()
 {
    FSize = 0;
-   FCube = (MkCube *)NULL;
+   FCube.reset();
 }
 
 MkCubes::MkCubes(int size)
@@ -237,24 +237,44 @@ MkCubes::MkCubes(int size)
    if (size <= 0)
    {
       FSize = 0;
-      FCube = (MkCube *)NULL;
+      FCube.reset();
    }
    FSize = size;
-   FCube = new MkCube[FSize];
-   if (!FCube)
+   try
    {
-      FSize = 0;
-      return;
+      FCube = boost::make_shared<MkCube[]>(FSize);
    }
+
+   catch (std::bad_alloc &a)
+   {
+      MkDebug("MkCubes::MkCubes bad_alloc thrown!!!\n");
+      throw Alloc(a.what());
+   }
+}
+
+MkCubes::MkCubes(MkCubes &rc)
+{
+   FSize = rc.FSize;
+
+   try
+   {
+      FCube = boost::make_shared<MkCube[]> (FSize);
+   }
+   catch (std::bad_alloc &a)
+   {
+      MkDebug("MkCubes::MkCubes bad_alloc thrown!!!\n");
+      throw Alloc(a.what());
+   }
+   
+
+   for (int i = 0; i < FSize; i++)
+      FCube[i] = rc.FCube[i];
 }
 
 MkCubes::~MkCubes()
 {
-   if (FCube)
-   {
-      delete[] (MkCube *)FCube;
-      FSize = 0;
-   }
+   FSize = 0;
+   FCube.reset();
 }
 
 bool MkCubes::Initialize(int size)
@@ -262,22 +282,20 @@ bool MkCubes::Initialize(int size)
    if (size <= 0)
    {
       FSize = 0;
-      FCube = (MkCube *)NULL;
+      FCube.reset();
       return false;
-   }
-
-   if (!FCube)
-   {
-      delete[] (MkCube *)FCube;
-      FCube = (MkCube *)NULL;
    }
 
    FSize = size;
-   FCube = new MkCube[FSize];
-   if (!FCube)
+   try 
    {
-      FSize = 0;
-      return false;
+      FCube = boost::make_shared<MkCube[]>  (FSize);
+   }
+   
+   catch (std::bad_alloc &a)
+   {
+      MkDebug("MkCubes::MkCubes bad_alloc thrown!!!\n");
+      throw Alloc(a.what());
    }
    return true;
 }
@@ -287,23 +305,21 @@ bool MkCubes::Initialize(int size, MkCube *cube)
    if (size <= 0)
    {
       FSize = 0;
-      FCube = (MkCube *)NULL;
+      FCube.reset();
       return false;
-   }
-
-   if (!FCube)
-   {
-      delete[] (MkCube *)FCube;
-      FCube = (MkCube *)NULL;
    }
 
    FSize = size;
-   FCube = new MkCube[FSize];
-   if (!FCube)
+   try
    {
-      FSize = 0;
-      return false;
+      FCube =boost::make_shared<MkCube[]> (FSize);
    }
+   catch (std::bad_alloc &a)
+   {
+      MkDebug("MkCubes::MkCubes bad_alloc thrown!!!\n");
+      throw Alloc(a.what());
+   }
+   
    for (int i = 0; i < FSize; i++)
       FCube[i] = cube[i];
 

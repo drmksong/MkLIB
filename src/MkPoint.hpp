@@ -331,6 +331,7 @@ public:
     FCapacity = FSize = 0;
     FPoint.reset();
   }
+  MkPoints(const MkPoints &p);
   ~MkPoints();
   void Initialize(std::vector<MkPoint> &p); // use this
   void Initialize(int size, MkPoint *rps);  // do not use this

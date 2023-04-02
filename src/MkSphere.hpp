@@ -4,7 +4,8 @@
 #include <math.h>
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
-// #include "MkTriangle.hpp"
+#include "MkLine.hpp"
+#include "MkTriangle.hpp"
 
 //---------------------------------------------------------------------------
 #ifdef __BCPLUSPLUS__
@@ -13,7 +14,7 @@
 class MkSphere : public MkShape
 {
 private:
-  // MkTriangles Surf;
+  MkTriangles Surf;
   int SurfDivision;
   bool needUpdate;
   bool UpdateSurf();
