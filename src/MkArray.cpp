@@ -34,7 +34,7 @@ MkArray<T>::MkArray(int s_x, int s_y, int s_z)
   try
   {
     MkDebug("MkArray memory reset 1\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
   }
   catch (std::bad_alloc &a)
   {
@@ -69,7 +69,8 @@ MkArray<T>::MkArray(int s_x, int s_y)
   try
   {
     MkDebug("MkArray memory reset 2\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
+    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -101,7 +102,8 @@ MkArray<T>::MkArray(int s_x)
   try
   {
     MkDebug("MkArray memory reset 3\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
+    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -164,7 +166,8 @@ void MkArray<T>::Initialize(int s_x, int s_y, int s_z)
   try
   {
     MkDebug("MkArray memory reset 5\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
+    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -196,7 +199,8 @@ void MkArray<T>::Initialize(int s_x, int s_y)
   try
   {
     MkDebug("MkArray memory reset 6\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
+    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -226,7 +230,8 @@ void MkArray<T>::Initialize(int s_x)
   try
   {
     MkDebug("MkArray memory reset 7\n");
-    F.reset(new T[sz]);
+    F = boost::make_shared<T[]>(sz);
+    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {

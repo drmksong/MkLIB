@@ -394,7 +394,6 @@ void MkCircle::Draw(MkPaint *pb)
 //---------------------------------------------------------------------------
 MkCircles::MkCircles(int size)
 {
-    //  try {
     if (size <= 0)
     {
         MkDebug("::MkCircles - MkCircles(int size)");
@@ -402,11 +401,55 @@ MkCircles::MkCircles(int size)
     }
 
     FSize = size;
-    FCircle = new MkCircle[FSize];
-    //  }
-    //  catch () {
-    //    ShowMessage(AnsiString(E.ClassName())+ E.Message);
-    //  }
+    try {
+        FCircle = boost::make_shared<MkCircle[]> (FSize);
+    }
+    catch (std::bad_alloc &a)
+    {
+        MkDebug("MkCircles::MkCircles bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+}
+
+// TODO: should revise if the implementation is not efficient!!!
+MkCircles::MkCircles(int size, boost::shared_ptr<MkCircle[]> circle)
+{
+    if (size <= 0)
+    {
+        MkDebug("::MkCircles - MkCircles(int size)");
+        return;
+    }
+
+    FSize = size;
+    try {
+        FCircle = boost::make_shared<MkCircle[]> (FSize);
+    }
+    catch (std::bad_alloc &a)
+    {
+        MkDebug("MkCircles::MkCircles bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+
+    int i;
+    for (i = 0; i < FSize; i++)
+        FCircle[i] = circle[i];
+}
+
+MkCircles::MkCircles(MkCircles &circles)
+{
+    int i;
+    FSize = circles.FSize;
+    try {
+        FCircle = boost::make_shared<MkCircle[]> (FSize);
+    }
+    catch (std::bad_alloc &a)
+    {
+        MkDebug("MkCircles::MkCircles bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+
+    for (i = 0; i < FSize; i++)
+        FCircle[i] = circles.FCircle[i];
 }
 
 void MkCircles::Initialize(int size)
@@ -415,18 +458,25 @@ void MkCircles::Initialize(int size)
     FSize = size;
     if (FSize == 0)
     {
-        FCircle = NULL;
+        FCircle.reset();
         return;
     }
-    FCircle = new MkCircle[FSize];
+
+    try {
+        FCircle = boost::make_shared<MkCircle[]> (FSize);
+    }
+
+    catch (std::bad_alloc &a)
+    {
+        MkDebug("MkCircles::Initialize bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
 }
 
 void MkCircles::Clear()
 {
     FSize = 0;
-    if (FCircle)
-        delete[] FCircle;
-    FCircle = NULL;
+    FCircle.reset();
 }
 
 MkCircle &MkCircles::operator[](int i)
@@ -441,7 +491,7 @@ MkCircles &MkCircles::operator=(MkCircles &circles)
 {
     int i;
     FSize = circles.FSize;
-    this->FCircle = new MkCircle[FSize];
+    this->FCircle = boost::make_shared<MkCircle[]> (FSize);
 
     for (i = 0; i < FSize; i++)
         this->FCircle[i] = circles.FCircle[i];

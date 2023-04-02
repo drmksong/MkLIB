@@ -3,6 +3,8 @@
 #define MkCylinderH
 
 #include <math.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkShape.hpp"
 #include "MkLine.hpp"
 #include "MkPoint.hpp"
@@ -124,24 +126,27 @@ public:
 class MkCylinders : public MkShape
 {
 protected:
-  MkCylinder *FCylinder;
+  boost::shared_ptr<MkCylinder[]>FCylinder;
   int FSize;
 
 public:
   MkCylinders(int Size);
+
   MkCylinders()
   {
     FSize = 0;
-    FCylinder = NULL;
+    FCylinder.reset();
   }
+
+  MkCylinders(int size, boost::shared_ptr<MkCylinder[]>cylinders);
+  MkCylinders(MkCylinders &cylinders);
+
   ~MkCylinders()
   {
-    if (FCylinder)
-    {
-      delete (MkCylinder *)FCylinder;
-      FCylinder = NULL;
-    }
+    FSize = 0;
+    FCylinder.reset();
   }
+
   void Initialize(int Size);
   void Clear();
   int GetSize() { return FSize; }
@@ -155,6 +160,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 //---------------------------------------------------------------------------
 #endif

@@ -1773,117 +1773,122 @@ void MkLine::Draw(MkPaint *pb)
 #endif
 
 //---------------------------------------------------------------------------
-MkLines::MkLines(int size, MkLine *rl)
+
+MkLines::MkLines(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-#ifdef __BCPLUSPLUS__
-      ShowMessage("::MkLines - MkLines(int size)");
-#else
       MkDebug("::MkLines - MkLines(int size)");
-#endif
+      FRealLine.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
+   try {
+      FRealLine = boost::make_shared<MkLine[]> (FSize);
+   }
+   catch(std::bad_alloc &e) {
+      MkDebug("::MkLines - MkLines(int size) - bad_alloc caught: %s", e.what());
+      FRealLine.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkLines - MkLines(int size) - unknown exception caught");
+      FRealLine.reset();
+      return;
+   }
+   
+}
+
+// alternative implementation of simple copy of shared_ptr, not copying individual elements
+MkLines::MkLines(int size, boost::shared_ptr<MkLine[]> rl)
+{
+   if (size <= 0)
    {
-      FRealLine = NULL;
+      MkDebug("::MkLines - MkLines(int size)");
+      FRealLine.reset();
       return;
    }
 
-   FRealLine = new MkLine[FSize];
+   FSize = size;
+   try {
+      FRealLine = boost::make_shared<MkLine[]> (FSize);
+   }
+   catch(std::bad_alloc &e) {
+      MkDebug("::MkLines - MkLines(int size) - bad_alloc caught: %s", e.what());
+      FRealLine.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkLines - MkLines(int size) - unknown exception caught");
+      FRealLine.reset();
+      return;
+   }
    for (int i = 0; i < FSize; i++)
       FRealLine[i] = rl[i];
 }
 
-MkLines::MkLines(int size)
+
+MkLines::MkLines(const MkLines &rl)
 {
-   if (size < 0)
-   {
-#ifdef __BCPLUSPLUS__
-      ShowMessage("::MkLines - MkLines(int size)");
-#else
-      MkDebug("::MkLines - MkLines(int size)");
-#endif
-
+   FSize = rl.FSize;
+   try {
+      FRealLine = boost::make_shared<MkLine[]> (FSize);
+   }
+   catch(std::bad_alloc &e) {
+      MkDebug("::MkLines - MkLines(int size) - bad_alloc caught: %s", e.what());
+      FRealLine.reset();
       return;
    }
-
-   FSize = size;
-   if (FSize == 0)
-   {
-      FRealLine = NULL;
+   catch(...) {
+      MkDebug("::MkLines - MkLines(int size) - unknown exception caught");
+      FRealLine.reset();
       return;
    }
-
-   FRealLine = new MkLine[FSize];
+   for (int i = 0; i < FSize; i++)
+      FRealLine[i] = rl.FRealLine[i];
 }
 
 MkLines::~MkLines()
 {
    FSize = 0;
-   if (FRealLine)
-   {
-      delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
-   }
+   FRealLine.reset();
 }
 
 void MkLines::Initialize(int size)
 {
-   if (size < 0)
-   {
-#ifdef __BCPLUSPLUS__
-      ShowMessage("::MkLines - Initialize(int size)");
-#else
-      MkDebug("::MkLines - Initialize(int size)");
-#endif
-
-      return;
-   }
-   if (FSize == size)
-      return;
-
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FRealLine != NULL)
-         delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
+   try {
+      FRealLine = boost::make_shared<MkLine[]> (FSize);
+   }
+   catch(std::bad_alloc &e) {
+      MkDebug("::MkLines - MkLines(int size) - bad_alloc caught: %s", e.what());
+      FRealLine.reset();
       return;
    }
-
-   if (FRealLine != NULL)
-      delete[] (MkLine *)FRealLine;
-   FRealLine = new MkLine[FSize];
+   catch(...) {
+      MkDebug("::MkLines - MkLines(int size) - unknown exception caught");
+      FRealLine.reset();
+      return;
+   }   
 }
 
-void MkLines::Initialize(int size, MkLine *rl)
+void MkLines::Initialize(int size, boost::shared_ptr<MkLine[]> rl)
 {
-   if (size < 0)
-   {
-#ifdef __BCPLUSPLUS__
-      ShowMessage("::MkLines - Initialize(int size)");
-#else
-      MkDebug("::MkLines - Initialize(int size)");
-#endif
-
-      return;
-   }
-
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FRealLine != NULL)
-         delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
+   try {
+      FRealLine = boost::make_shared<MkLine[]> (FSize);
+   }
+   catch(std::bad_alloc &e) {
+      MkDebug("::MkLines - MkLines(int size) - bad_alloc caught: %s", e.what());
+      FRealLine.reset();
       return;
    }
-
-   if (FRealLine != NULL)
-      delete[] (MkLine *)FRealLine;
-   FRealLine = new MkLine[FSize];
+   catch(...) {
+      MkDebug("::MkLines - MkLines(int size) - unknown exception caught");
+      FRealLine.reset();
+      return;
+   }
    for (int i = 0; i < FSize; i++)
       FRealLine[i] = rl[i];
 }
@@ -1895,16 +1900,10 @@ void MkLines::Grow(int size) // Grow allocate extra memory
       return;
    }
 
-   MkLine *pLine = new MkLine[FSize + size];
+   boost::shared_ptr<MkLine[]> pLine = boost::make_shared<MkLine[]>(FSize + size);
 
    for (int i = 0; i < FSize; i++)
       pLine[i] = FRealLine[i];
-
-   if (FRealLine != NULL)
-   {
-      delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
-   }
 
    FRealLine = pLine;
    FSize = FSize + size;
@@ -1920,16 +1919,12 @@ void MkLines::DeleteSelected()
          del_line_num++;
    }
 
-   MkLine *pLine = new MkLine[FSize - del_line_num];
+   boost::shared_ptr<MkLine[]> pLine = boost::make_shared<MkLine[]>(FSize - del_line_num);
+   
    for (i = 0, c = 0; i < FSize; i++)
    {
       if (!FRealLine[i].GetSelected())
          pLine[c++] = FRealLine[i];
-   }
-   if (FRealLine != NULL)
-   {
-      delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
    }
    FRealLine = pLine;
    FSize = FSize - del_line_num;
@@ -1938,11 +1933,7 @@ void MkLines::DeleteSelected()
 bool MkLines::Clear()
 {
    FSize = 0;
-   if (FRealLine)
-   {
-      delete[] (MkLine *)FRealLine;
-      FRealLine = NULL;
-   }
+   FRealLine.reset();
    return true;
 }
 
@@ -1995,14 +1986,14 @@ MkLines &MkLines::operator=(MkLines &rls)
 {
    int i;
 
-   Clear();
    FSize = rls.FSize;
    if (FSize == 0)
    {
-      FRealLine = NULL;
+      FRealLine.reset();
       return *this;
    }
-   FRealLine = new MkLine[FSize];
+   
+   FRealLine = boost::make_shared<MkLine[]>(FSize);
 
    for (i = 0; i < FSize; i++)
       FRealLine[i] = rls.FRealLine[i];

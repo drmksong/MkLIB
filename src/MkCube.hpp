@@ -98,10 +98,11 @@ private:
 public:
   MkCubes();
   MkCubes(int);
+  MkCubes(int, boost::shared_ptr<MkCube[]>);
   MkCubes(MkCubes &);
   ~MkCubes();
   bool Initialize(int size);
-  bool Initialize(int size, MkCube *fault);
+  bool Initialize(int size, boost::shared_ptr<MkCube[]> fault);
   void Clear();
 
   MkCube &operator()(int);

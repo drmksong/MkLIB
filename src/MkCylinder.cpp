@@ -481,39 +481,83 @@ void MkCylinder::Draw(MkPaint *pb)
 //---------------------------------------------------------------------------
 MkCylinders::MkCylinders(int size)
 {
-    //  try {
     if (size <= 0)
     {
         MkDebug("::MkCylinders - MkCylinders(int size)");
+        FCylinder.reset();
         return;
     }
 
     FSize = size;
-    FCylinder = new MkCylinder[FSize];
-    //  }
-    //  catch () {
-    //    MkDebug(AnsiString(E.ClassName())+ E.Message);
-    //  }
+    try {
+        FCylinder = boost::make_shared<MkCylinder[]>(FSize);
+    }
+    catch (std::bad_alloc &a) {
+        MkDebug("MkCylinders::MkCylinders(int size) bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+}
+
+MkCylinders::MkCylinders(int size, boost::shared_ptr<MkCylinder[]> cylinders)
+{
+    if (size <= 0)
+    {
+        MkDebug("::MkCylinders - MkCylinders(int size, boost::shared_ptr<MkCylinder[]> cylinders)");
+        FCylinder.reset();
+        return;
+    }
+
+    FSize = size;
+    try {
+        FCylinder = boost::make_shared<MkCylinder[]>(FSize);
+    }
+    catch (std::bad_alloc &a) {
+        MkDebug("MkCylinders::MkCylinders(int size, boost::shared_ptr<MkCylinder[]> cylinders) bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FCylinder[i] = cylinders[i];
+}
+
+MkCylinders::MkCylinders(MkCylinders &cylinders)
+{
+    FSize = cylinders.FSize;
+    try {
+        FCylinder = boost::make_shared<MkCylinder[]>(FSize);
+    }
+    catch (std::bad_alloc &a) {
+        MkDebug("MkCylinders::MkCylinders(MkCylinders &cylinders) bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FCylinder[i] = cylinders.FCylinder[i];
 }
 
 void MkCylinders::Initialize(int size)
 {
-    Clear();
-    FSize = size;
-    if (FSize == 0)
+    if (size <= 0)
     {
-        FCylinder = NULL;
+        MkDebug("::MkCylinders - Initialize(int size)");
+        FCylinder.reset();
         return;
     }
-    FCylinder = new MkCylinder[FSize];
+
+    FSize = size;
+    try {
+        FCylinder = boost::make_shared<MkCylinder[]>(FSize);
+    }
+    catch (std::bad_alloc &a) {
+        MkDebug("MkCylinders::Initialize(int size) bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
 }
 
 void MkCylinders::Clear()
 {
     FSize = 0;
-    if (FCylinder)
-        delete[] FCylinder;
-    FCylinder = NULL;
+    FCylinder.reset();
 }
 
 MkCylinder &MkCylinders::operator[](int i)
@@ -526,12 +570,20 @@ MkCylinder &MkCylinders::operator[](int i)
 
 MkCylinders &MkCylinders::operator=(MkCylinders &cylinders)
 {
-    int i;
-    FSize = cylinders.FSize;
-    this->FCylinder = new MkCylinder[FSize];
+    if (this == &cylinders)
+        return *this;
 
-    for (i = 0; i < FSize; i++)
-        this->FCylinder[i] = cylinders.FCylinder[i];
+    FSize = cylinders.FSize;
+    try {
+        FCylinder = boost::make_shared<MkCylinder[]>(FSize);
+    }
+    catch (std::bad_alloc &a) {
+        MkDebug("MkCylinders::operator=(MkCylinders &cylinders) bad_alloc thrown!!!\n");
+        throw Alloc(a.what());
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FCylinder[i] = cylinders.FCylinder[i];
 
     return *this;
 }

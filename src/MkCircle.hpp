@@ -84,7 +84,7 @@ public:
 class MkCircles : public MkShape
 {
 protected:
-    MkCircle *FCircle;
+    boost::shared_ptr<MkCircle[]> FCircle;
     int FSize;
 
 public:
@@ -92,15 +92,16 @@ public:
     MkCircles()
     {
         FSize = 0;
-        FCircle = NULL;
+        FCircle.reset();
     }
+    // TODO: should revise if the implementation is not efficient!!!
+    MkCircles(int size, boost::shared_ptr<MkCircle[]> circle);
+    MkCircles(MkCircles &circles);
+
     ~MkCircles()
     {
-        if (FCircle)
-        {
-            delete (MkCircle *)FCircle;
-            FCircle = NULL;
-        }
+        FSize = 0;
+        FCircle.reset();
     }
     void Initialize(int Size);
     void Clear();
@@ -115,6 +116,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
     void Draw(MkPaint *);
 #endif
+
+class Alloc
+  {
+  public:
+    std::string What;
+    Alloc(std::string what) : What(what) {}
+    std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+    std::string What;
+    int N;
+    Size(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+    std::string What;
+    int N;
+    Range(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
 };
 
 class MkArc : public MkCircle

@@ -3,6 +3,8 @@
 #define MkLineH
 
 #include <cmath>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkMatrix.hpp"
@@ -192,8 +194,8 @@ public:
 class MkLines
 {
 protected:
-    MkLine *FRealLine;
     int FSize;
+    boost::shared_ptr<MkLine[]>FRealLine;
 #ifdef __BCPLUSPLUS__
     TColor Color;
 #endif
@@ -201,16 +203,17 @@ protected:
     MkColor PColor, BColor;
 #endif
 public:
-    MkLines(int size, MkLine *rl);
-    MkLines(int FSize);
     MkLines()
     {
         FSize = 0;
         FRealLine = NULL;
     }
+    MkLines(int FSize);
+    MkLines(int size, boost::shared_ptr<MkLine[]>rl);
+    MkLines(const MkLines &rl);   
     ~MkLines();
     void Initialize(int size);
-    void Initialize(int size, MkLine *rl);
+    void Initialize(int size, boost::shared_ptr<MkLine[]>rl);
     void Grow(int sz);
     void Add(MkLine &l)
     {
@@ -220,7 +223,8 @@ public:
     void DeleteSelected();
     int GetSize() { return FSize; };
     int GetNumber() { return FSize; };
-    MkLine *GetLine() { return FRealLine; }
+    MkLine &GetLine(int i) { if (i < FSize) return FRealLine[i]; }
+    boost::shared_ptr<MkLine[]> &GetLines() {return FRealLine;}
     bool Clear();
 #ifdef __BCPLUSPLUS__
     TColor GetColor()
@@ -255,6 +259,29 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
     void Draw(MkPaint *);
 #endif
+ class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 
 void GetSubParam(int i, MkLines &in, double &aj, double &bj, double &lj1, double &lj);
