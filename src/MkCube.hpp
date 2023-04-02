@@ -51,8 +51,8 @@ public:
 public:
   double GetNorm(MkPoint &rp);
   double GetNorm(MkPoint &&rp);
-  MkPoint &GetNormPoint(MkPoint &rp);
-  MkPoint &GetNormPoint(MkPoint &&rp);
+  MkPoint GetNormPoint(MkPoint &rp);
+  MkPoint GetNormPoint(MkPoint &&rp);
   double GetXLength() { return XLength; }
   double GetYLength() { return YLength; }
   double GetZLength() { return ZLength; }

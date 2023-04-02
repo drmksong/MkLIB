@@ -93,7 +93,7 @@ bool MkCube::IsInSpace(MkPoint &&pnt)
 }
 
 
-MkPoint &MkCube::GetNormPoint(MkPoint &rp)
+MkPoint MkCube::GetNormPoint(MkPoint &rp)
 {
    MkPoint pnt = rp;
 
@@ -107,7 +107,7 @@ MkPoint &MkCube::GetNormPoint(MkPoint &rp)
    return pnt;
 }
 
-MkPoint &MkCube::GetNormPoint(MkPoint &&rp)
+MkPoint MkCube::GetNormPoint(MkPoint &&rp)
 {
    MkPoint pnt = rp;
 

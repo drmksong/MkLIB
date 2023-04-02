@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+#include <boost/make_shared.hpp>
 #include "MkMatrix.hpp"
 #include "MkPoint.hpp"
 
@@ -202,6 +204,22 @@ void arr_test_move_op()
     }
 }
 
+void shared_test()
+{
+    boost::shared_ptr<MkPoint[]> pnts;
+    pnts = boost::make_shared<MkPoint[]>(100);
+    for (int i;i<100;i++) {
+        pnts[i] = MkPoint(i,i,i);
+    }
+
+    for (int i;i<100;i++) {
+        printf("%f, %f, %f \n",pnts[i].X,pnts[i].Y,pnts[i].Z);
+    }
+
+    pnts.reset();
+
+}
+
 int main()
 {
 
@@ -209,6 +227,7 @@ int main()
     // array_test();
 
     arr_test_move_op();
+    shared_test();
 
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <exception>
 #include <iostream>
 #include <boost/shared_array.hpp>
+#include <boost/make_shared.hpp>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/freeglut.h>
@@ -48,6 +49,12 @@ public:
     X = x;
     Y = y;
     Z = z;
+  }
+
+  MkPoint(MkPoint &pnt) {
+    X = pnt.X;
+    Y = pnt.Y;
+    Z = pnt.Z;
   }
 
   void SetPoint(double x, double y)
@@ -299,6 +306,7 @@ std::ostream &operator<<(std::ostream &outputStream, const MkPoint &);
 std::ostream &operator<<(std::ostream &outputStream, MkPoint &&);
 void Swap(MkPoint &p1, MkPoint &p2);
 
+// TODO: To revise MkPoints FPoint boost::shared_ptr to std::vector
 class MkPoints
 {
 protected:

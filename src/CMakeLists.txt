@@ -16,6 +16,7 @@ SET (SRC_FILES
         MkColor.cpp
         MkCircle.cpp
         MkCylinder.cpp
+        MkCube.cpp
         MkLine.cpp 
         MkMatrix.cpp
         MkMisc.cpp 
@@ -28,7 +29,7 @@ SET (SRC_FILES
         MkTriangle.cpp    
     )
 
-# SET(SRC_FILES ${SCOURCES})
+# SET(SRC_FILES ${SCOURCES}) 
 
 ADD_DEFINITIONS(-DMKDEBUG)
 

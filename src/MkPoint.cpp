@@ -314,8 +314,9 @@ MkPoints::MkPoints(std::vector<MkPoint> &rps)
 
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
@@ -339,8 +340,9 @@ MkPoints::MkPoints(int size, MkPoint *rps)
 
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
@@ -370,8 +372,9 @@ MkPoints::MkPoints(int size)
    }
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
@@ -392,8 +395,9 @@ void MkPoints::Initialize(std::vector<MkPoint> &rps)
 
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
@@ -416,8 +420,9 @@ void MkPoints::Initialize(int size, MkPoint *rps)
 
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
@@ -447,8 +452,9 @@ void MkPoints::Initialize(int size)
    }
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);      
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::Initialize bad_alloc thrown!!!\n");
@@ -501,8 +507,9 @@ int MkPoints::Grow(int delta)
 
    try
    {
-      rp.reset(new MkPoint[FCapacity + delta]);
+      rp = boost::make_shared<MkPoint[]>(FCapacity + delta);
    }
+   
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoint::Grow std::bad_alloc thrown");
@@ -526,8 +533,9 @@ int MkPoints::Shrink(int delta)
 
    try
    {
-      rp.reset(new MkPoint[FCapacity - delta]);
+      rp = boost::make_shared<MkPoint[]>(FCapacity - delta);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoint::Shrink std::bad_alloc thrown");
@@ -762,8 +770,9 @@ MkPoints &MkPoints::operator=(const MkPoints &points)
    FCapacity = points.FCapacity;
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::operator=(const lvalue ref) throw std::bad_alloc while reserving memory for copying points\n");
@@ -787,8 +796,9 @@ MkPoints &MkPoints::operator=(MkPoints &&points)
    FCapacity = points.FCapacity;
    try
    {
-      FPoint.reset(new MkPoint[FCapacity]);
+      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
    }
+
    catch (std::bad_alloc &a)
    {
       MkDebug("MkPoints::operator=(rvalue ref) throw std::bad_alloc while reserving memory for copying points\n");
