@@ -323,36 +323,34 @@ protected:
   // #endif
 
 public:
-  MkPoints(std::vector<MkPoint> &p); // use this constructor instead
-  MkPoints(int size, MkPoint *rps);  // TODO: do not use this constructor as much as you can...
-  MkPoints(int size);
   MkPoints()
   {
     FCapacity = FSize = 0;
     FPoint.reset();
   }
+  MkPoints(int size);
+  MkPoints(int size, boost::shared_ptr<MkPoint[]>rps);  
   MkPoints(const MkPoints &p);
   ~MkPoints();
-  void Initialize(std::vector<MkPoint> &p); // use this
-  void Initialize(int size, MkPoint *rps);  // do not use this
+  void Initialize(int size, boost::shared_ptr<MkPoint[]>rps);
   void Initialize(int size);
   int GetSize() { return FSize; };
   int GetSize() const { return FSize; };
   int GetNumber() { return FSize; };
   int GetCapacity() { return FCapacity; }
-  MkPoint *GetPoints() { return FPoint.get(); }
+  boost::shared_ptr<MkPoint[]>GetPoints() { return FPoint; }
   MkPoint &GetCenter()
   {
     FindCenter();
     return FCenter;
   };
-  bool Add(const MkPoint &point); // change of size of point
+  bool Add(MkPoint &point); // change of size of point
   bool Add(MkPoint &&point);      // change of size of point
 
-  bool Add(int index, const MkPoint &point); // TODO: should avoid its usage as much as possible
+  bool Add(int index, MkPoint &point); // TODO: should avoid its usage as much as possible
   bool Add(int index, MkPoint &&point);      // TODO: should avoid its usage as much as possible
 
-  bool Add(const MkPoints &p)
+  bool Add(MkPoints &p)
   {
     for (int i = 0; i < p.GetSize(); i++)
       Add(p[i]);
@@ -365,7 +363,7 @@ public:
       Add(p[i]);
     return true;
   }
-  bool Delete(const MkPoint &point); // TODO: should avoid its usage as much as possible
+  bool Delete(MkPoint &point); // TODO: should avoid its usage as much as possible
   bool Delete(MkPoint &&point);      // TODO: should avoid its usage as much as possible
   bool Delete(int index);            // use this instead
   bool Delete();                     // Delete the last point, 23.01.28
@@ -419,7 +417,7 @@ public:
   }
 
   MkPoint &operator[](int);
-  MkPoint &operator[](int) const;
+  // MkPoint &operator[](int) const;
   MkPoints &operator*=(MkMatrix4<double> &rm);
   friend MkPoints &operator*(const MkPoints &rps, MkMatrix4<double> &rm)
   {

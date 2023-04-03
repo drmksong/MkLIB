@@ -23,8 +23,8 @@ bool point_test()
     }
 
     puts(" pnts test \n");
-    std::vector<MkPoint> p(20);
-    MkPoints pnts2(p);
+    boost::shared_ptr<MkPoint[]> p = boost::make_shared<MkPoint[]>(20);
+    MkPoints pnts2(20,p);
     printf("before %d %d\n", pnts2.GetSize(), pnts2.GetCapacity());
     pnts2.Add(MkPoint(1, 1, 1));
     printf("after %d \n", pnts2.GetSize());
@@ -151,8 +151,8 @@ void arr_test_move_op()
         }
     }
 
-    printf("before:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
-    printf("before:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+    printf("before:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), (void *) &a.F);
+    printf("before:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), (void *) &b.F);
     a = std::move(b);
 
     if (a == b)
@@ -165,8 +165,8 @@ void arr_test_move_op()
     }
     
     // a = (b);
-    printf("after:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), a.F);
-    printf("after:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), b.F);
+    printf("after:: a %ld, %ld, 0x%p\n", a.getSzX(), a.getSzY(), (void *) &a.F);
+    printf("after:: b %ld, %ld, 0x%p\n", b.getSzX(), b.getSzY(), (void *) &b.F);
 
     for (int i = 0; i < 5; i++)
     {
@@ -206,28 +206,35 @@ void arr_test_move_op()
 
 void shared_test()
 {
+
     boost::shared_ptr<MkPoint[]> pnts;
     pnts = boost::make_shared<MkPoint[]>(100);
-    for (int i;i<100;i++) {
+
+    for (int i=0;i<100;i++) {
         pnts[i] = MkPoint(i,i,i);
     }
 
-    for (int i;i<100;i++) {
-        printf("%f, %f, %f \n",pnts[i].X,pnts[i].Y,pnts[i].Z);
+    MkPoints pts(100,pnts);
+        
+    for (int i=0; i<100; i++) {
+        printf("i:%d, %f, %f, %f \n",i, pts[i].X, pts[i].Y, pts[i].Z);
     }
 
-    pnts.reset();
-
+    // pnts.reset();
 }
 
 int main()
 {
+    for (int i=0; i<10; i++) {
+        printf("0> i:%d\n",i);
+    }
+
+    shared_test();
 
     // point_test();
     // array_test();
 
-    arr_test_move_op();
-    shared_test();
-
+    // arr_test_move_op();
+    
     return 0;
 }

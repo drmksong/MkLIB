@@ -3,6 +3,8 @@
 #define MkPolygonH
 
 #include <cassert>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkArray.hpp"
 #include "MkCircle.hpp"
 #include "MkLine.hpp"
@@ -88,12 +90,12 @@ public:
   }
 
 public:
-  MkPolygon(int size, MkPoint *);
+  MkPolygon(int size, boost::shared_ptr< MkPoint[]>);
   MkPolygon(int size); // empty polygon
   MkPolygon();         // even memory is not allocated
   ~MkPolygon();
   void Initialize(int size);
-  void Initialize(int size, MkPoint *);
+  void Initialize(int size, boost::shared_ptr< MkPoint[]>);
   bool Clear()
   {
     isLengthChanged = true;

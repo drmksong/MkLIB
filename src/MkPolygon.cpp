@@ -32,7 +32,7 @@ MkPolygon::MkPolygon(int size) : MkPoints(size)
   CrossOption = coAbsMax;
 }
 
-MkPolygon::MkPolygon(int size, MkPoint *rps) : MkPoints(size, rps)
+MkPolygon::MkPolygon(int size, boost::shared_ptr< MkPoint[]>rps) : MkPoints(size, rps)
 {
   // effectively identical to the constructor that does not give rp at all 23.01.26
   if (rps == NULL)
@@ -78,7 +78,7 @@ void MkPolygon::Initialize(int size)
   CrossOption = coAbsMax;
 }
 
-void MkPolygon::Initialize(int size, MkPoint *rps)
+void MkPolygon::Initialize(int size, boost::shared_ptr< MkPoint[]>rps)
 {
   // effectively identical to the constructor that does not give rp at all 23.01.26
   if (rps == NULL)
@@ -1060,7 +1060,8 @@ bool MkPolygon::Merge(MkPolygon &poly)
 
   size = FSize + poly.GetSize() - (isSame1 ? 1 : 0) - (isSame2 ? 1 : 0);
 
-  MkPoint *pnt = new MkPoint[size];
+  boost::shared_ptr<MkPoint[]> pnt = boost::make_shared<MkPoint[]>(size);
+  
   if (!pnt)
     return false;
   for (i = 0; i < FSize; i++)

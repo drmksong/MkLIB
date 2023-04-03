@@ -306,37 +306,22 @@ std::ostream &operator<<(std::ostream &outputStream, MkPoint &&pnt)
 }
 
 //---------------------------------------------------------------------------
-
-MkPoints::MkPoints(std::vector<MkPoint> &rps)
-{
-   FSize = rps.size();
-   FCapacity = FSize + Mk::Delta;
-
-   try
-   {
-      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
-   }
-
-   catch (std::bad_alloc &a)
-   {
-      MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
-      throw Alloc(a.what());
-   }
-
-   for (int i = 0; i < FSize; i++)
-      FPoint[i] = rps[i];
-   for (int i = FSize; i < FCapacity; i++)
-      FPoint[i] = NullPoint;
-}
-
-// TODO: do not use this constructor as much as you can..., eventually be deleted
-MkPoints::MkPoints(int size, MkPoint *rps)
+MkPoints::MkPoints(int size, boost::shared_ptr<MkPoint[]> rps)
 {
    if (size < 0)
    {
-      MkDebug("::MkPoints - MkPoints(int size=%ld)\n", sizeof(rps));
+      MkDebug("::MkPoints - MkPoints(int size=%ld, boost::shared_ptr<MkPoint[]> rps)\n", sizeof(rps));
       throw(std::length_error("strange :: size is less than zero"));
    }
+
+   if (size == 0)
+   {
+      MkDebug("::MkPoints - MkPoints(int size=%ld, boost::shared_ptr<MkPoint[]> rps)\n", sizeof(rps));
+      FPoint.reset();
+      return;
+   }
+
+   FSize = FCapacity = size;
 
    try
    {
@@ -348,10 +333,16 @@ MkPoints::MkPoints(int size, MkPoint *rps)
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
       throw Alloc(a.what());
    }
+   catch (std::length_error &a)
+   {
+      MkDebug("MkPoints::MkPoints length_error thrown!!!\n");
+      throw Size(a.what(), size);
+   }
 
    for (int i = 0; i < FSize; i++)
       FPoint[i] = rps[i];
-   for (int i = size; i < FCapacity; i++)
+
+   for (int i = FSize; i < FCapacity; i++)
       FPoint[i] = NullPoint;
 }
 
@@ -380,6 +371,11 @@ MkPoints::MkPoints(int size)
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
       throw Alloc(a.what());
    }
+   catch (std::length_error &a)
+   {
+      MkDebug("MkPoints::MkPoints length_error thrown!!!\n");
+      throw Size(a.what(), size);
+   }
 }
 
 MkPoints::MkPoints(const MkPoints &rps)
@@ -397,6 +393,11 @@ MkPoints::MkPoints(const MkPoints &rps)
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
       throw Alloc(a.what());
    }
+   catch (std::length_error &a)
+   {
+      MkDebug("MkPoints::MkPoints length_error thrown!!!\n");
+      throw Size(a.what(), FSize);
+   }
 
    for (int i = 0; i < FSize; i++)
       FPoint[i] = rps.FPoint[i];
@@ -410,29 +411,7 @@ MkPoints::~MkPoints()
    FPoint.reset();
 }
 
-void MkPoints::Initialize(std::vector<MkPoint> &rps)
-{
-   FSize = rps.size();
-   FCapacity = FSize + Mk::Delta;
-
-   try
-   {
-      FPoint = boost::make_shared<MkPoint[]>(FCapacity);
-   }
-
-   catch (std::bad_alloc &a)
-   {
-      MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
-      throw Alloc(a.what());
-   }
-
-   for (int i = 0; i < FSize; i++)
-      FPoint[i] = rps[i];
-   for (int i = FSize; i < FCapacity; i++)
-      FPoint[i] = NullPoint;
-}
-
-void MkPoints::Initialize(int size, MkPoint *rps)
+void MkPoints::Initialize(int size, boost::shared_ptr<MkPoint[]> rps)
 {
    if (size < 0)
    {
@@ -440,6 +419,15 @@ void MkPoints::Initialize(int size, MkPoint *rps)
       throw(std::length_error("strange :: size is less than zero"));
    }
 
+   if (size == 0)
+   {
+      MkDebug("::MkPoints - MkPoints(int size=%ld)\n", sizeof(rps));
+      FPoint.reset();
+      return;
+   }
+
+   FCapacity = FSize = size;
+
    try
    {
       FPoint = boost::make_shared<MkPoint[]>(FCapacity);
@@ -449,6 +437,16 @@ void MkPoints::Initialize(int size, MkPoint *rps)
    {
       MkDebug("MkPoints::MkPoints bad_alloc thrown!!!\n");
       throw Alloc(a.what());
+   }
+   catch(std::length_error &a)
+   {
+      MkDebug("MkPoints::MkPoints length_error thrown!!!\n");
+      throw Size(a.what(), size);
+   }
+   catch(...)
+   {
+      MkDebug("MkPoints::MkPoints unknown exception thrown!!!\n");
+      throw Alloc("unknown exception");
    }
 
    for (int i = 0; i < FSize; i++)
@@ -481,6 +479,16 @@ void MkPoints::Initialize(int size)
    {
       MkDebug("MkPoints::Initialize bad_alloc thrown!!!\n");
       throw Alloc(a.what());
+   }
+   catch (std::length_error &a)
+   {
+      MkDebug("MkPoints::Initialize length_error thrown!!!\n");
+      throw Size(a.what(), size);
+   }
+   catch(...)
+   {
+      MkDebug("MkPoints::Initialize unknown exception thrown!!!\n");
+      throw Alloc("unknown exception");
    }
 }
 
@@ -537,6 +545,16 @@ int MkPoints::Grow(int delta)
       MkDebug("MkPoint::Grow std::bad_alloc thrown");
       throw Alloc(a.what());
    }
+   catch (std::length_error &a)
+   {
+      MkDebug("MkPoint::Grow length_error thrown");
+      throw Size(a.what(), FSize);
+   } 
+   catch(...)
+   {
+      MkDebug("MkPoint::Grow unknown exception thrown");
+      throw Alloc("unknown exception");
+   }
 
    for (i = 0; i < FSize; i++)
       rp[i] = FPoint[i];
@@ -575,7 +593,7 @@ int MkPoints::Shrink(int delta)
    return FCapacity;
 }
 
-bool MkPoints::Add(const MkPoint &point)
+bool MkPoints::Add(MkPoint &point)
 {
    printf("MkPoint:: size %d and capacity %d \n", FSize, FCapacity);
    if (FSize + 2 < FCapacity)
@@ -618,7 +636,7 @@ bool MkPoints::Add(MkPoint &&point)
 }
 
 // TODO: should avoid its usage as much as possible
-bool MkPoints::Add(int index, const MkPoint &point)
+bool MkPoints::Add(int index, MkPoint &point)
 {
    if (FSize + 2 < FCapacity)
    {
@@ -664,7 +682,7 @@ bool MkPoints::Add(int index, MkPoint &&point)
 }
 
 // TODO: should avoid its usage as much as possible
-bool MkPoints::Delete(const MkPoint& point)
+bool MkPoints::Delete(MkPoint& point)
 {
    int i;
    for (i = 0; i < FSize; i++)
@@ -752,22 +770,23 @@ MkPoint &MkPoints::operator[](int i)
 
    if (i >= 0 && i < FSize)
       return FPoint[i];
-   else
+   else if (i>=FSize && i<FCapacity)
       return NullPoint;
+   else throw std::length_error("MkPoints::[] index out of bounds");
 }
 
-MkPoint &MkPoints::operator[](int i) const
-{
-   if (i >= FSize)
-   {
-      throw std::length_error("MkPoints::[] index out of bounds");
-   }
+// MkPoint &MkPoints::operator[](int i) const
+// {
+//    if (i >= FSize)
+//    {
+//       throw std::length_error("MkPoints::[] index out of bounds");
+//    }
 
-   if (i >= 0 && i < FSize)
-      return FPoint[i];
-   else
-      return NullPoint;
-}
+//    if (i >= 0 && i < FSize)
+//       return FPoint[i];
+//    else
+//       return NullPoint;
+// }
 
 // MkPoint &MkPoints::operator[](int i)
 // {

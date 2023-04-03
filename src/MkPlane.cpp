@@ -13,9 +13,9 @@ MkPointsPlane::MkPointsPlane() : MkPoints() {}
 
 MkPointsPlane::MkPointsPlane(int size) : MkPoints(size) {}
 
-MkPointsPlane::MkPointsPlane(int size, MkPoint *rps) : MkPoints(size, rps) {}
+MkPointsPlane::MkPointsPlane(int size, boost::shared_ptr<MkPoint[]> rps) : MkPoints(size, rps) {}
 
-MkPointsPlane::MkPointsPlane(int size, MkPoint *rps, MkOrient fo) : MkPoints(size, rps)
+MkPointsPlane::MkPointsPlane(int size, boost::shared_ptr<MkPoint[]> rps, MkOrient fo) : MkPoints(size, rps)
 {
    MkPoint rp(0, 0, 1);
    MkMatrix4_d rm;
@@ -180,52 +180,115 @@ void MkPointsPlane::Draw(MkPaint *)
 #endif
 
 //---------------------------------------------------------------------------
-MkPointsPlanes::MkPointsPlanes(int size, MkPointsPlane *jp)
+// MkPointsPlanes::MkPointsPlanes(int size, MkPointsPlane *jp)
+// {
+//    if (size < 0)
+//    {
+//       MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
+//       return;
+//    }
+
+//    FSize = size;
+//    if (FSize == 0)
+//    {
+//       FPoints = NULL;
+//       return;
+//    }
+
+//    FPoints = new MkPointsPlane[FSize];
+//    for (int i = 0; i < FSize; i++)
+//       FPoints[i] = jp[i];
+// }
+
+MkPointsPlanes::MkPointsPlanes(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
+      FPoints.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
+   try {
+      FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size) - bad_alloc caught: %s",e.what());
+      FPoints.reset();
+      return;
+   }
+   catch (...) {
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
+      MkDebug("Unknown error");
+      FPoints.reset();
+      return;
+   }
+   
+}
+
+MkPointsPlanes::MkPointsPlanes(int size, boost::shared_ptr<MkPointsPlane[]> jp)
+{
+   if (size <= 0)
    {
-      FPoints = NULL;
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
+      FPoints.reset();
       return;
    }
 
-   FPoints = new MkPointsPlane[FSize];
+   FSize = size;
+   try {
+      FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(int size,boost::shared<MkPointPlane[]>) - bad_alloc caught: %s",e.what());
+      FPoints.reset();
+      return;
+   }
+   catch (...) {
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
+      MkDebug("Unknown error");
+      FPoints.reset();
+      return;
+   }
+
    for (int i = 0; i < FSize; i++)
       FPoints[i] = jp[i];
 }
 
-MkPointsPlanes::MkPointsPlanes(int size)
+MkPointsPlanes::MkPointsPlanes(const MkPointsPlanes &pp)
 {
-   if (size < 0)
-   {
-      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
-      return;
-   }
-
-   FSize = size;
+   FSize = pp.FSize;
    if (FSize == 0)
    {
-      FPoints = NULL;
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(MkPointPlanes &)");
+      FPoints.reset();
       return;
    }
 
-   FPoints = new MkPointsPlane[FSize];
+   try {
+      FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(MkPointPlanes &) - bad_alloc caught: %s",e.what());
+      FPoints.reset();
+      return;
+   }
+   catch (...) {
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(const MkPointsPlanes &pp)");
+      MkDebug("Unknown error");
+      FPoints.reset();
+      return;
+   }
+
+   for (int i = 0; i < FSize; i++)
+      FPoints[i] = pp.FPoints[i];
 }
 
 MkPointsPlanes::~MkPointsPlanes()
 {
    FSize = 0;
-   if (FPoints)
-   {
-      delete[] (MkPointsPlane *)FPoints;
-      FPoints = NULL;
-   }
+   FPoints.reset();
 }
 
 void MkPointsPlanes::Initialize(int size)
@@ -236,29 +299,38 @@ void MkPointsPlanes::Initialize(int size)
       ;
       return;
    }
-   if (FSize == size)
-      return;
 
    FSize = size;
    if (FSize == 0)
    {
       if (FPoints != NULL)
-         delete[] (MkPointsPlane *)FPoints;
-      FPoints = NULL;
+         FPoints.reset();
       return;
    }
 
    if (FPoints != NULL)
-      delete[] (MkPointsPlane *)FPoints;
-   FPoints = new MkPointsPlane[FSize];
+      FPoints.reset();
+   try {
+      FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPointsPlanes - Initialize(int size) - bad_alloc caught: %s",e.what());
+      FPoints.reset();
+      return;
+   }
+   catch (...) {
+      MkDebug("::MkPointsPlanes - Initialize(int size)");
+      MkDebug("Unknown error");
+      FPoints.reset();
+      return;
+   }
 }
 
-void MkPointsPlanes::Initialize(int size, MkPointsPlane *jp)
+void MkPointsPlanes::Initialize(int size, boost::shared_ptr<MkPointsPlane[]> jp)
 {
    if (size < 0)
    {
-      MkDebug("::MkPointsPlanes - Initialize(int size)");
-      ;
+      MkDebug("::MkPointsPlanes - Initialize(int size, MkPointsPlane *jp)");
       return;
    }
 
@@ -266,14 +338,27 @@ void MkPointsPlanes::Initialize(int size, MkPointsPlane *jp)
    if (FSize == 0)
    {
       if (FPoints != NULL)
-         delete[] (MkPointsPlane *)FPoints;
-      FPoints = NULL;
+         FPoints.reset();
       return;
    }
 
    if (FPoints != NULL)
-      delete[] (MkPointsPlane *)FPoints;
-   FPoints = new MkPointsPlane[FSize];
+      FPoints.reset();
+   try {
+      FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPointsPlanes - Initialize(int size, MkPointsPlane *jp) - bad_alloc caught: %s", e.what());
+      FPoints.reset();
+      return;
+   }
+   catch (...) {
+      MkDebug("::MkPointsPlanes - Initialize(int size, MkPointsPlane *jp)");
+      MkDebug("Unknown error");
+      FPoints.reset();
+      return;
+   }
+
    for (int i = 0; i < FSize; i++)
       FPoints[i] = jp[i];
 }
@@ -281,11 +366,7 @@ void MkPointsPlanes::Initialize(int size, MkPointsPlane *jp)
 bool MkPointsPlanes::Clear()
 {
    FSize = 0;
-   if (FPoints)
-   {
-      delete[] (MkPointsPlane *)FPoints;
-      FPoints = NULL;
-   }
+   FPoints.reset();
    return true;
 }
 
@@ -310,7 +391,7 @@ MkPointsPlanes &MkPointsPlanes::operator=(MkPointsPlanes &pps)
       this->FPoints = NULL;
       return *this;
    }
-   this->FPoints = new MkPointsPlane[FSize];
+   this->FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
 
    for (i = 0; i < FSize; i++)
       this->FPoints[i] = pps.FPoints[i];
@@ -1646,52 +1727,63 @@ MkPlane &MkPlane::operator=(MkPlane &&rp)
    return *this;
 }
 //---------------------------------------------------------------------------
-MkPlanes::MkPlanes(int size, MkPlane *jp)
+MkPlanes::MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-      MkDebug("::MkPlanes - MkPlanes(int size)");
+      MkDebug("::MkPlanes - MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FPlane = NULL;
+   try {
+      FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPlanes - MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkPlanes - MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
       return;
    }
 
-   FPlane = new MkPlane[FSize];
    for (int i = 0; i < FSize; i++)
       FPlane[i] = jp[i];
 }
 
 MkPlanes::MkPlanes(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkPlanes - MkPlanes(int size)");
+      FPlane.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FPlane = NULL;
+   try {
+      FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPlanes - MkPlanes(int size)");
+      FPlane.reset();
       return;
    }
-
-   FPlane = new MkPlane[FSize];
+   catch(...) {
+      MkDebug("::MkPlanes - MkPlanes(int size)");
+      FPlane.reset();
+      return;
+   }
 }
 
 MkPlanes::~MkPlanes()
 {
    FSize = 0;
-   if (FPlane)
-   {
-      delete[] (MkPlane *)FPlane;
-      FPlane = NULL;
-   }
+   FPlane.reset();
 }
 
 void MkPlanes::Initialize(int size)
@@ -1702,44 +1794,54 @@ void MkPlanes::Initialize(int size)
       ;
       return;
    }
-   if (FSize == size)
-      return;
 
    FSize = size;
    if (FSize == 0)
    {
-      if (FPlane != NULL)
-         delete[] (MkPlane *)FPlane;
-      FPlane = NULL;
+      FPlane.reset();
       return;
    }
 
-   if (FPlane != NULL)
-      delete[] (MkPlane *)FPlane;
-   FPlane = new MkPlane[FSize];
+   try {
+      FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPlanes - Initialize(int size)");
+      FPlane.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkPlanes - Initialize(int size)");
+      FPlane.reset();
+      return;
+   }
 }
 
-void MkPlanes::Initialize(int size, MkPlane *jp)
+void MkPlanes::Initialize(int size, boost::shared_ptr<MkPlane[]>jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-      MkDebug("::MkPlanes - Initialize(int size)");
-      ;
+      MkDebug("::MkPlanes - Initialize(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FPlane != NULL)
-         delete[] (MkPlane *)FPlane;
-      FPlane = NULL;
+
+   try {
+      FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkPlanes - Initialize(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkPlanes - Initialize(int size, boost::shared_ptr<MkPlane[]>jp)");
+      FPlane.reset();
       return;
    }
 
-   if (FPlane != NULL)
-      delete[] (MkPlane *)FPlane;
-   FPlane = new MkPlane[FSize];
    for (int i = 0; i < FSize; i++)
       FPlane[i] = jp[i];
 }
@@ -1747,11 +1849,7 @@ void MkPlanes::Initialize(int size, MkPlane *jp)
 bool MkPlanes::Clear()
 {
    FSize = 0;
-   if (FPlane)
-   {
-      delete[] (MkPlane *)FPlane;
-      FPlane = NULL;
-   }
+   FPlane.reset();
    return true;
 }
 
@@ -1776,7 +1874,7 @@ MkPlanes &MkPlanes::operator=(MkPlanes &jps)
       this->FPlane = NULL;
       return *this;
    }
-   this->FPlane = new MkPlane[FSize];
+   this->FPlane = boost::make_shared<MkPlane[]>(FSize);
 
    for (i = 0; i < FSize; i++)
       this->FPlane[i] = jps.FPlane[i];
@@ -1891,100 +1989,118 @@ bool MkJointPlane::operator!=(MkJointPlane &&j)
 }
 
 //---------------------------------------------------------------------------
-MkJointPlanes::MkJointPlanes(int size, MkJointPlane *jp)
+MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]>jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-      MkDebug("::MkJointPlanes - MkJointPlanes(int size)");
+      MkDebug("::MkJointPlanes - MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FJoint = NULL;
+
+   try {
+      FJoint = boost::make_shared<MkJointPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
       return;
    }
 
-   FJoint = new MkJointPlane[FSize];
    for (int i = 0; i < FSize; i++)
       FJoint[i] = jp[i];
 }
 
 MkJointPlanes::MkJointPlanes(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkJointPlanes - MkJointPlanes(int size)");
+      FJoint.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FJoint = NULL;
+
+   try {
+      FJoint = boost::make_shared<MkJointPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkJointPlanes - Initialize(int size)");
+      FJoint.reset();
       return;
    }
-
-   FJoint = new MkJointPlane[FSize];
+   catch(...) {
+      MkDebug("::MkJointPlanes - Initialize(int size)");
+      FJoint.reset();
+      return;
+   }
 }
 
 MkJointPlanes::~MkJointPlanes()
 {
    FSize = 0;
-   if (FJoint)
-   {
-      delete[] (MkJointPlane *)FJoint;
-      FJoint = NULL;
-   }
+   FJoint.reset();
 }
 
 void MkJointPlanes::Initialize(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkJointPlanes - Initialize(int size)");
-      ;
+      FJoint.reset();
       return;
    }
-   if (FSize == size)
-      return;
 
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FJoint != NULL)
-         delete[] (MkJointPlane *)FJoint;
-      FJoint = NULL;
+
+   try {
+      FJoint = boost::make_shared<MkJointPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkJointPlanes - Initialize(int size)");
+      FJoint.reset();
       return;
    }
-
-   if (FJoint != NULL)
-      delete[] (MkJointPlane *)FJoint;
-   FJoint = new MkJointPlane[FSize];
+   catch(...) {
+      MkDebug("::MkJointPlanes - Initialize(int size)");
+      FJoint.reset();
+      return;
+   }
 }
 
-void MkJointPlanes::Initialize(int size, MkJointPlane *jp)
+void MkJointPlanes::Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-      MkDebug("::MkJointPlanes - Initialize(int size)");
-      ;
+      MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FJoint != NULL)
-         delete[] (MkJointPlane *)FJoint;
-      FJoint = NULL;
+
+   try {
+      FJoint = boost::make_shared<MkJointPlane[]>(FSize);
+   }
+   catch (std::bad_alloc &e) {
+      MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
+      return;
+   }
+   catch(...) {
+      MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
+      FJoint.reset();
       return;
    }
 
-   if (FJoint != NULL)
-      delete[] (MkJointPlane *)FJoint;
-   FJoint = new MkJointPlane[FSize];
    for (int i = 0; i < FSize; i++)
       FJoint[i] = jp[i];
 }
@@ -1992,11 +2108,7 @@ void MkJointPlanes::Initialize(int size, MkJointPlane *jp)
 bool MkJointPlanes::Clear()
 {
    FSize = 0;
-   if (FJoint)
-   {
-      delete[] (MkJointPlane *)FJoint;
-      FJoint = NULL;
-   }
+   FJoint.reset();
    return true;
 }
 
@@ -2021,7 +2133,7 @@ MkJointPlanes &MkJointPlanes::operator=(MkJointPlanes &jps)
       this->FJoint = NULL;
       return *this;
    }
-   this->FJoint = new MkJointPlane[FSize];
+   this->FJoint = boost::make_shared<MkJointPlane[]>(FSize);
 
    for (i = 0; i < FSize; i++)
       this->FJoint[i] = jps.FJoint[i];
@@ -3263,100 +3375,107 @@ void MkPennyJoint::Draw(MkPaint *pb)
 #endif
 
 //---------------------------------------------------------------------------
-MkPennyJoints::MkPennyJoints(int size, MkPennyJoint *jp)
+MkPennyJoints::MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint[]> jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
+      FPenny.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FPenny = NULL;
+   try{
+      FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
+   }
+   catch(std::bad_alloc &e){
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s",e.what());
       return;
    }
-
-   FPenny = new MkPennyJoint[FSize];
+   catch(...){
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint> jp)");
+      return;
+   }
+   
    for (int i = 0; i < FSize; i++)
       FPenny[i] = jp[i];
 }
 
 MkPennyJoints::MkPennyJoints(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
+      FPenny.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      FPenny = NULL;
+   try{
+      FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
+   }
+   catch(std::bad_alloc &e){
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size) - %s",e.what());
       return;
    }
-
-   FPenny = new MkPennyJoint[FSize];
+   catch(...){
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
+      return;
+   }
 }
 
 MkPennyJoints::~MkPennyJoints()
 {
    FSize = 0;
-   if (FPenny)
-   {
-      delete[] (MkPennyJoint *)FPenny;
-      FPenny = NULL;
-   }
+   FPenny.reset();
 }
 
 void MkPennyJoints::Initialize(int size)
 {
-   if (size < 0)
+   if (size <= 0)
    {
       MkDebug("::MkPennyJoints - Initialize(int size)");
-      ;
+      FPenny.reset();
       return;
    }
-   if (FSize == size)
-      return;
 
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FPenny != NULL)
-         delete[] (MkPennyJoint *)FPenny;
-      FPenny = NULL;
+   
+   try{
+      FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
+   }
+   catch(std::bad_alloc &e){
+      MkDebug("::MkPennyJoints - Initialize(int size) - bad_alloc caught:%s",e.what());
       return;
    }
-
-   if (FPenny != NULL)
-      delete[] (MkPennyJoint *)FPenny;
-   FPenny = new MkPennyJoint[FSize];
+   catch(...){
+      MkDebug("::MkPennyJoints - Initialize(int size)");
+      return;
+   }
 }
 
-void MkPennyJoints::Initialize(int size, MkPennyJoint *jp)
+void MkPennyJoints::Initialize(int size, boost::shared_ptr<MkPennyJoint[]> jp)
 {
-   if (size < 0)
+   if (size <= 0)
    {
-      MkDebug("::MkPennyJoints - Initialize(int size)");
-      ;
+      MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp)");
+      FPenny.reset();
       return;
    }
 
    FSize = size;
-   if (FSize == 0)
-   {
-      if (FPenny != NULL)
-         delete[] (MkPennyJoint *)FPenny;
-      FPenny = NULL;
+   try{
+      FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
+   }
+   catch(std::bad_alloc &e){
+      MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s",e.what());
       return;
    }
-
-   if (FPenny != NULL)
-      delete[] (MkPennyJoint *)FPenny;
-   FPenny = new MkPennyJoint[FSize];
+   catch(...){
+      MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp)");
+      return;
+   }
+   
    for (int i = 0; i < FSize; i++)
       FPenny[i] = jp[i];
 }
@@ -3364,11 +3483,7 @@ void MkPennyJoints::Initialize(int size, MkPennyJoint *jp)
 bool MkPennyJoints::Clear()
 {
    FSize = 0;
-   if (FPenny)
-   {
-      delete[] (MkPennyJoint *)FPenny;
-      FPenny = NULL;
-   }
+   FPenny.reset();
    return true;
 }
 
@@ -3393,7 +3508,7 @@ MkPennyJoints &MkPennyJoints::operator=(MkPennyJoints &jps)
       FPenny = NULL;
       return *this;
    }
-   FPenny = new MkPennyJoint[FSize];
+   FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
 
    for (i = 0; i < FSize; i++)
       FPenny[i] = jps.FPenny[i];

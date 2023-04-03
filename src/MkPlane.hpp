@@ -31,8 +31,8 @@ protected:
 public:
   MkPointsPlane();
   MkPointsPlane(int size);
-  MkPointsPlane(int size, MkPoint *rps);
-  MkPointsPlane(int size, MkPoint *rps, MkOrient fo);
+  MkPointsPlane(int size, boost::shared_ptr<MkPoint[]> rps);
+  MkPointsPlane(int size, boost::shared_ptr<MkPoint[]> rps, MkOrient fo);
   void SetOrient(MkOrient fo);
 
   void SetHeightMode(THeightMode fhm) { FHeightMode = fhm; }
@@ -62,26 +62,28 @@ public:
 class MkPointsPlanes
 {
 protected:
-  MkPointsPlane *FPoints;
+  boost::shared_ptr<MkPointsPlane[]> FPoints;
+  // MkPointsPlane *FPoints;
   int FSize;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 
 public:
-  MkPointsPlanes(int size, MkPointsPlane *jp);
-  MkPointsPlanes(int FSize);
   MkPointsPlanes()
   {
     FSize = 0;
-    FPoints = NULL;
+    FPoints.reset();
   }
+  MkPointsPlanes(int FSize);
+  MkPointsPlanes(int size, boost::shared_ptr<MkPointsPlane[]>jp);
+  MkPointsPlanes(const MkPointsPlanes &jp);
   ~MkPointsPlanes();
   virtual void Initialize(int size);
-  virtual void Initialize(int size, MkPointsPlane *jp);
+  virtual void Initialize(int size, boost::shared_ptr<MkPointsPlane[]>jp);
   int GetSize() { return FSize; };
   int GetNumber() { return FSize; };
-  MkPointsPlane *GetPoints() { return FPoints; }
+  boost::shared_ptr<MkPointsPlane[]> GetPoints() { return FPoints; }
   bool Clear();
 
 #ifdef __BCPLUSPLUS__
@@ -104,6 +106,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 
 // plane primitive�� (-1,-1),(1,-1),(1,1),(-1,1)�� ������, ȸ��, �̵��� ������
@@ -254,25 +280,27 @@ public:
 class MkPlanes
 {
 protected:
-  MkPlane *FPlane;
+  boost::shared_ptr<MkPlane[]> FPlane;
+  // MkPlane *FPlane;
   int FSize;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 public:
-  MkPlanes(int size, MkPlane *jp);
-  MkPlanes(int FSize);
   MkPlanes()
   {
     FSize = 0;
     FPlane = NULL;
   }
+  MkPlanes(int FSize);
+  MkPlanes(int size, boost::shared_ptr<MkPlane[]> jp);
+  MkPlanes(MkPlanes &jp);
   ~MkPlanes();
   virtual void Initialize(int size);
-  virtual void Initialize(int size, MkPlane *jp);
+  virtual void Initialize(int size,boost::shared_ptr<MkPlane[]> jp);
   int GetSize() { return FSize; };
   int GetNumber() { return FSize; };
-  MkPlane *GetReal() { return FPlane; }
+  boost::shared_ptr<MkPlane[]> GetReal() { return FPlane; }
   bool Clear();
   void Translate(double x, double y, double z);
   void Translate(MkPoint rp);
@@ -295,6 +323,29 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 //---------------------------------------------------------------------------
 class MkJointPlane : public MkPlane
@@ -351,25 +402,28 @@ public:
 class MkJointPlanes
 {
 protected:
-  MkJointPlane *FJoint;
+  boost::shared_ptr<MkJointPlane[]> FJoint;
+  // MkJointPlane *FJoint;
   int FSize;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 public:
-  MkJointPlanes(int size, MkJointPlane *jp);
-  MkJointPlanes(int FSize);
+  
   MkJointPlanes()
   {
     FSize = 0;
     FJoint = NULL;
   }
+  MkJointPlanes(int FSize);
+  MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]> jp);
+  MkJointPlanes(MkJointPlanes &jp);
   ~MkJointPlanes();
   virtual void Initialize(int size);
-  virtual void Initialize(int size, MkJointPlane *jp);
+  virtual void Initialize(int size, boost::shared_ptr<MkJointPlane[]> jp);
   int GetSize() { return FSize; };
   int GetNumber() { return FSize; };
-  MkJointPlane *GetJoint() { return FJoint; }
+  boost::shared_ptr<MkJointPlane[]> GetJoint() { return FJoint; }
   bool Clear();
 #ifdef __BCPLUSPLUS__
   TColor GetColor()
@@ -392,6 +446,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 
 //---------------------------------------------------------------------------
@@ -486,13 +564,14 @@ public:
 class MkPennyJoints
 {
 protected:
-  MkPennyJoint *FPenny;
+  boost::shared_ptr<MkPennyJoint[]> FPenny;
+  // MkPennyJoint *FPenny;
   int FSize;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 public:
-  MkPennyJoints(int size, MkPennyJoint *jp);
+  MkPennyJoints(int size, boost::shared_ptr<MkPennyJoint[]> jp);
   MkPennyJoints(int FSize);
   MkPennyJoints()
   {
@@ -501,10 +580,10 @@ public:
   }
   ~MkPennyJoints();
   virtual void Initialize(int size);
-  virtual void Initialize(int size, MkPennyJoint *jp);
+  virtual void Initialize(int size, boost::shared_ptr<MkPennyJoint[]> jp);
   int GetSize() { return FSize; };
   int GetNumber() { return FSize; };
-  MkPennyJoint *GetJoint() { return FPenny; }
+  boost::shared_ptr<MkPennyJoint[]>GetJoint() { return FPenny; }
   bool Clear();
 #ifdef __BCPLUSPLUS__
   TColor GetColor()
@@ -525,6 +604,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+      std::string What;
+      Alloc(std::string what) : What(what) {}
+      std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+      std::string What;
+      int N;
+      Size(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+      std::string What;
+      int N;
+      Range(std::string what, int n) : What(what), N(n) {}
+      std::string what() { return What; }
+  };
 };
 //---------------------------------------------------------------------------
 extern MkJointPlane NullJoint;
