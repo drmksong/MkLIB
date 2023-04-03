@@ -64,6 +64,7 @@ MkPolygon::MkPolygon(int size, boost::shared_ptr< MkPoint[]>rps) : MkPoints(size
 
 MkPolygon::~MkPolygon()
 {
+  Clear();
 }
 
 void MkPolygon::Initialize(int size)
@@ -2409,24 +2410,38 @@ void GetSubParam(int i, MkPolygon &in, double &aj, double &bj, double &lj1, doub
   bj = c / b;
 }
 //---------------------------------------------------------------------------
-MkPolygons::MkPolygons(int size, MkPolygon *polys)
+MkPolygons::MkPolygons(int size, boost::shared_ptr<MkPolygon []>polys)
 {
 
   if (size < 0)
   {
     MkDebug("::MkPolygons - MkPolygons(int size)");
-    ;
-    return;
+    throw Size("Negative Length of Polygon",size);
   }
 
-  FSizeOfArray = FSize = size;
+  FCapacity = FSize = size;
   if (FSize == 0)
   {
-    FPolygon = NULL;
+    FPolygon.reset();
     return;
   }
 
-  FPolygon = new MkPolygon[FSize];
+  try {
+    FPolygon = boost::make_shared<MkPolygon []>(FCapacity);
+  }
+  catch( std::bad_alloc&e)
+  {
+    MkDebug("::MkPolygons - MkPolygons(int size, boost::shared_ptr<MkPolygon []>polys) - bad_alloc : %s", e.what());
+    FPolygon.reset();
+    return;
+  }
+  catch(...) 
+  {
+    MkDebug("::MkPolygons - MkPolygons(int size, boost::shared_ptr<MkPolygon []>polys) - unknown exception");
+    FPolygon.reset();
+    return;
+  }
+  
   for (int i = 0; i < FSize; i++)
     (*this)[i] = polys[i];
 }
@@ -2440,25 +2455,21 @@ MkPolygons::MkPolygons(int size)
     return;
   }
 
-  FSize = FSizeOfArray = size;
+  FSize = FCapacity = size;
 
-  if (FSizeOfArray == 0)
+  if (FCapacity == 0)
   {
-    FPolygon = NULL;
+    FPolygon.reset();
     return;
   }
 
-  FPolygon = new MkPolygon[FSizeOfArray];
+  FPolygon = boost::make_shared<MkPolygon []>(FCapacity);
 }
 
 MkPolygons::~MkPolygons()
 {
-  FSizeOfArray = FSize = 0;
-  if (FPolygon)
-  {
-    delete[] FPolygon;
-    FPolygon = NULL;
-  }
+  FCapacity = FSize = 0;
+  FPolygon.reset();
 }
 
 void MkPolygons::Initialize(int size)
@@ -2466,103 +2477,96 @@ void MkPolygons::Initialize(int size)
   if (size < 0)
   {
     MkDebug("::MkPolygons - Initialize(int size)");
-    ;
-    return;
+    throw Size("Negative Length of Polygon",size);
   }
-  if (FSizeOfArray == size)
+  if (FCapacity == size)
     return;
-
-  FSize = FSizeOfArray = size;
-
-  if (FSizeOfArray == 0)
+  FSize = FCapacity = size;
+  if (FCapacity == 0)
   {
-    if (FPolygon != NULL)
-      delete[] (MkPolygon *)FPolygon;
-    FPolygon = NULL;
+    FPolygon.reset();
     return;
   }
 
-  if (FPolygon != NULL)
-    delete[] (MkPolygon *)FPolygon;
-  FPolygon = new MkPolygon[FSizeOfArray];
+  FPolygon = boost::make_shared<MkPolygon []>(FCapacity);
 }
 
 void MkPolygons::Initialize(int size, MkPolygon *polys)
 {
-
-  if (size < 0 || polys == NULL)
+  if (size < 0)
   {
-    MkDebug("::MkPolygons - Initialize(int size)");
-    ;
-    return;
+    MkDebug("::MkPolygons - Initialize(int size, MkPolygon *polys)");
+    throw Size("Negative Length of Polygon",size);
   }
-  if (FSizeOfArray == size)
+  if (FCapacity == size)
     return;
-  FSize = FSizeOfArray = size;
-  if (FSizeOfArray == 0)
+  FSize = FCapacity = size;
+  if (FCapacity == 0)
   {
-    if (FPolygon != NULL)
-      delete[] (MkPolygon *)FPolygon;
-    FPolygon = NULL;
+    FPolygon.reset();
     return;
   }
 
-  if (FPolygon != NULL)
-    delete[] (MkPolygon *)FPolygon;
-  FPolygon = new MkPolygon[FSizeOfArray];
-  for (int i = 0; i < FSizeOfArray; i++)
-    FPolygon[i] = polys[i];
+  FPolygon = boost::make_shared<MkPolygon []>(FCapacity);
+  for (int i = 0; i < FSize; i++)
+    (*this)[i] = polys[i];
 }
 
 int MkPolygons::Grow(int delta)
 {
   int i;
-  MkPolygon *poly = NULL;
+  boost::shared_ptr<MkPolygon[]> poly;
 
-  if (!(poly = new MkPolygon[FSizeOfArray + delta]))
-    return FSizeOfArray;
+  try {
+    poly = boost::make_shared<MkPolygon []>(FCapacity + delta);
+  }
+  catch(std::bad_alloc&e) {
+    MkDebug("::MkPolygons - Grow(int delta) - bad_alloc : %s", e.what());
+    throw Alloc(e.what());
+  }
 
   for (i = 0; i < FSize; i++)
     poly[i] = FPolygon[i];
-  for (i = FSize; i < FSizeOfArray + delta; i++)
+  for (i = FSize; i < FCapacity + delta; i++)
     poly[i] = NullPolygon;
-  if (FPolygon)
-  {
-    delete[] (MkPolygon *)FPolygon;
-    FPolygon = NULL;
-  }
+  
   FPolygon = poly;
-  FSizeOfArray = FSizeOfArray + delta;
+  FCapacity = FCapacity + delta;
 
-  return FSizeOfArray;
+  return FCapacity;
 }
 
 int MkPolygons::Shrink(int delta)
 {
   int i;
-  MkPolygon *poly = NULL;
+  boost::shared_ptr<MkPolygon[]>poly;
 
-  if (!(poly = new MkPolygon[FSizeOfArray - delta]))
-    return FSizeOfArray;
+  try {
+    poly = boost::make_shared<MkPolygon []>(FCapacity - delta);
+  }
+  catch(std::bad_alloc&e) {
+    MkDebug("::MkPolygons - Shrink(int delta) - bad_alloc : %s", e.what());
+    throw Alloc(e.what());
+  }
+  catch(...) {
+    MkDebug("::MkPolygons - Shrink(int delta) - unknown exception");
+    throw Alloc("unknown exception");
+  }
 
   for (i = 0; i < FSize; i++)
     poly[i] = FPolygon[i];
-  for (i = FSize; i < FSizeOfArray - delta; i++)
+  for (i = FSize; i < FCapacity - delta; i++)
     poly[i] = NullPolygon;
-  if (FPolygon)
-  {
-    delete[] (MkPolygon *)FPolygon;
-    FPolygon = NULL;
-  }
-  FPolygon = poly;
-  FSizeOfArray = FSizeOfArray - delta;
 
-  return FSizeOfArray;
+  FPolygon = poly;
+  FCapacity = FCapacity - delta;
+
+  return FCapacity;
 }
 
 bool MkPolygons::Add(MkPolygon &poly)
 {
-  int tmp = FSizeOfArray;
+  int tmp = FCapacity;
   bool flag = false;
   for (int i = 0; i < FSize; i++)
     if (FPolygon[i] == poly)
@@ -2570,10 +2574,10 @@ bool MkPolygons::Add(MkPolygon &poly)
 
   if (flag)
     return false;
-  if (FSize >= FSizeOfArray)
+  if (FSize >= FCapacity)
   {
-    Grow(FSize - FSizeOfArray + 10);
-    if (tmp == FSizeOfArray)
+    Grow(FSize - FCapacity + 10);
+    if (tmp == FCapacity)
       return false;
   }
   FSize++;
@@ -2584,11 +2588,11 @@ bool MkPolygons::Add(MkPolygon &poly)
 
 bool MkPolygons::Add(int index, MkPolygon &poly)
 {
-  int tmp = FSizeOfArray;
+  int tmp = FCapacity;
 
-  if (FSize >= FSizeOfArray)
-    Grow(FSize - FSizeOfArray + 1);
-  if (tmp == FSizeOfArray)
+  if (FSize >= FCapacity)
+    Grow(FSize - FCapacity + 1);
+  if (tmp == FCapacity)
     return false;
 
   for (int i = FSize - 1; i >= index; i--)
@@ -2630,20 +2634,16 @@ bool MkPolygons::Delete(int index)
 
 bool MkPolygons::Clear()
 {
-  FSizeOfArray = FSize = 0;
-  if (FPolygon)
-  {
-    delete[] FPolygon;
-    FPolygon = NULL;
-  }
+  FCapacity = FSize = 0;
+  FPolygon.reset();
   return true;
 }
 
 MkPolygon &MkPolygons::operator[](int i)
 {
-  if (FSizeOfArray == 0)
+  if (FCapacity == 0)
     return NullPolygon;
-  if (i >= FSize && i < FSizeOfArray)
+  if (i >= FSize && i < FCapacity)
     FSize = i + 1;
 
   if (i >= 0 && i < FSize)
@@ -2658,17 +2658,17 @@ MkPolygons &MkPolygons::operator=(MkPolygons &polys)
 
   Clear();
   FSize = polys.FSize;
-  FSizeOfArray = polys.FSizeOfArray;
+  FCapacity = polys.FCapacity;
   if (FSize == 0)
   {
     FPolygon = NULL;
     return *this;
   }
-  this->FPolygon = new MkPolygon[FSizeOfArray];
+  this->FPolygon = boost::make_shared<MkPolygon []>(FCapacity);
 
   for (i = 0; i < FSize; i++)
     FPolygon[i] = polys.FPolygon[i];
-  for (i = FSize; i < FSizeOfArray; i++)
+  for (i = FSize; i < FCapacity; i++)
     FPolygon[i] = NullPolygon;
 
   return *this;

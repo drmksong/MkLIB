@@ -367,7 +367,7 @@ void MkRect::Draw(MkPaint *pb)
 MkRects::MkRects()
 {
   FSize = 0;
-  FRect = (MkRect *)NULL;
+  FRect.reset();
 }
 
 MkRects::MkRects(int size)
@@ -375,10 +375,17 @@ MkRects::MkRects(int size)
   if (size <= 0)
   {
     FSize = 0;
-    FRect = (MkRect *)NULL;
+    FRect.reset();
   }
   FSize = size;
-  FRect = new MkRect[FSize];
+  try {
+    FRect = std::make_unique<MkRect[]>(FSize);
+  }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+  
   if (!FRect)
   {
     FSize = 0;
@@ -386,13 +393,45 @@ MkRects::MkRects(int size)
   }
 }
 
+MkRects::MkRects(int size, boost::shared_ptr<MkRect[]> rect)
+{
+  if (size <= 0)
+  {
+    FSize = 0;
+    FRect.reset();
+    throw Alloc("MkRects::MkRects(int size, boost::shared_ptr<MkRect[]> rect)");
+  }
+  FSize = size;
+  try {
+    FRect = boost::make_shared<MkRect[]>(FSize);
+  }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+  
+  for (int i = 0; i < FSize; i++)
+    FRect[i] = rect[i];
+}
+
+MkRects::MkRects(MkRects &rects)
+{
+  FSize = rects.FSize;
+  try {
+    FRect = boost::make_shared<MkRect[]>(FSize);
+  }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+  
+  for (int i = 0; i < FSize; i++)
+    FRect[i] = rects.FRect[i];
+}
+
 MkRects::~MkRects()
 {
-  if (FRect)
-  {
-    delete[] (MkRect *)FRect;
-    FSize = 0;
-  }
+  FRect.reset();
 }
 
 bool MkRects::Initialize(int size)
@@ -400,52 +439,64 @@ bool MkRects::Initialize(int size)
   if (size <= 0)
   {
     FSize = 0;
-    FRect = (MkRect *)NULL;
+    FRect.reset();
     return false;
   }
-
-  if (!FRect)
-  {
-    delete[] (MkRect *)FRect;
-    FRect = (MkRect *)NULL;
-  }
-
+  
   FSize = size;
-  FRect = new MkRect[FSize];
-  if (!FRect)
-  {
-    FSize = 0;
-    return false;
+  try {
+    FRect = boost::make_shared<MkRect[]>(FSize);
   }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+
   return true;
 }
 
-bool MkRects::Initialize(int size, MkRect *cube)
+bool MkRects::Initialize(int size, boost::shared_ptr<MkRect[]> rect)
 {
   if (size <= 0)
   {
     FSize = 0;
-    FRect = (MkRect *)NULL;
-    return false;
+    FRect.reset();
+    throw Alloc("MkRects::Initialize(int size, boost::shared_ptr<MkRect[]> rect)");
   }
-
-  if (!FRect)
-  {
-    delete[] (MkRect *)FRect;
-    FRect = (MkRect *)NULL;
-  }
-
   FSize = size;
-  FRect = new MkRect[FSize];
-  if (!FRect)
-  {
-    FSize = 0;
-    return false;
+  try {
+    FRect = boost::make_shared<MkRect[]>(FSize);
   }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+  
   for (int i = 0; i < FSize; i++)
-    FRect[i] = cube[i];
-
+    FRect[i] = rect[i];
   return true;
+}
+
+bool MkRects::Initialize(MkRects &rects)
+{
+  FSize = rects.FSize;
+  try {
+    FRect = boost::make_shared<MkRect[]>(FSize);
+  }
+  catch(std::bad_alloc &e) {
+    FRect.reset();
+    throw Alloc(e.what());
+  }
+  
+  for (int i = 0; i < FSize; i++)
+    FRect[i] = rects.FRect[i];
+  return true;
+}
+
+void MkRects::Clear()
+{
+  FSize = 0;
+  FRect.reset();
 }
 
 MkRect &MkRects::operator()(int i)
