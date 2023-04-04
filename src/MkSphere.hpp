@@ -2,6 +2,8 @@
 #ifndef MkSphereH
 #define MkSphereH
 #include <math.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
@@ -91,25 +93,30 @@ public:
 class MkSpheres
 {
 protected:
-  MkSphere *FSphere;
+  boost::shared_ptr<MkSphere[]> FSphere;
   int FSize;
 
 public:
-  MkSpheres(int Size);
+  
   MkSpheres()
   {
     FSize = 0;
-    FSphere = NULL;
+    FSphere.reset();
   }
+
+  MkSpheres(int Size);
+  MkSpheres(int size, boost::shared_ptr<MkSphere[]> spheres);
+  MkSpheres(MkSpheres &spheres);
+
   ~MkSpheres()
   {
-    if (FSphere)
-    {
-      delete (MkSphere *)FSphere;
-      FSphere = NULL;
-    }
+    FSize = 0;
+    FSphere.reset();
   }
-  void Initialize(int Size);
+  bool Initialize(int Size);
+  bool Initialize(int size, boost::shared_ptr<MkSphere[]> spheres);
+  bool Initialize(MkSpheres &spheres);
+  
   void Clear();
   int GetSize() { return FSize; }
   virtual MkSphere &operator[](int);
@@ -122,6 +129,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+class Alloc
+  {
+  public:
+    std::string What;
+    Alloc(std::string what) : What(what) {}
+    std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+    std::string What;
+    int N;
+    Size(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+    std::string What;
+    int N;
+    Range(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
 };
 
 #endif

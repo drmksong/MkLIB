@@ -599,36 +599,170 @@ MkSpheres::MkSpheres(int size)
     //  try {
     if (size <= 0)
     {
-        MkDebug("::MkSpheres - MkSpheres(int size)");
-        return;
+        FSize = 0;
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size) - size <= 0"));
     }
 
     FSize = size;
-    FSphere = new MkSphere[FSize];
-    //  }
-    //  catch () {
-    //    MkDebug(AnsiString(E.ClassName())+ E.Message);
-    //  }
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size) - unknown exception"));
+    }
+    
 }
 
-void MkSpheres::Initialize(int size)
+MkSpheres::MkSpheres(int size, boost::shared_ptr<MkSphere[]> sphere)
 {
-    Clear();
-    FSize = size;
-    if (FSize == 0)
+    //  try {
+    if (size <= 0)
     {
-        FSphere = NULL;
-        return;
+        FSize = 0;
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size, boost::shared_ptr<MkSphere> &sphere) - size <= 0"));
     }
-    FSphere = new MkSphere[FSize];
+
+    FSize = size;
+
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size, boost::shared_ptr<MkSphere> &sphere) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(int size, boost::shared_ptr<MkSphere> &sphere) - unknown exception"));
+    }
+    
+    for (int i = 0; i < FSize; i++)
+        FSphere[i] = sphere[i];
+}
+
+MkSpheres::MkSpheres(MkSpheres &sphere)
+{
+    FSize = sphere.FSize;
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(MkSpheres &sphere) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(MkSpheres &sphere) - unknown exception"));
+    }
+    
+    for (int i = 0; i < FSize; i++)
+        FSphere[i] = sphere.FSphere[i];
+
+}
+
+bool MkSpheres::Initialize(int size)
+{
+    if (size <= 0)
+    {
+        FSize = 0;
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size) - size <= 0"));
+    }
+
+    FSize = size;
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size) - unknown exception"));
+    }
+    
+    return true;
+}
+
+bool MkSpheres::Initialize(int size,boost::shared_ptr<MkSphere[]> sphere)
+{
+    if (size <= 0)
+    {
+        FSize = 0;
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size, boost::shared_ptr<MkSphere> &sphere) - size <= 0"));
+    }
+
+    FSize = size;
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size, boost::shared_ptr<MkSphere> &sphere) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::Initialize(int size, boost::shared_ptr<MkSphere> &sphere) - unknown exception"));
+    }
+    
+    for (int i = 0; i < FSize; i++)
+        FSphere[i] = sphere[i];
+
+    return true;
+}
+
+bool MkSpheres::Initialize(MkSpheres &sphere)
+{
+    FSize = sphere.FSize;
+    try
+    {
+        FSphere = boost::make_shared<MkSphere[]>(FSize);
+    }
+    catch(std::bad_alloc &e)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(MkSpheres &sphere) - ") + e.what());
+    }
+    catch(...)
+    {
+        FSphere.reset();
+        throw Alloc(std::string("MkSpheres::MkSpheres(MkSpheres &sphere) - unknown exception"));
+    }
+    
+    for (int i = 0; i < FSize; i++)
+        FSphere[i] = sphere.FSphere[i];
+
+    return true;
 }
 
 void MkSpheres::Clear()
 {
     FSize = 0;
-    if (FSphere)
-        delete[] FSphere;
-    FSphere = NULL;
+    FSphere.reset();
 }
 
 MkSphere &MkSpheres::operator[](int i)
@@ -643,7 +777,7 @@ MkSpheres &MkSpheres::operator=(MkSpheres &spheres)
 {
     int i;
     FSize = spheres.FSize;
-    this->FSphere = new MkSphere[FSize];
+    this->FSphere = boost::make_shared<MkSphere[]>(FSize);
 
     for (i = 0; i < FSize; i++)
         this->FSphere[i] = spheres.FSphere[i];

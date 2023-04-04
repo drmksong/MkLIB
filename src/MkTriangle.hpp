@@ -3,6 +3,8 @@
 #define MkTriangleH
 
 #include <stdio.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
 #include "MkShape.hpp"
@@ -97,33 +99,37 @@ public:
 class MkTriangles
 {
 protected:
-  MkTriangle *FTriangle;
+  boost::shared_ptr<MkTriangle[]>FTriangle;
   int FSize;
   int FSizeOfArray;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 public:
-  MkTriangles(int Size);
-  MkTriangles()
+    MkTriangles()
   {
     FSize = 0;
     FSizeOfArray = 0;
-    FTriangle = NULL;
+    FTriangle.reset();
   }
+  MkTriangles(int size);
+  MkTriangles(int size, boost::shared_ptr<MkTriangle[]> tri);
+  MkTriangles(MkTriangles &Triangles);
+
   ~MkTriangles()
   {
-    if (FTriangle)
-    {
-      delete (MkTriangle *)FTriangle;
-      FTriangle = NULL;
-    }
+    FSize = FSizeOfArray = 0;
+    FTriangle.reset();
   }
-  void Initialize(int Size);
+  bool Initialize(int Size);
+  bool Initialize(int Size, boost::shared_ptr<MkTriangle[]> tri);
+  bool Initialize(MkTriangles &Triangles);
   void Clear();
 
-  bool Add(MkTriangle tri);    // change of size of tri
-  bool Delete(MkTriangle tri); // change of size of tri
+  bool Add(MkTriangle &tri);    // change of size of tri
+  bool Add(MkTriangle &&tri);    // change of size of tri
+  bool Delete(MkTriangle &tri); // change of size of tri
+  bool Delete(MkTriangle &&tri); // change of size of tri
   int Grow(int Delta);         // change of size of array
   int Shrink(int Delta);       // change of size of array
 
@@ -149,6 +155,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+class Alloc
+  {
+  public:
+    std::string What;
+    Alloc(std::string what) : What(what) {}
+    std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+    std::string What;
+    int N;
+    Size(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+    std::string What;
+    int N;
+    Range(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
 };
 //---------------------------------------------------------------------------
 extern MkTriangle NullTriangle;

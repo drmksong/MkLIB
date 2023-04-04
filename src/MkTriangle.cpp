@@ -489,55 +489,191 @@ MkTriangles::MkTriangles(int size)
 
     if (size <= 0)
     {
-        MkDebug("::MkTriangles - MkTriangles(int size)");
-        return;
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-size <= 0"));
     }
 
     FSizeOfArray = FSize = size;
-    FTriangle = new MkTriangle[FSize];
+
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-unknown exception"));
+    }
+    
 }
 
-void MkTriangles::Initialize(int size)
+MkTriangles::MkTriangles(int size, boost::shared_ptr<MkTriangle[]> tri)
 {
-    Clear();
-    FSizeOfArray = FSize = size;
-    if (FSize == 0)
+    if (size <= 0)
     {
-        FTriangle = NULL;
-        return;
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-size <= 0"));
     }
-    FTriangle = new MkTriangle[FSize];
-#ifdef __BCPLUSPLUS__
+
+    FSizeOfArray = FSize = size;
+
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-unknown exception"));
+    }
+
     for (int i = 0; i < FSize; i++)
-        (*this)[i].SetColor(GetColor());
-#endif
+        FTriangle[i] = tri[i];
+}
+
+MkTriangles::MkTriangles(MkTriangles &tri) {
+    FSizeOfArray = FSize = tri.FSize;
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::MkTriangles(int size)-unknown exception"));
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FTriangle[i] = tri.FTriangle[i];
+}
+
+bool MkTriangles::Initialize(int size)
+{
+    if (size <= 0)
+    {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-size <= 0"));
+    }
+
+    FSizeOfArray = FSize = size;
+
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-unknown exception"));
+    }
+    return true;
+}
+
+bool MkTriangles::Initialize(int size, boost::shared_ptr<MkTriangle[]> tri)
+{
+    if (size <= 0)
+    {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-size <= 0"));
+    }
+
+    FSizeOfArray = FSize = size;
+
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-unknown exception"));
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FTriangle[i] = tri[i];
+    
+    return true;
+}
+
+bool MkTriangles::Initialize(MkTriangles &tri) {
+    FSizeOfArray = FSize = tri.FSize;
+    try {
+        FTriangle = boost::make_shared<MkTriangle[]>(FSize);
+    }
+    catch(std::bad_alloc)   {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-bad_alloc"));
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+        throw Alloc(std::string("MkTriangles::Initialize(int size)-unknown exception"));
+    }
+
+    for (int i = 0; i < FSize; i++)
+        FTriangle[i] = tri.FTriangle[i];
+
+    return true;
 }
 
 void MkTriangles::Clear()
 {
     FSizeOfArray = FSize = 0;
-    if (FTriangle)
-        delete[] FTriangle;
-    FTriangle = NULL;
+    FTriangle.reset();
 }
 
 int MkTriangles::Grow(int delta)
 {
     int i;
-    MkTriangle *tri = NULL;
+    boost::shared_ptr<MkTriangle[]> tri;
 
-    if (!(tri = new MkTriangle[FSizeOfArray + delta]))
+    try {
+        tri = boost::make_shared<MkTriangle[]>(FSizeOfArray + delta);
+    }
+    catch(std::bad_alloc)   
+    {   
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+
         return FSizeOfArray;
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+
+        return FSizeOfArray;
+    }
 
     for (i = 0; i < FSize; i++)
         tri[i] = FTriangle[i];
     for (i = FSize; i < FSizeOfArray + delta; i++)
         tri[i] = NullTriangle;
-    if (FTriangle)
-    {
-        delete[] (MkTriangle *)FTriangle;
-        FTriangle = NULL;
-    }
+
     FTriangle = tri;
     FSizeOfArray = FSizeOfArray + delta;
     return FSizeOfArray;
@@ -546,26 +682,36 @@ int MkTriangles::Grow(int delta)
 int MkTriangles::Shrink(int delta)
 {
     int i;
-    MkTriangle *tri = NULL;
+    boost::shared_ptr<MkTriangle []>tri;
 
-    if (!(tri = new MkTriangle[FSizeOfArray - delta]))
+    try{
+        tri = boost::make_shared<MkTriangle[]>(FSizeOfArray - delta);
+    }
+    catch(std::bad_alloc)   
+    {   
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
+
         return FSizeOfArray;
+    }
+    catch(...)  {
+        FSizeOfArray = FSize = 0;
+        FTriangle.reset();
 
+        return FSizeOfArray;
+    }
+    
     for (i = 0; i < FSize; i++)
         tri[i] = FTriangle[i];
     for (i = FSize; i < FSizeOfArray - delta; i++)
         tri[i] = NullTriangle;
-    if (FTriangle)
-    {
-        delete[] (MkTriangle *)FTriangle;
-        FTriangle = NULL;
-    }
+
     FTriangle = tri;
     FSizeOfArray = FSizeOfArray - delta;
     return FSizeOfArray;
 }
 
-bool MkTriangles::Add(MkTriangle point)
+bool MkTriangles::Add(MkTriangle &point)
 {
     if (FSize == FSizeOfArray)
         Grow(FSize - FSizeOfArray + 10);
@@ -577,7 +723,39 @@ bool MkTriangles::Add(MkTriangle point)
     return true;
 }
 
-bool MkTriangles::Delete(MkTriangle point)
+bool MkTriangles::Add(MkTriangle &&point)
+{
+    if (FSize == FSizeOfArray)
+        Grow(FSize - FSizeOfArray + 10);
+    if (FSize == FSizeOfArray)
+        return false;
+
+    FSize++;
+    FTriangle[FSize - 1] = point;
+    return true;
+}
+
+bool MkTriangles::Delete(MkTriangle &point)
+{
+    int i;
+    for (i = 0; i < FSize; i++)
+    {
+        if (FTriangle[i] == point)
+            break;
+    }
+    if (i == FSize)
+        return false;
+    if (FTriangle[i] == point)
+    {
+        for (int j = i; j < FSize - 1; j++)
+            FTriangle[j] = FTriangle[j + 1];
+    }
+    FSize--;
+    FTriangle[FSize] = NullTriangle;
+    return true;
+}
+
+bool MkTriangles::Delete(MkTriangle &&point)
 {
     int i;
     for (i = 0; i < FSize; i++)
@@ -663,7 +841,7 @@ MkTriangles &MkTriangles::operator=(MkTriangles &Triangles)
     int i;
     FSize = Triangles.FSize;
     FSizeOfArray = Triangles.FSizeOfArray;
-    this->FTriangle = new MkTriangle[FSizeOfArray];
+    this->FTriangle = boost::make_shared<MkTriangle[]>(FSizeOfArray);
 
     for (i = 0; i < FSize; i++)
         this->FTriangle[i] = Triangles.FTriangle[i];
