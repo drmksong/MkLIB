@@ -1,6 +1,8 @@
 //---------------------------------------------------------------------------
 #ifndef MkRectH
 #define MkRectH
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include "MkShape.hpp"
 #include "MkLine.hpp"
 //---------------------------------------------------------------------------
@@ -101,15 +103,23 @@ class MkRects
 {
 private:
   int FSize;
-  MkRect *FRect;
+  // MkRect *FRect;
+  boost::shared_ptr<MkRect[]> FRect;
 
 public:
   MkRects();
   MkRects(int);
+  MkRects(int, boost::shared_ptr<MkRect[]>);
+  MkRects(MkRects &a);
   ~MkRects();
   bool Initialize(int size);
-  bool Initialize(int size, MkRect *fault);
-  void Clear();
+  bool Initialize(int size, boost::shared_ptr<MkRect[]>);
+  bool Initialize(MkRects &a);
+  void Clear()
+  {
+    FSize = 0;
+    FRect.reset();
+  }
 
   MkRect &operator()(int);
   MkRect &operator[](int);
@@ -124,6 +134,30 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+    std::string What;
+    Alloc(std::string what) : What(what) {}
+    std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+    std::string What;
+    int N;
+    Size(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+    std::string What;
+    int N;
+    Range(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
 };
 extern MkRect NullRect;
 #endif
