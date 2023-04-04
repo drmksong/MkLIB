@@ -261,21 +261,22 @@ public:
 class MkPolygons
 {
 protected:
-  MkPolygon *FPolygon;
+  boost::shared_ptr<MkPolygon []>FPolygon;
   int FSize; // Actual size of polys
-  int FSizeOfArray;
+  int FCapacity;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 
 public:
-  MkPolygons(int size, MkPolygon *poly);
-  MkPolygons(int size);
   MkPolygons()
   {
-    FSizeOfArray = FSize = 0;
+    FCapacity = FSize = 0;
     FPolygon = NULL;
   }
+  MkPolygons(int size);
+  MkPolygons(int size, boost::shared_ptr<MkPolygon []>poly);
+  MkPolygons(MkPolygons &poly);
   ~MkPolygons();
   virtual void Initialize(int size);
   virtual void Initialize(int size, MkPolygon *);
@@ -315,6 +316,31 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
+
+  class Alloc
+  {
+  public:
+    std::string What;
+    Alloc(std::string what) : What(what) {}
+    std::string what() { return What; }
+  };
+  class Size
+  {
+  public:
+    std::string What;
+    int N;
+    Size(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+  class Range
+  {
+  public:
+    std::string What;
+    int N;
+    Range(std::string what, int n) : What(what), N(n) {}
+    std::string what() { return What; }
+  };
+
 };
 
 void GetSubPolygon(double ymin, double ymax, MkPolygon &inpoly, MkPolygon &outpoly);
