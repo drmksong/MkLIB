@@ -200,7 +200,6 @@ void MkArray<T>::Initialize(int s_x, int s_y)
   {
     MkDebug("MkArray memory reset 6\n");
     F = boost::make_shared<T[]>(sz);
-    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -231,7 +230,6 @@ void MkArray<T>::Initialize(int s_x)
   {
     MkDebug("MkArray memory reset 7\n");
     F = boost::make_shared<T[]>(sz);
-    // F.reset(new T[sz]);
   }
   catch (std::bad_alloc &a)
   {
@@ -268,7 +266,7 @@ MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
     }
     catch (Alloc &a)
     {
-      // MkDebug("MkArray::operator=() thows Alloc()");
+      MkDebug("MkArray::operator=() thows Alloc()");
       throw Alloc(std::string("MkArray<T>"));
     }
   }

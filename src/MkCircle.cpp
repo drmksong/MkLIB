@@ -397,10 +397,11 @@ MkCircles::MkCircles(int size)
     if (size <= 0)
     {
         MkDebug("::MkCircles - MkCircles(int size)");
-        return;
+        throw Size(std::string("MkCircles::MkCircles(int size) - size is less than 0"),size);
     }
 
     FSize = size;
+
     try {
         FCircle = boost::make_shared<MkCircle[]> (FSize);
     }
@@ -408,6 +409,11 @@ MkCircles::MkCircles(int size)
     {
         MkDebug("MkCircles::MkCircles bad_alloc thrown!!!\n");
         throw Alloc(a.what());
+    }
+    catch(...)
+    {
+        MkDebug("MkCircles::MkCircles unknown exception thrown!!!\n");
+        throw;
     }
 }
 
