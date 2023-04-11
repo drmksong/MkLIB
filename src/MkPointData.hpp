@@ -53,7 +53,7 @@ public:
 };
 
 template <class T>
-class MkPointDatas
+class MkPointDatas : public MkAbstract
 {
 protected:
     boost::shared_ptr<MkPointData<T>[]> FPoint;
@@ -96,29 +96,8 @@ public:
     bool operator==(MkPointDatas &points);
     bool operator!=(MkPointDatas &points);
 
-    class Alloc
-    {
-    public:
-        std::string What;
-        Alloc(std::string what) : What(what) {}
-        std::string what() { return What; }
-    };
-    class Size
-    {
-    public:
-        std::string What;
-        int N;
-        Size(std::string what, int n) : What(what), N(n) {}
-        std::string what() { return What; }
-    };
-    class Range
-    {
-    public:
-        std::string What;
-        int N;
-        Range(std::string what, int n) : What(what), N(n) {}
-        std::string what() { return What; }
-    };
+    std::string ClassName() { return std::string("MkPointDatas"); };
+
 };
 template <class T>
 extern MkPointData<T> NullPointData;

@@ -96,7 +96,7 @@ public:
 #endif
 };
 
-class MkTriangles
+class MkTriangles : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkTriangle[]>FTriangle;
@@ -156,29 +156,10 @@ public:
   void Draw(MkPaint *);
 #endif
 
-class Alloc
+  virtual std::string ClassName()
   {
-  public:
-    std::string What;
-    Alloc(std::string what) : What(what) {}
-    std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-    std::string What;
-    int N;
-    Size(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-    std::string What;
-    int N;
-    Range(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
+    return std::string("MkTriangles");
+  }
 };
 //---------------------------------------------------------------------------
 extern MkTriangle NullTriangle;

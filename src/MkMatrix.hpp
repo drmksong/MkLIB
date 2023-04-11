@@ -130,7 +130,7 @@ public:
 typedef MkMatrix4<double> MkMatrix4_d;
 
 template <class T>
-class MkVector
+class MkVector : public MkAbstract
 { // for matrix calculation
 private:
     MkArray<T> FVector; // only onedimesional
@@ -244,25 +244,6 @@ public:
     }
 
     void Out(char *);
-
-    class Alloc
-    {
-    };
-    class Size
-    {
-    public:
-        int X, Y, Z;
-        Size(int x, int y, int z) : X(x), Y(y), Z(z) {}
-        Size(int x, int y) : X(x), Y(y), Z(1) {}
-        Size(int x) : X(x), Y(1), Z(1) {}
-    };
-    class Range
-    {
-    public:
-        char *Str;
-        int N;
-        Range(char *str, int n) : Str(str), N(n) {}
-    };
 };
 
 // warning : MkMatrix instance will always be changed after some operator function
@@ -279,7 +260,7 @@ public:
 // class MkSparseMatrix;
 
 template <class T>
-class MkMatrix
+class MkMatrix : public MkAbstract
 {
 private:
     MkArray<T> FMatrix;
@@ -381,24 +362,7 @@ public:
 
     void Out(char *);
 
-    class Alloc
-    {
-    };
-    class Size
-    {
-    public:
-        int X, Y, Z;
-        Size(int x, int y, int z) : X(x), Y(y), Z(z) {}
-        Size(int x, int y) : X(x), Y(y), Z(1) {}
-        Size(int x) : X(x), Y(1), Z(1) {}
-    };
-    class Range
-    {
-    public:
-        char *Str;
-        int N;
-        Range(char *str, int n) : Str(str), N(n) {}
-    };
+
 };
 
 //---------------------------------------------------------------------------

@@ -43,7 +43,7 @@ enum MkCrossOption
 };
 
 class MkPolygons;
-class MkPolygon : public MkPoints
+class MkPolygon : public MkShape, public MkPoints
 {
 protected:
   bool Closeness; // is this polygon closed(true) or opened(false);
@@ -239,7 +239,11 @@ public:
   MkPoint &operator[](int i);
   MkLine &operator()(int i);
   MkPolygon &operator=(MkPolygon &polygon);
+  bool operator==(MkPolygon &poly);
   bool operator!=(MkPolygon &poly);
+  bool operator==(MkPolygon &&poly);
+  bool operator!=(MkPolygon &&poly);
+  
   double CalArea(); // TODO: figure out what is the difference
   double CalArea2();
 
@@ -249,6 +253,8 @@ public:
   bool GetDrawFill() { return doFill; }
 
   bool Out(char *fname);
+
+  std::string ClassName() { return std::string("MkPolygon"); }
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
 #endif
@@ -258,7 +264,7 @@ public:
 #endif
 };
 
-class MkPolygons
+class MkPolygons : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkPolygon []>FPolygon;
@@ -308,6 +314,9 @@ public:
   virtual MkPolygon &operator[](int);
   MkPolygons &operator=(MkPolygons &polys);
   bool operator==(MkPolygons &polys);
+  bool operator==(MkPolygons &&polys);
+
+  std::string ClassName() { return std::string("MkPolygons"); };
 
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
@@ -316,30 +325,6 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
-
-  class Alloc
-  {
-  public:
-    std::string What;
-    Alloc(std::string what) : What(what) {}
-    std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-    std::string What;
-    int N;
-    Size(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-    std::string What;
-    int N;
-    Range(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
 
 };
 

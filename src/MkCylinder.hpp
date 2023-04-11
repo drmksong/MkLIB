@@ -5,6 +5,7 @@
 #include <math.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include "MkAbstract.hpp"
 #include "MkShape.hpp"
 #include "MkLine.hpp"
 #include "MkPoint.hpp"
@@ -123,7 +124,7 @@ public:
 #endif
 };
 
-class MkCylinders : public MkShape
+class MkCylinders : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkCylinder[]>FCylinder;
@@ -153,6 +154,11 @@ public:
   virtual MkCylinder &operator[](int);
   MkCylinders &operator=(MkCylinders &cylinders);
 
+  std::string ClassName()
+  {
+    return std::string("MkCylinders");
+  }
+
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
 #endif
@@ -161,29 +167,7 @@ public:
   void Draw(MkPaint *);
 #endif
 
-  class Alloc
-  {
-  public:
-      std::string What;
-      Alloc(std::string what) : What(what) {}
-      std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-      std::string What;
-      int N;
-      Size(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-      std::string What;
-      int N;
-      Range(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
+  
 };
 //---------------------------------------------------------------------------
 #endif

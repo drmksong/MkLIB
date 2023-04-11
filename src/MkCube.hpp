@@ -2,6 +2,7 @@
 #ifndef MkCubeH
 #define MkCubeH
 //---------------------------------------------------------------------------
+#include "MkAbstract.hpp"
 #include "MkPoint.hpp"
 #include "MkShape.hpp"
 
@@ -89,7 +90,7 @@ public:
 #endif
 };
 
-class MkCubes
+class MkCubes : public MkShape, public MkAbstract
 {
 private:
   int FSize;
@@ -111,30 +112,11 @@ public:
 
   int GetSize() { return FSize; };
 
-  class Alloc
+  std::string ClassName()
   {
-  public:
-      std::string What;
-      Alloc(std::string what) : What(what) {}
-      std::string what() { return What; }
+    return std::string("MkCubes");
   };
-  class Size
-  {
-  public:
-      std::string What;
-      int N;
-      Size(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-      std::string What;
-      int N;
-      Range(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-
+  
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
 #endif

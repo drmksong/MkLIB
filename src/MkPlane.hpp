@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <cassert>
-
+#include "MkAbstract.hpp"
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
@@ -59,7 +59,7 @@ public:
 #ifdef __BCPLUSPLUS__
 #endif
 
-class MkPointsPlanes
+class MkPointsPlanes : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkPointsPlane[]> FPoints;
@@ -107,29 +107,6 @@ public:
   void Draw(MkPaint *);
 #endif
 
-  class Alloc
-  {
-  public:
-      std::string What;
-      Alloc(std::string what) : What(what) {}
-      std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-      std::string What;
-      int N;
-      Size(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-      std::string What;
-      int N;
-      Range(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
 };
 
 // plane primitive�� (-1,-1),(1,-1),(1,1),(-1,1)�� ������, ȸ��, �̵��� ������
@@ -277,7 +254,7 @@ public:
 #endif
 };
 //---------------------------------------------------------------------------
-class MkPlanes
+class MkPlanes : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkPlane[]> FPlane;
@@ -316,6 +293,8 @@ public:
   MkPlanes &operator=(MkPlanes &);
   bool operator==(MkPlanes &);
 
+
+  std::string ClassName() { return std::string("MkPlanes"); }
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
 #endif
@@ -323,29 +302,8 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
   void Draw(MkPaint *);
 #endif
-  class Alloc
-  {
-  public:
-      std::string What;
-      Alloc(std::string what) : What(what) {}
-      std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-      std::string What;
-      int N;
-      Size(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-      std::string What;
-      int N;
-      Range(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
+
+
 };
 //---------------------------------------------------------------------------
 class MkJointPlane : public MkPlane

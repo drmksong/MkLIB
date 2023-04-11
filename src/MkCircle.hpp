@@ -3,6 +3,7 @@
 #define MkCircleH
 
 #include <math.h>
+#include "MkAbstract.hpp"
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
@@ -81,7 +82,7 @@ public:
 #endif
 };
 
-class MkCircles : public MkShape
+class MkCircles : public MkShape, MkAbstract
 {
 protected:
     boost::shared_ptr<MkCircle[]> FCircle;
@@ -108,6 +109,10 @@ public:
     int GetSize() { return FSize; }
     virtual MkCircle &operator[](int);
     MkCircles &operator=(MkCircles &circles);
+    std::string ClassName()
+    {
+        return std::string("MkCircles");
+    }
 
 #ifdef __BCPLUSPLUS__
     void Draw(TObject *);
@@ -117,29 +122,7 @@ public:
     void Draw(MkPaint *);
 #endif
 
-class Alloc
-  {
-  public:
-    std::string What;
-    Alloc(std::string what) : What(what) {}
-    std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-    std::string What;
-    int N;
-    Size(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-    std::string What;
-    int N;
-    Range(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
+
 };
 
 class MkArc : public MkCircle

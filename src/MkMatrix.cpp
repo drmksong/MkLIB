@@ -351,13 +351,13 @@ MkVector<T>::MkVector(int sz)
     {
         sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
-        throw Size(0);
+        throw Size(std::string("Size Zero"),0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
-        throw Alloc();
+        throw Alloc(std::string("Vector Allocation Error"));
     }
 
     FVectType = vtNone;
@@ -376,13 +376,13 @@ MkVector<T>::MkVector(int sz, VectType vt)
     {
         sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
-        throw Size(0);
+        throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
-        throw Alloc();
+        throw Alloc(std::string("Vector Allocation Error"));
     }
 
     FVectType = vt;
@@ -481,13 +481,13 @@ void MkVector<T>::Cross(MkVector &vect, MkVector &target) // not yet finished, b
     {
         sprintf(str, "Vector::Cross Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
-        throw Size(0);
+        throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
-        throw Alloc();
+        throw Alloc(std::string("Vector Allocation Error"));
     }
 
     //    l3 = m1*n2 - m2*n1;
@@ -646,13 +646,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     {
         sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d,%d)\n", s.X, s.Y);
         MkDebug("%s",str);
-        throw Size(0);
+        throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
-        throw Alloc();
+        throw Alloc(std::string("Vector Allocation Error"));
     }
 
     try
@@ -664,13 +664,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     {
         sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
-        throw Size(0);
+        throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
         sprintf(str, "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
-        throw Alloc();
+        throw Alloc(std::string("Vector Allocation Error"));
     }
 
     FD = 0;

@@ -5,6 +5,7 @@
 #include <cmath>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include "MkAbstract.hpp"
 #include "MkShape.hpp"
 #include "MkPoint.hpp"
 #include "MkMatrix.hpp"
@@ -191,7 +192,7 @@ public:
 #endif
 };
 
-class MkLines
+class MkLines : public MkShape, public MkAbstract
 {
 protected:
     int FSize;
@@ -252,6 +253,8 @@ public:
     MkLines &operator*(MkMatrix4_d &rm);
     MkLines &operator=(MkLines &);
     bool operator==(MkLines &);
+
+    std::string ClassName () {return std::string("MkLines");}
 #ifdef __BCPLUSPLUS__
     void Draw(TObject *);
 #endif
@@ -259,29 +262,7 @@ public:
 #if defined(_MSC_VER) && defined(_WINDOWS_)
     void Draw(MkPaint *);
 #endif
- class Alloc
-  {
-  public:
-      std::string What;
-      Alloc(std::string what) : What(what) {}
-      std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-      std::string What;
-      int N;
-      Size(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-      std::string What;
-      int N;
-      Range(std::string what, int n) : What(what), N(n) {}
-      std::string what() { return What; }
-  };
+
 };
 
 void GetSubParam(int i, MkLines &in, double &aj, double &bj, double &lj1, double &lj);

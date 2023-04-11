@@ -20,8 +20,7 @@ class MkPoints;
 extern MkPoint NullPoint;
 extern MkPoints NullPoints;
 
-struct MkPoint
-{
+struct MkPoint {
 public:
   double X, Y, Z;
 
@@ -306,8 +305,8 @@ std::ostream &operator<<(std::ostream &outputStream, const MkPoint &);
 std::ostream &operator<<(std::ostream &outputStream, MkPoint &&);
 void Swap(MkPoint &p1, MkPoint &p2);
 
-// TODO: To revise MkPoints FPoint boost::shared_ptr to std::vector
-class MkPoints
+
+class MkPoints : public MkAbstract
 {
 protected:
   boost::shared_ptr<MkPoint[]> FPoint;
@@ -456,33 +455,12 @@ public:
   bool operator!=(const MkPoints &points);
   bool operator!=(MkPoints &&points);
 
+  std::string ClassName() { return ("MkPoints"); }
+
 #if defined(__GL_H__)
   void Draw(); // TODO: implement it
 #endif
 
-  class Alloc
-  {
-  public:
-    std::string What;
-    Alloc(std::string what) : What(what) {}
-    std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-    std::string What;
-    int N;
-    Size(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-    std::string What;
-    int N;
-    Range(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
 };
 
 //---------------------------------------------------------------------------

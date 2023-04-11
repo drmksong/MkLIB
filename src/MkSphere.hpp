@@ -90,7 +90,7 @@ public:
 #endif
 };
 
-class MkSpheres
+class MkSpheres : public MkShape, public MkAbstract
 {
 protected:
   boost::shared_ptr<MkSphere[]> FSphere;
@@ -122,6 +122,11 @@ public:
   virtual MkSphere &operator[](int);
   MkSpheres &operator=(MkSpheres &spheres);
 
+  std::string ClassName()
+  {
+    return std::string("MkSpheres");
+  }
+
 #ifdef __BCPLUSPLUS__
   void Draw(TObject *);
 #endif
@@ -130,29 +135,6 @@ public:
   void Draw(MkPaint *);
 #endif
 
-class Alloc
-  {
-  public:
-    std::string What;
-    Alloc(std::string what) : What(what) {}
-    std::string what() { return What; }
-  };
-  class Size
-  {
-  public:
-    std::string What;
-    int N;
-    Size(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
-  class Range
-  {
-  public:
-    std::string What;
-    int N;
-    Range(std::string what, int n) : What(what), N(n) {}
-    std::string what() { return What; }
-  };
 };
 
 #endif

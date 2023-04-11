@@ -2160,7 +2160,7 @@ MkPolygon &MkPolygon::operator=(MkPolygon &polygon)
 
   return *this;
 }
-bool MkPolygon::operator!=(MkPolygon &polygon)
+bool MkPolygon::operator==(MkPolygon &polygon)
 {
   bool flag = true;
 
@@ -2182,6 +2182,78 @@ bool MkPolygon::operator!=(MkPolygon &polygon)
   flag = flag && FCurrent == polygon.FCurrent;
 
   return flag;
+}
+
+bool MkPolygon::operator!=(MkPolygon &polygon)
+{
+  bool flag = true;
+
+  flag = flag && MkPoints::operator==(polygon);
+
+  flag = flag && Closeness == polygon.Closeness;
+  flag = flag && Convexity == polygon.Convexity;
+  flag = flag && Crossing == polygon.Crossing;
+  flag = flag && Fullness == polygon.Fullness;
+  flag = flag && isLengthChanged == polygon.isLengthChanged;
+  flag = flag && isAreaChanged == polygon.isAreaChanged;
+  flag = flag && isCrossingChanged == polygon.isCrossingChanged;
+  flag = flag && isClosenessChanged == polygon.isClosenessChanged;
+  flag = flag && isConvexityChanged == polygon.isConvexityChanged;
+
+  flag = flag && FLength == polygon.FLength;
+  flag = flag && FArea == polygon.FArea;
+  flag = flag && PointState == polygon.PointState;
+  flag = flag && FCurrent == polygon.FCurrent;
+
+  return !flag;
+}
+
+bool MkPolygon::operator==(MkPolygon &&polygon)
+{
+  bool flag = true;
+
+  flag = flag && MkPoints::operator==(polygon);
+
+  flag = flag && Closeness == polygon.Closeness;
+  flag = flag && Convexity == polygon.Convexity;
+  flag = flag && Crossing == polygon.Crossing;
+  flag = flag && Fullness == polygon.Fullness;
+  flag = flag && isLengthChanged == polygon.isLengthChanged;
+  flag = flag && isAreaChanged == polygon.isAreaChanged;
+  flag = flag && isCrossingChanged == polygon.isCrossingChanged;
+  flag = flag && isClosenessChanged == polygon.isClosenessChanged;
+  flag = flag && isConvexityChanged == polygon.isConvexityChanged;
+
+  flag = flag && FLength == polygon.FLength;
+  flag = flag && FArea == polygon.FArea;
+  flag = flag && PointState == polygon.PointState;
+  flag = flag && FCurrent == polygon.FCurrent;
+
+  return flag;
+}
+
+bool MkPolygon::operator!=(MkPolygon &&polygon)
+{
+  bool flag = true;
+
+  flag = flag && MkPoints::operator==(polygon);
+
+  flag = flag && Closeness == polygon.Closeness;
+  flag = flag && Convexity == polygon.Convexity;
+  flag = flag && Crossing == polygon.Crossing;
+  flag = flag && Fullness == polygon.Fullness;
+  flag = flag && isLengthChanged == polygon.isLengthChanged;
+  flag = flag && isAreaChanged == polygon.isAreaChanged;
+  flag = flag && isCrossingChanged == polygon.isCrossingChanged;
+  flag = flag && isClosenessChanged == polygon.isClosenessChanged;
+  flag = flag && isConvexityChanged == polygon.isConvexityChanged;
+
+  flag = flag && FLength == polygon.FLength;
+  flag = flag && FArea == polygon.FArea;
+  flag = flag && PointState == polygon.PointState;
+  flag = flag && FCurrent == polygon.FCurrent;
+
+  return !flag;
 }
 
 #ifdef __BCPLUSPLUS__
@@ -2675,6 +2747,19 @@ MkPolygons &MkPolygons::operator=(MkPolygons &polys)
 }
 
 bool MkPolygons::operator==(MkPolygons &polys)
+{
+  int i;
+
+  if (FSize != polys.FSize)
+    return false;
+  for (i = 0; i < FSize; i++)
+    if (this->FPolygon[i] != polys.FPolygon[i])
+      return false;
+
+  return true;
+}
+
+bool MkPolygons::operator==(MkPolygons &&polys)
 {
   int i;
 
