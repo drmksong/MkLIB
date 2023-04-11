@@ -1,5 +1,6 @@
 #include <string>
 class MkAbstract {
+public:
     class Alloc
     {
     public:
