@@ -8,6 +8,9 @@
 #include "MkMatrix.hpp"
 #include "MkPoint.hpp"
 
+// #include "gltest.hpp"
+int gl_main(int argc, char *argv[]);
+
 bool point_test()
 {
     MkPoints pnts(10);
@@ -229,7 +232,11 @@ int main()
         printf("0> i:%d\n",i);
     }
 
+    int argc;
+    char *argv;
+
     shared_test();
+    gl_main(argc, &argv);
 
     // point_test();
     // array_test();
