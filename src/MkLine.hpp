@@ -224,7 +224,7 @@ public:
     void DeleteSelected();
     int GetSize() { return FSize; };
     int GetNumber() { return FSize; };
-    MkLine &GetLine(int i) { if (i < FSize) return FRealLine[i]; }
+    MkLine &GetLine(int i) { if (i < FSize) return FRealLine[i]; else throw Range("MkLine Range Error",i);}
     boost::shared_ptr<MkLine[]> &GetLines() {return FRealLine;}
     bool Clear();
 #ifdef __BCPLUSPLUS__

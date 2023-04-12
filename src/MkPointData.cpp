@@ -130,7 +130,8 @@ MkPointDatas<T>::MkPointDatas(std::vector<MkPointData<T>> &dp)
 
     try
     {
-        FPoint.reset(new MkPointData[FCapacity]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FCapacity]);
     }
     catch (std::bad_alloc &a)
     {
@@ -162,7 +163,8 @@ MkPointDatas<T>::MkPointDatas(int size, MkPointData<T> *rps)
 
     try
     {
-        FPoint.reset(new MkPointData[FSize]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData<T>[FSize]); // critical error found, FSize is totally wrong!!!
     }
     catch (std::bad_alloc &a)
     {
@@ -194,7 +196,8 @@ MkPointDatas<T>::MkPointDatas(int size)
 
     try
     {
-        FPoint.reset(new MkPointData[FSize]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FSize]);
     }
     catch (std::bad_alloc &a)
     {
@@ -227,7 +230,8 @@ void MkPointDatas<T>::Initialize(int size)
 
     try
     {
-        FPoint.reset(new MkPointData[FSize]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FSize]);
     }
     catch (std::bad_alloc &a)
     {
@@ -255,7 +259,8 @@ void MkPointDatas<T>::Initialize(int size, MkPointData<T> *rps)
 
     try
     {
-        FPoint.reset(new MkPointData[FSize]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FSize]);
     }
     catch (std::bad_alloc &a)
     {
@@ -289,7 +294,8 @@ int MkPointDatas<T>::Grow(int delta)
 
     try
     {
-        rp.reset(new MkPointData[FCapacity + delta]);
+        rp = boost::make_shared<MkPointData<T>[]>(FCapacity+delta);
+        // rp.reset(new MkPointData[FCapacity + delta]);
     }
     catch (std::bad_alloc &a)
     {
@@ -358,7 +364,8 @@ MkPointDatas<T> &MkPointDatas<T>::CopyFrom(MkPointDatas<T> points)
     FCapacity = points.FCapacity;
     try
     {
-        FPoint.reset(new MkPointData[FCapacity]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FCapacity]);
     }
     catch (std::bad_alloc &a)
     {
@@ -383,7 +390,8 @@ MkPointDatas<T> &MkPointDatas<T>::operator=(MkPointDatas<T> &points)
     FCapacity = points.FCapacity;
     try
     {
-        FPoint.reset(new MkPointData[FCapacity]);
+        FPoint = boost::make_shared<MkPointData<T>[]>(FCapacity);
+        // FPoint.reset(new MkPointData[FCapacity]);
     }
     catch (std::bad_alloc &a)
     {

@@ -185,12 +185,12 @@ public:
   double GetAng();
   void GetAng(double &alpha, double &beta, double &gamma);
 
-  bool operator==(const MkPoint &rp);
+  bool operator==(const MkPoint &rp) const;
   bool operator==(MkPoint &&rp);
   // bool operator==(const MkPoint &rp) const;
   // bool operator==(MkPoint &&rp) const;
 
-  bool operator!=(const MkPoint &rp);
+  bool operator!=(const MkPoint &rp) const;
   bool operator!=(MkPoint &&rp);
 
   friend MkPoint &operator*(const MkPoint &rp, MkMatrix4<double> &rm)
@@ -449,10 +449,10 @@ public:
   MkPoints &operator=(const MkPoints &points);
   MkPoints &operator=(MkPoints &&points);
 
-  bool operator==(const MkPoints &points);
+  bool operator==(const MkPoints &points) const;
   bool operator==(MkPoints &&points);
 
-  bool operator!=(const MkPoints &points);
+  bool operator!=(const MkPoints &points) const;
   bool operator!=(MkPoints &&points);
 
   std::string ClassName() { return ("MkPoints"); }

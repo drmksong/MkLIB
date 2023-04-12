@@ -1438,26 +1438,28 @@ MkLine &MkPlane::CalcIntLine(MkTriangle &&rt)
 
 MkPoint &MkPlane::CalcIntPnt(MkTriangle &rt) // Shortest point
 {
-   MkPoint rp;
+   static MkPoint rp;
    MkLine rl;
    rl = CalcIntLine(rt);
    rl.SetFiniteness(true);
    if (rl != NullLine)
    {
-      return rp = rl.GetNearestPnt(FCenter);
+      rp = rl.GetNearestPnt(FCenter);
+      return rp;
    }
    return NullPoint;
 }
 
 MkPoint &MkPlane::CalcIntPnt(MkTriangle &&rt) // Shortest point
 {
-   MkPoint rp;
+   static MkPoint rp;
    MkLine rl;
    rl = CalcIntLine(rt);
    rl.SetFiniteness(true);
    if (rl != NullLine)
    {
-      return rp = rl.GetNearestPnt(FCenter);
+      rp = rl.GetNearestPnt(FCenter);
+      return rp;
    }
    return NullPoint;
 }

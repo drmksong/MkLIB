@@ -830,7 +830,7 @@ MkPoint &MkLine::operator&(MkLine &line)
           fabs(StartPoint.Y - line.StartPoint.Y) < EPS)
          return StartPoint;
       else
-         NullPoint;
+         return NullPoint;
    }
    else
    {
@@ -849,7 +849,7 @@ MkPoint &MkLine::operator&(MkLine &line)
          return spnt;
       }
       else
-         NullPoint;
+         return NullPoint;
    }
 }
 
@@ -870,7 +870,7 @@ MkPoint &MkLine::operator&(MkLine &&line)
           fabs(StartPoint.Y - line.StartPoint.Y) < EPS)
          return StartPoint;
       else
-         NullPoint;
+         return NullPoint;
    }
    else
    {
@@ -889,7 +889,7 @@ MkPoint &MkLine::operator&(MkLine &&line)
          return spnt;
       }
       else
-         NullPoint;
+         return NullPoint;
    }
 }
 

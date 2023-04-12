@@ -90,7 +90,7 @@ void MkPoint::GetAng(double &alpha, double &beta, double &gamma)
    }
 }
 
-bool MkPoint::operator==(const MkPoint &rp)
+bool MkPoint::operator==(const MkPoint &rp) const
 {
    char str[256];
    sprintf(str, " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
@@ -135,7 +135,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 // }
 
-bool MkPoint::operator!=(const MkPoint &rp)
+bool MkPoint::operator!=(const MkPoint &rp) const
 {
    return (fabs(X - rp.X) > EPS) || (fabs(Y - rp.Y) > EPS) || (fabs(Z - rp.Z) > EPS);
 }
@@ -854,7 +854,7 @@ MkPoints &MkPoints::operator=(MkPoints &&points)
    return *this;
 }
 
-bool MkPoints::operator==(const MkPoints &points)
+bool MkPoints::operator==(const MkPoints &points) const
 {
    if (FSize != points.FSize)
       return false;
@@ -876,7 +876,7 @@ bool MkPoints::operator==(MkPoints &&points)
    return true;
 }
 
-bool MkPoints::operator!=(const MkPoints &points)
+bool MkPoints::operator!=(const MkPoints &points) const
 {
    if (FSize != points.FSize)
       return true;
