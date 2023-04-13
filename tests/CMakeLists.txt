@@ -13,6 +13,7 @@
 # ADD_EXECUTABLE(test ${srcs})
 # TARGET_LINK_LIBRARIES(test ../build/MkLib glu32 freeglut)
 
+# TODO: must install glfw and glad(copy to deps) before build
 link_libraries(glfw)
 
 set(GLFW_SOURCE_DIR "../../glfw")
