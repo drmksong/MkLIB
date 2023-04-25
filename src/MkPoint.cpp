@@ -93,9 +93,9 @@ void MkPoint::GetAng(double &alpha, double &beta, double &gamma)
 bool MkPoint::operator==(const MkPoint &rp) const
 {
    char str[256];
-   sprintf(str, " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
    // MkDebug("MkPoint::operator==() is called\n");
-   MkDebug("%s",str);
+   // sprintf(str, " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+   // MkDebug("%s",str);
    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 }
 

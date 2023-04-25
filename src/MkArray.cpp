@@ -33,7 +33,7 @@ MkArray<T>::MkArray(int s_x, int s_y, int s_z)
 
   try
   {
-    MkDebug("MkArray memory reset 1\n");
+    // MkDebug("MkArray memory reset 1\n");
     F = boost::make_shared<T[]>(sz);
   }
   catch (std::bad_alloc &a)
@@ -68,7 +68,7 @@ MkArray<T>::MkArray(int s_x, int s_y)
 
   try
   {
-    MkDebug("MkArray memory reset 2\n");
+    // MkDebug("MkArray memory reset 2\n");
     F = boost::make_shared<T[]>(sz);
     // F.reset(new T[sz]);
   }
@@ -101,7 +101,7 @@ MkArray<T>::MkArray(int s_x)
 
   try
   {
-    MkDebug("MkArray memory reset 3\n");
+    // MkDebug("MkArray memory reset 3\n");
     F = boost::make_shared<T[]>(sz);
     // F.reset(new T[sz]);
   }
@@ -142,7 +142,7 @@ void MkArray<T>::Clear()
   sz_x = 0;
   sz_y = 0;
   sz_z = 0;
-  MkDebug("MkArray memory reset 4\n");
+  // MkDebug("MkArray memory reset 4\n");
   F.reset();
 }
 
@@ -165,7 +165,7 @@ void MkArray<T>::Initialize(int s_x, int s_y, int s_z)
 
   try
   {
-    MkDebug("MkArray memory reset 5\n");
+    // MkDebug("MkArray memory reset 5\n");
     F = boost::make_shared<T[]>(sz);
     // F.reset(new T[sz]);
   }
@@ -198,7 +198,7 @@ void MkArray<T>::Initialize(int s_x, int s_y)
 
   try
   {
-    MkDebug("MkArray memory reset 6\n");
+    // MkDebug("MkArray memory reset 6\n");
     F = boost::make_shared<T[]>(sz);
   }
   catch (std::bad_alloc &a)
@@ -228,7 +228,7 @@ void MkArray<T>::Initialize(int s_x)
 
   try
   {
-    MkDebug("MkArray memory reset 7\n");
+    // MkDebug("MkArray memory reset 7\n");
     F = boost::make_shared<T[]>(sz);
   }
   catch (std::bad_alloc &a)
@@ -244,7 +244,7 @@ void MkArray<T>::Initialize(int s_x)
 template <class T>
 MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
 {
-  MkDebug("MkArray op = copy\n");
+  // MkDebug("MkArray op = copy\n");
   // MkDebug("MkArray op = copy 1. 0x%p\n", value.F);
   if (!(value.sz_x * value.sz_y * value.sz_z)) // FIXME: is it an error???
     return *this;

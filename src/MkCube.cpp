@@ -82,6 +82,28 @@ bool MkCube::IsInSurface(MkPoint &rp, double thick)
       return false;
 }
 
+bool MkCube::IsInSurface(MkPoint &&rp, double thick)
+{
+   MkPoint pnt = rp;
+
+   pnt.X -= FCenter.X;
+   pnt.Y -= FCenter.Y;
+   pnt.Z -= FCenter.Z;
+
+   pnt.Rotate(0, 0, -Theta); // Ȯ�ο�.
+   pnt.Rotate(0, Psi, 0);    // Ȯ�ο�.
+
+   if ((pnt.X < XLength / 2 + thick && pnt.X > XLength / 2 - thick) ||
+       (pnt.X < -XLength / 2 + thick && pnt.X > -XLength / 2 - thick) ||
+       (pnt.Y < YLength / 2 + thick && pnt.Y > YLength / 2 - thick) ||
+       (pnt.Y < -YLength / 2 + thick && pnt.Y > -YLength / 2 - thick) ||
+       (pnt.Z < ZLength / 2 + thick && pnt.Z > ZLength / 2 - thick) ||
+       (pnt.Z < -ZLength / 2 + thick && pnt.Z > -ZLength / 2 - thick))
+      return true;
+   else
+      return false;
+}
+
 bool MkCube::IsInSpace(MkPoint &pnt)
 {
    return IsIn(pnt);

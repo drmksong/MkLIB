@@ -37,6 +37,40 @@ public:
     MkLine(MkPoint &sp, MkPoint &ep);
     MkLine(MkPoint &&sp, MkPoint &&ep);
     MkLine(double sx, double sy, double ex, double ey);
+    MkLine(MkLine &ml) : MkShape(ml)
+    {
+        StartPoint = ml.StartPoint;
+        EndPoint = ml.EndPoint;
+        Theta = ml.Theta;
+        Length = ml.Length;
+        Width = ml.Width;
+        A = ml.A;
+        B = ml.B;
+        C = ml.C;
+        L = ml.L;
+        M = ml.M;
+        N = ml.N;
+        isSelected = ml.isSelected;
+        isFinite = ml.isFinite;
+        Tol = ml.Tol;
+    }
+    MkLine(MkLine &&ml) : MkShape(std::move(ml))
+    {
+        StartPoint = std::move(ml.StartPoint);
+        EndPoint = std::move(ml.EndPoint);
+        Theta = ml.Theta;
+        Length = ml.Length;
+        Width = ml.Width;
+        A = ml.A;
+        B = ml.B;
+        C = ml.C;
+        L = ml.L;
+        M = ml.M;
+        N = ml.N;
+        isSelected = ml.isSelected;
+        isFinite = ml.isFinite;
+        Tol = ml.Tol;
+    }
 
 #ifdef __BCPLUSPLUS__
     MkLine(MkPoint sp, MkPoint ep, TColor C);

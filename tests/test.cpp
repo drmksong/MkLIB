@@ -3,13 +3,16 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
+#include <cstring>
 #include <vector>
 #include <boost/make_shared.hpp>
 #include "MkMatrix.hpp"
 #include "MkPoint.hpp"
+#include "MkLine.hpp"
 
 // #include "gltest.hpp"
-int gl_main(int argc, char *argv[]);
+// int gl_main(int argc, char *argv[]);
 
 bool point_test()
 {
@@ -226,22 +229,133 @@ void shared_test()
     // pnts.reset();
 }
 
-int main()
-{
-    for (int i=0; i<10; i++) {
-        printf("0> i:%d\n",i);
+bool read_file(std::string fname,MkLines &lines) {
+    bool flag=false;
+    std::ifstream ifs;
+    float sx,sy,ex,ey;
+    ifs.open(fname);
+    flag = ifs.is_open();
+    if (!flag) {
+        std::cout << "file open error: " << fname << "\n";
+        return flag;
+    }
+    else {
+        while(!ifs.eof()) {
+            ifs >> sx >> sy >> ex >> ey;
+            std::cout << sx << ", " << sy << ", " << ex << ", " << ey << "\n";
+            MkPoint sp(sx,sy,0),ep(ex,ey,0);
+            MkLine line(sp,ep);
+            lines.Add(line);
+        }
     }
 
-    int argc;
-    char *argv;
+    ifs.close();
+    return flag;
+}
 
-    shared_test();
-    gl_main(argc, &argv);
+MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines) 
+{
+
+    std::cout << "get_fblr entered \n\n\n\n";
+    static MkDouble fblr(4);
+    double x = pnt.X;
+    double y = pnt.Y;
+    double z = pnt.Z;
+
+    MkPoint fp,bp,lp,rp;
+    MkPoints fpnts(5),bpnts(5),lpnts(5),rpnts(5);
+
+    fp.X += 200;
+    bp.X -= 200;
+    lp.Y += 200;
+    rp.Y -= 200;
+
+    fp.RotateInZ(-theta);
+    bp.RotateInZ(-theta);
+    lp.RotateInZ(-theta);
+    rp.RotateInZ(-theta);
+
+    fp += pnt;
+    bp += pnt;
+    lp += pnt;
+    rp += pnt;
+
+    MkLine fl(pnt,fp),bl(pnt,bp),ll(pnt,lp),rl(pnt,rp);
+    std::cout << "fl coord:" << fl[0].X << " " << " " << fl[0].Y << " " << fl[1].X << " " << fl[1].Y << std::endl;
+
+    for (int i=0;i<lines.GetSize();i++) {
+        MkLine line = lines[i];
+        std::cout << "line["<< i <<"] coord:" << line[0].X << " " << " " << line[0].Y << " " << line[1].X << " " << line[1].Y << std::endl;        
+        if (fl.IsIntersect(line)) {
+            std::cout << "fl intersect before add "<< fpnts.GetSize() << std::endl;
+            MkPoint tpnt;
+            std::cout << "fl intersect middle add "<< fpnts.GetSize() << std::endl;
+            tpnt = fl.GetIntPoint(line);
+            fpnts.Add(tpnt);
+            std::cout << "fl intersect after  add "<< fpnts.GetSize() << std::endl;
+        }
+        // if (bl.IsIntersect(line)) {
+        //     bpnts.Add(bl.GetIntPoint(line));
+        // }
+        // if (ll.IsIntersect(line)) {
+        //     lpnts.Add(ll.GetIntPoint(line));
+        // }
+        // if (rl.IsIntersect(line)) {
+        //     rpnts.Add(rl.GetIntPoint(line));
+        // }
+    }
+
+    // double dist = 1000;
+    // for (int i=0;i<fpnts.GetSize();i++) {
+    //     dist = min(dist,CalDist(pnt,fpnts[i]));
+    // }
+    // fblr[0] = dist;
+
+    // dist = 1000;
+    // for (int i=0;i<bpnts.GetSize();i++) {
+    //     dist = min(dist,CalDist(pnt,bpnts[i]));
+    // }
+    // fblr[1] = dist;
+
+    // dist = 1000;
+    // for (int i=0;i<lpnts.GetSize();i++) {
+    //     dist = min(dist,CalDist(pnt,lpnts[i]));
+    // }
+
+    // fblr[2] = dist;
+
+    // dist = 1000;
+    // for (int i=0;i<rpnts.GetSize();i++) {
+    //     dist = min(dist,CalDist(pnt,rpnts[i]));
+    // }
+    // fblr[3] = dist;
+
+    return fblr;
+}
+
+int main()
+{
+
+    // TODO: to incorporate GLFW, GLAD for the testing
+    // int argc;
+    // char *argv;
+    // gl_main(argc, &argv);
 
     // point_test();
     // array_test();
 
     // arr_test_move_op();
+
+    // shared_test();
+    MkDouble res;
+    MkLines lines;
+    MkPoint pnt(1,1,0);
+    double theta = 90;
+    std::string fname = "../wall_column.dat";
+    read_file(fname,lines);
+    std::cout << "lines size: " << lines.GetSize() << "\n";
+    res = get_fblr(theta, pnt, lines);
+    std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
     
     return 0;
 }

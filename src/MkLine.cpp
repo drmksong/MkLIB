@@ -454,6 +454,9 @@ bool MkLine::GetIntParam(MkLine &rl, double &t) // full 3d & check it out.  test
    MkMatrix<double> mat(2, 2);
    MkVector<double> vec(2);
 
+   mat(0,0) = 0;
+   vec(0)   = 0;
+
    t = 0;
    if (!IsInSamePlane(rl))
       return false;
@@ -489,8 +492,9 @@ bool MkLine::GetIntParam(MkLine &rl, double &t) // full 3d & check it out.  test
    m2 /= len;
    n2 /= len;
 
-   if (fabs(l1 - l2) < EPS && fabs(m1 - m2) < EPS && fabs(n1 - n2) < EPS)
+   if (fabs(l1 - l2) < EPS && fabs(m1 - m2) < EPS && fabs(n1 - n2) < EPS) {
       return false;
+   }
    else if (fabs(l1) < EPS && fabs(l2) < EPS)
    {
       mat(0, 0) = m1;
@@ -686,10 +690,12 @@ MkPoint &MkLine::GetIntPoint(MkLine &rl)
    static MkPoint dvp;
    double t;
    bool flag;
+
    if (!(flag = GetIntParam(rl, t)))
       return NullPoint;
    if (t < 0.0 || t > 1.0)
       return NullPoint;
+
    dvp.Set(GetDivision(t));
    return dvp;
 }

@@ -2,6 +2,7 @@
 #ifndef MkShapeH
 #define MkShapeH
 
+#include <boost/shared_ptr.hpp>
 #include "MkPoint.hpp"
 
 class MkShape
@@ -9,6 +10,9 @@ class MkShape
 private:
      //     virtual void CalArea(){};
 public:
+     boost::shared_ptr<MkShape> NextShape;
+     boost::shared_ptr<MkShape> PrevShape;
+
 #ifdef __BCPLUSPLUS__
      TColor Color;
      TPenStyle PenStyle;
@@ -17,12 +21,23 @@ public:
 public:
      MkShape()
      {
-          NextShape = NULL;
-          PrevShape = NULL;
      };
-     ~MkShape();
-     MkShape *Next() { return NextShape; };
-     MkShape *Prev() { return PrevShape; };
+     MkShape(MkShape &ms)
+     {
+          NextShape = ms.NextShape;
+          PrevShape = ms.PrevShape;
+     };
+     MkShape(MkShape &&ms)
+     {
+          NextShape = ms.NextShape;
+          PrevShape = ms.PrevShape;
+     };
+     ~MkShape()
+     {
+     };
+
+     boost::shared_ptr<MkShape> Next() { return NextShape; };
+     boost::shared_ptr<MkShape> Prev() { return PrevShape; };
 
      virtual double GetArea()
      {
@@ -75,8 +90,6 @@ public:
      virtual bool IsInSpace(MkPoint &&pnt) { return false; }
      //     virtual MkShape operator=(MkShape &ms);
 public:
-     MkShape *NextShape;
-     MkShape *PrevShape;
 
 #ifdef __BCPLUSPLUS__
      virtual void Draw(TObject *)
@@ -98,18 +111,18 @@ public:
 class MkShapeList
 { // �ͳγ��� �� �κ� : ���̴�, ������ ��
 private:
-     MkShape *FirstMyShapes;
-     MkShape *CurrentMyShapes;
-     MkShape *LastMyShapes;
+     boost::shared_ptr<MkShape> FirstMyShapes;
+     boost::shared_ptr<MkShape> CurrentMyShapes;
+     boost::shared_ptr<MkShape> LastMyShapes;
      int NumberOfShape;
 
 public:
-     MkShapeList(MkShape *);
+     MkShapeList(boost::shared_ptr<MkShape> ms);
      MkShapeList();
      ~MkShapeList();
-     bool Add(MkShape *);
-     bool Insert(MkShape *);
-     bool Delete(MkShape *); // �� ������ ����Ʈ&�޸� ���Ŵ� �ƴ�.
+     bool Add(boost::shared_ptr<MkShape> ms);
+     bool Insert(boost::shared_ptr<MkShape> ms);
+     bool Delete(boost::shared_ptr<MkShape> ms); // �� ������ ����Ʈ&�޸� ���Ŵ� �ƴ�.
      bool Clear();           // ��� ����Ʈ �Ӹ� �ƴ϶� �޸𸮵� ����
      double GetArea();
      int GetNumberOfShape() { return NumberOfShape; }

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------- ------
 #include "MkMatrix.hpp"
 
 //---------------------------------------------------------------------------
@@ -391,7 +391,9 @@ MkVector<T>::MkVector(int sz, VectType vt)
 template <class T>
 MkVector<T>::MkVector(const MkArray<T> &b)
 {
-    *this = std::move(b);
+    FVector = b;
+    FSize = b.getSzX();
+    FVectType = vtNone;
 }
 
 template <class T>
@@ -515,7 +517,8 @@ T &MkVector<T>::operator[](int i)
 template <class T>
 MkVector<T> &MkVector<T>::operator=(const MkVector<T> &vect)
 {
-    FVector = std::move(vect.FVector);
+    FVector = vect.FVector;
+    
     FSize = vect.FSize;
     FVectType = vect.FVectType;
     return *this;
@@ -679,14 +682,19 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     FMatType = mtNormal;
 }
 
-template <class T>
-MkMatrix<T>::MkMatrix(const MkMatrix<T> &tm)
+template <class T>  
+MkMatrix<T>::MkMatrix(const MkMatrix<T> &tm) // copy constructor
 {
-    *this = std::move(tm);
+    FMatrix = (tm.FMatrix);
+    FIndex = (tm.FIndex);
+    FD = tm.FD;
+    FI = tm.FI;
+    FJ = tm.FJ;
+    FMatType = tm.FMatType;
 }
 
 template <class T>
-MkMatrix<T>::MkMatrix(MkMatrix<T> &&tm)
+MkMatrix<T>::MkMatrix(MkMatrix<T> &&tm)  // move constructor
 {
     *this = std::move(tm);
 }
@@ -694,12 +702,15 @@ MkMatrix<T>::MkMatrix(MkMatrix<T> &&tm)
 template <class T>
 MkMatrix<T>::MkMatrix(const MkArray<T> &fm)
 {
-    FMatrix = std::move(fm);
+    FMatrix = (fm);
+    if (FMatrix.getSzX() == FMatrix.getSzY())
+        FIndex.Initialize(FMatrix.getSzX());
     if (FMatrix.getSzZ() != 1)
     {
         MkDebug("MkMatrix::const with MkArray, z vector is not one\n");
         exit(-1);
     }
+
     FI = FMatrix.getSzX();
     FJ = FMatrix.getSzY();
     FD = 0;
@@ -710,6 +721,8 @@ template <class T>
 MkMatrix<T>::MkMatrix(MkArray<T> &&fm)
 {
     FMatrix = std::move(fm);
+    if (FMatrix.getSzX() == FMatrix.getSzY())
+        FIndex.Initialize(FMatrix.getSzX());
     if (FMatrix.getSzZ() != 1)
     {
         MkDebug("MkMatrix::const with MkArray, z vector is not one\n");
@@ -849,6 +862,7 @@ bool MkMatrix<T>::LUDecompose()
                 sum -= FMatrix(i, k) * FMatrix(k, j);
             FMatrix(i, j) = sum;
         }
+
         big = 0.0;
         for (i = j; i < n; i++)
         {
@@ -862,6 +876,7 @@ bool MkMatrix<T>::LUDecompose()
                 imax = i;
             }
         }
+
         if (j != imax)
         {
             for (k = 0; k < n; k++)
@@ -874,7 +889,7 @@ bool MkMatrix<T>::LUDecompose()
             vv(imax) = vv(j);
         }
         FIndex(j) = imax;
-        if (FMatrix(j, j) == 0.0)
+        if (fabs(FMatrix(j, j)) < EPS)
             FMatrix(j, j) = TINY;
         if (j != n)
         {
@@ -883,6 +898,7 @@ bool MkMatrix<T>::LUDecompose()
                 FMatrix(i, j) *= dum;
         }
     }
+
     FMatType = mtLUDecomposed;
     return true;
 }
@@ -1082,11 +1098,11 @@ bool MkMatrix<T>::Solve(MkVector<T> &B)
     if (isSingular())
         return false;
     MkVector<T> X;
-    MkMatrix A(FMatrix);
+    MkMatrix<T> A(FMatrix);
     X = B;
     A.LUDecompose();
     A.LUBackSubstitute(X);
-    MkMatrix A1(FMatrix);
+    MkMatrix<T> A1(FMatrix);
     A1.GaussSeidel(X, B);
     B = X;
     return true;
@@ -1101,7 +1117,7 @@ bool MkMatrix<T>::Solve(MkVector<T> &B, SolveType solve_type)
     if (solve_type == stLUD)
     {
         MkVector<T> X;
-        MkMatrix A(FMatrix);
+        MkMatrix<T> A(FMatrix);
         X = B;
         A.LUDecompose();
         A.LUBackSubstitute(X);
@@ -1111,7 +1127,7 @@ bool MkMatrix<T>::Solve(MkVector<T> &B, SolveType solve_type)
     else if (solve_type == stGauss)
     {
         MkVector<T> X;
-        MkMatrix A(FMatrix);
+        MkMatrix<T> A(FMatrix);
         X = B;
         A.GaussSeidel(X, B);
         B = X;
@@ -1161,7 +1177,7 @@ MkMatrix<T> &MkMatrix<T>::operator*=(MkMatrix<T> &m)
     static MkMatrix<T> NullMatrix;
     if (FJ != m.FI)
         return NullMatrix;
-    static MkMatrix m_t(FI, m.FJ);
+    static MkMatrix<T> m_t(FI, m.FJ);
     T sum;
     for (int i = 0; i < FI; i++)
     {
@@ -1198,8 +1214,8 @@ MkVector<T> &MkMatrix<T>::operator*=(MkVector<T> &v)
 template <class T>
 MkMatrix<T> &MkMatrix<T>::operator=(const MkMatrix<T> &m)
 {
-    FMatrix = std::move(m.FMatrix);
-    FIndex = std::move(m.FIndex);
+    FMatrix = (m.FMatrix);
+    FIndex = (m.FIndex);
     FD = m.FD;
     FI = m.FI;
     FJ = m.FJ;

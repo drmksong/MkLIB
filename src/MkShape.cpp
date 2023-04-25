@@ -4,6 +4,11 @@
 // It forms the base for the higher level class, such as tunnel component.
 //
 // Copyright (c) 1999 Myung Kyu Song, ESCO Consultant Co., Ltd.#include <vcl.h>
+//---------------------------------------------------------------------------
+// TODO: need to implement the test code especially the ShapeList class,
+//       because I am not sure if the add and delete member function is
+//       working properly. 23.04.25
+//---------------------------------------------------------------------------
 #pragma hdrstop
 //---------------------------------------------------------------------------
 #ifdef __BCPLUSPLUS__
@@ -23,6 +28,7 @@
 #include "Graphics.hpp"
 #include "MkPaintBox.h"
 #endif
+
 
 bool MkShape::operator==(MkShape &ms)
 {
@@ -228,7 +234,7 @@ MkShapeList::MkShapeList()
   NumberOfShape = 0;
 }
 
-MkShapeList::MkShapeList(MkShape *ms)
+MkShapeList::MkShapeList(boost::shared_ptr<MkShape> ms)
 {
   FirstMyShapes = ms;
   FirstMyShapes->NextShape = NULL;
@@ -253,7 +259,7 @@ MkShapeList::~MkShapeList()
   LastMyShapes = NULL;
 }
 
-bool MkShapeList::Add(MkShape *ms)
+bool MkShapeList::Add(boost::shared_ptr<MkShape> ms)
 {
   if (LastMyShapes == NULL)
   {
@@ -279,20 +285,23 @@ bool MkShapeList::Add(MkShape *ms)
   return true;
 }
 
-bool MkShapeList::Insert(MkShape *) // Not implemented yet, but it will be used
+// TODO:
+bool MkShapeList::Insert(boost::shared_ptr<MkShape> ms) // Not implemented yet, but it will be used
 {                                   // when new object inserted current position.
   return true;
 }
 
-bool MkShapeList::Delete(MkShape *ms)
+
+bool MkShapeList::Delete(boost::shared_ptr<MkShape> ms)
 {
-  MkShape *cur = FirstMyShapes;
+  boost::shared_ptr<MkShape> cur = FirstMyShapes;
 
   for (int i = 0; i < NumberOfShape; i++, cur = cur->Next())
   {
     if (cur == ms)
       break;
   }
+  
   if (cur == ms)
   {
     if (cur->Prev())
@@ -303,7 +312,7 @@ bool MkShapeList::Delete(MkShape *ms)
     {
       FirstMyShapes = cur->Next();
       if (FirstMyShapes)
-        FirstMyShapes->PrevShape = NULL;
+        FirstMyShapes->PrevShape = NULL; // TODO: not sure this is correct, or do we need to call reset() instead?
     }
     if (cur->Next())
       cur->NextShape->PrevShape = cur->Prev();
@@ -311,7 +320,7 @@ bool MkShapeList::Delete(MkShape *ms)
     {
       LastMyShapes = cur->Prev();
       if (LastMyShapes)
-        LastMyShapes->NextShape = NULL;
+        LastMyShapes->NextShape = NULL; // TODO: not sure this is correct, or do we need to call reset() instead?
     }
     if (cur == CurrentMyShapes)
     {
@@ -323,9 +332,8 @@ bool MkShapeList::Delete(MkShape *ms)
         CurrentMyShapes = NULL;
     }
 
-    delete ms;
-    ms = NULL;
-    NumberOfShape--;
+    ms.reset();
+    NumberOfShape--;  // TODO: check this
     return true;
   }
   else
@@ -335,7 +343,7 @@ bool MkShapeList::Delete(MkShape *ms)
 bool MkShapeList::Clear()
 {
   bool flag = true;
-  MkShape *cur = LastMyShapes;
+  boost::shared_ptr<MkShape> cur = LastMyShapes;
 
   if (!cur)
     return true;
@@ -348,9 +356,10 @@ bool MkShapeList::Clear()
   if (flag)
   {
     Delete(FirstMyShapes);
-    FirstMyShapes = NULL;
-    CurrentMyShapes = NULL;
-    LastMyShapes = NULL;
+    // it is smart pointer, so it is not necessary
+    // FirstMyShapes = NULL; 
+    // CurrentMyShapes = NULL;
+    // LastMyShapes = NULL;
     NumberOfShape = 0;
     return true;
   }
@@ -360,7 +369,7 @@ bool MkShapeList::Clear()
 
 double MkShapeList::GetArea()
 {
-  return 0; // ���ľ� �Ѵ�.
+  return 0; // TODO: not implemented yet
 }
 
 #ifdef __BCPLUSPLUS__
@@ -379,7 +388,7 @@ void MkShapeList::Draw(TObject *Sender)
 
 MkShape &MkShapeList::operator[](int i)
 {
-  MkShape *ms;
+  boost::shared_ptr<MkShape> ms;
   if (i > NumberOfShape)
     throw;
   ms = FirstMyShapes;
@@ -396,27 +405,27 @@ MkShapeList &MkShapeList::operator=(MkShapeList &sl)
   {
     if (sl[i].ClassName().compare( std::string("MkLine"))== 0) 
     {
-      MkLine *ms = new MkLine;
-      *ms = (MkLine &)sl[i];
+      boost::shared_ptr<MkLine> ms;
+      ms = boost::make_shared<MkLine>((MkLine &)sl[i]);
       Add(ms);
     }
     else if (sl[i].ClassName().compare( std::string("MkArc"))== 0) 
     {
-      MkArc *ms = new MkArc;
-      *ms = (MkArc &)sl[i];
+      boost::shared_ptr<MkArc> ms;
+      ms = boost::make_shared<MkArc>((MkArc &)sl[i]);
       Add(ms);
     }
     else if (sl[i].ClassName().compare( std::string("MkCircle"))== 0) 
     {
-      MkCircle *ms = new MkCircle;
-      *ms = (MkCircle &)sl[i];
+      boost::shared_ptr<MkCircle> ms;
+      ms = boost::make_shared<MkCircle>((MkCircle &)sl[i]);
       Add(ms);
     }
     else
     {
       MkDebug("Error MkShapeList operator=");
-      MkShape *ms = new MkShape;
-      *ms = sl[i];
+      boost::shared_ptr<MkShape> ms;
+      ms = boost::make_shared<MkShape>(sl[i]);
       Add(ms);
     }
   }
