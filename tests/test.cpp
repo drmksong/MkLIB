@@ -263,7 +263,8 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     double z = pnt.Z;
 
     MkPoint fp,bp,lp,rp;
-    MkPoints fpnts(5),bpnts(5),lpnts(5),rpnts(5);
+    MkPoints fpnts,bpnts,lpnts,rpnts;
+    MkPoint fpnt,bpnt,lpnt,rpnt;
 
     fp.X += 200;
     bp.X -= 200;
@@ -288,54 +289,77 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
         std::cout << "line["<< i <<"] coord:" << line[0].X << " " << " " << line[0].Y << " " << line[1].X << " " << line[1].Y << std::endl;        
         if (fl.IsIntersect(line)) {
             std::cout << "fl intersect before add "<< fpnts.GetSize() << std::endl;
-            MkPoint tpnt;
-            std::cout << "fl intersect middle add "<< fpnts.GetSize() << std::endl;
-            tpnt = fl.GetIntPoint(line);
-            fpnts.Add(tpnt);
+            fpnt = fl.GetIntPoint(line);
+            std::cout << "fpnt coord:" << fpnt.X << " " << " " << fpnt.Y << std::endl;        
+            fpnts.Add(fpnt);
             std::cout << "fl intersect after  add "<< fpnts.GetSize() << std::endl;
+
         }
-        // if (bl.IsIntersect(line)) {
-        //     bpnts.Add(bl.GetIntPoint(line));
-        // }
-        // if (ll.IsIntersect(line)) {
-        //     lpnts.Add(ll.GetIntPoint(line));
-        // }
-        // if (rl.IsIntersect(line)) {
-        //     rpnts.Add(rl.GetIntPoint(line));
-        // }
+        if (bl.IsIntersect(line)) {
+            std::cout << "bl intersect before add "<< bpnts.GetSize() << std::endl;
+            bpnt = bl.GetIntPoint(line);
+            std::cout << "bpnt coord:" << bpnt.X << " " << " " << bpnt.Y << std::endl;        
+            bpnts.Add(bpnt);
+            std::cout << "bl intersect after  add "<< bpnts.GetSize() << std::endl;            
+            
+        }
+        if (ll.IsIntersect(line)) {
+            std::cout << "ll intersect before add "<< lpnts.GetSize() << std::endl;
+            lpnt = ll.GetIntPoint(line);
+            std::cout << "lpnt coord:" << lpnt.X << " " << " " << lpnt.Y << std::endl;        
+            lpnts.Add(lpnt);
+            std::cout << "ll intersect after  add "<< lpnts.GetSize() << std::endl;            
+
+        }
+        if (rl.IsIntersect(line)) {
+            std::cout << "rl intersect before add "<< rpnts.GetSize() << std::endl;
+            rpnt = rl.GetIntPoint(line);
+            std::cout << "rpnt coord:" << rpnt.X << " " << " " << rpnt.Y << std::endl;        
+            rpnts.Add(rpnt);
+            std::cout << "rl intersect after  add "<< rpnts.GetSize() << std::endl;
+        }
+
     }
 
-    // double dist = 1000;
-    // for (int i=0;i<fpnts.GetSize();i++) {
-    //     dist = min(dist,CalDist(pnt,fpnts[i]));
-    // }
-    // fblr[0] = dist;
+    double dist = 1000;
+    for (int i=0;i<fpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,fpnts[i]));
+    }
+    fblr[0] = dist;
 
-    // dist = 1000;
-    // for (int i=0;i<bpnts.GetSize();i++) {
-    //     dist = min(dist,CalDist(pnt,bpnts[i]));
-    // }
-    // fblr[1] = dist;
+    dist = 1000;
+    for (int i=0;i<bpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,bpnts[i]));
+    }
+    fblr[1] = dist;
 
-    // dist = 1000;
-    // for (int i=0;i<lpnts.GetSize();i++) {
-    //     dist = min(dist,CalDist(pnt,lpnts[i]));
-    // }
+    dist = 1000;
+    for (int i=0;i<lpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,lpnts[i]));
+    }
 
-    // fblr[2] = dist;
+    fblr[2] = dist;
 
-    // dist = 1000;
-    // for (int i=0;i<rpnts.GetSize();i++) {
-    //     dist = min(dist,CalDist(pnt,rpnts[i]));
-    // }
-    // fblr[3] = dist;
+    dist = 1000;
+    for (int i=0;i<rpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,rpnts[i]));
+    }
+    fblr[3] = dist;
 
     return fblr;
 }
 
+void pnts_tst()
+{
+    MkPoint apnt(1,1,1);
+    MkPoints pnts;
+
+    pnts.Add(apnt);
+    printf("%f %f %f\n",pnts[0].X,pnts[0].Y,pnts[0].Z);
+}
+
 int main()
 {
-
     // TODO: to incorporate GLFW, GLAD for the testing
     // int argc;
     // char *argv;
@@ -347,15 +371,19 @@ int main()
     // arr_test_move_op();
 
     // shared_test();
-    MkDouble res;
-    MkLines lines;
-    MkPoint pnt(1,1,0);
-    double theta = 90;
-    std::string fname = "../wall_column.dat";
-    read_file(fname,lines);
-    std::cout << "lines size: " << lines.GetSize() << "\n";
-    res = get_fblr(theta, pnt, lines);
-    std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+    {
+        MkDouble res;
+        MkLines lines;
+        MkPoint pnt(10,10,0);
+        double theta = -43; // counter clockwise
+        std::string fname = "../wall_column.dat";
+        read_file(fname,lines);
+        std::cout << "lines size: " << lines.GetSize() << "\n";
+        res = get_fblr(theta, pnt, lines);
+        std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+    }
+
+    // pnts_tst();
     
     return 0;
 }
