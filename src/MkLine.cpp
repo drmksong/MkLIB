@@ -1115,30 +1115,30 @@ bool MkLine::IsIntersect(MkLine &rl)
 
    if (!isFinite && !rl.isFinite)
    {
-      /*
-            MkDouble t;
-            int i,j,cnt=0;
-            bool flag=true;
+      
+      // MkDouble t;
+      // int i,j,cnt=0;
+      // bool flag=true;
 
-            if (fabs(L)>EPS*1000) cnt++;
-            if (fabs(M)>EPS*1000) cnt++;
-            if (fabs(N)>EPS*1000) cnt++;
+      // if (fabs(L)>EPS*1000) cnt++;
+      // if (fabs(M)>EPS*1000) cnt++;
+      // if (fabs(N)>EPS*1000) cnt++;
 
-            t.Initialize(cnt);
+      // t.Initialize(cnt);
 
-            cnt=0;
-            if (fabs(L)>EPS*1000) {t(cnt) = (p3.X-p1.X)/L;cnt++;} else if (fabs(p3.X-p1.X)>EPS*1000){flag=false;}
-            if (fabs(M)>EPS*1000) {t(cnt) = (p3.Y-p1.Y)/M;cnt++;} else if (fabs(p3.Y-p1.Y)>EPS*1000){flag=false;}
-            if (fabs(N)>EPS*1000) {t(cnt) = (p3.Z-p1.Z)/N;cnt++;} else if (fabs(p3.Z-p1.Z)>EPS*1000){flag=false;}
+      // cnt=0;
+      // if (fabs(L)>EPS*1000) {t(cnt) = (p3.X-p1.X)/L;cnt++;} else if (fabs(p3.X-p1.X)>EPS*1000){flag=false;}
+      // if (fabs(M)>EPS*1000) {t(cnt) = (p3.Y-p1.Y)/M;cnt++;} else if (fabs(p3.Y-p1.Y)>EPS*1000){flag=false;}
+      // if (fabs(N)>EPS*1000) {t(cnt) = (p3.Z-p1.Z)/N;cnt++;} else if (fabs(p3.Z-p1.Z)>EPS*1000){flag=false;}
 
-            for (i=0;i<t.getSzX()-1;i++) {
-              for(j=i+1;j<t.getSzX();j++) {
-                flag = flag && fabs(t(i)-t(j))<EPS*1000;
-              }
-            }
-            return fabs(v12*v34) - 1 < EPS && flag;
-      */
-      return true;
+      // for (i=0;i<t.getSzX()-1;i++) {
+      //    for(j=i+1;j<t.getSzX();j++) {
+      //       flag = flag && fabs(t(i)-t(j))<EPS*1000;
+      //    }
+      // }
+      // return fabs(v12*v34) - 1 < EPS && flag;
+      
+      return true; // This is right. And I know why. 2023. 04. 28 by Dr. M.K. Song
    }
    else if (!isFinite && rl.isFinite)
    {
@@ -1204,30 +1204,29 @@ bool MkLine::IsIntersect(MkLine &&rl)
 
    if (!isFinite && !rl.isFinite)
    {
-      /*
-            MkDouble t;
-            int i,j,cnt=0;
-            bool flag=true;
+      // MkDouble t;
+      // int i,j,cnt=0;
+      // bool flag=true;
 
-            if (fabs(L)>EPS*1000) cnt++;
-            if (fabs(M)>EPS*1000) cnt++;
-            if (fabs(N)>EPS*1000) cnt++;
+      // if (fabs(L)>EPS*1000) cnt++;
+      // if (fabs(M)>EPS*1000) cnt++;
+      // if (fabs(N)>EPS*1000) cnt++;
 
-            t.Initialize(cnt);
+      // t.Initialize(cnt);
 
-            cnt=0;
-            if (fabs(L)>EPS*1000) {t(cnt) = (p3.X-p1.X)/L;cnt++;} else if (fabs(p3.X-p1.X)>EPS*1000){flag=false;}
-            if (fabs(M)>EPS*1000) {t(cnt) = (p3.Y-p1.Y)/M;cnt++;} else if (fabs(p3.Y-p1.Y)>EPS*1000){flag=false;}
-            if (fabs(N)>EPS*1000) {t(cnt) = (p3.Z-p1.Z)/N;cnt++;} else if (fabs(p3.Z-p1.Z)>EPS*1000){flag=false;}
+      // cnt=0;
+      // if (fabs(L)>EPS*1000) {t(cnt) = (p3.X-p1.X)/L;cnt++;} else if (fabs(p3.X-p1.X)>EPS*1000){flag=false;}
+      // if (fabs(M)>EPS*1000) {t(cnt) = (p3.Y-p1.Y)/M;cnt++;} else if (fabs(p3.Y-p1.Y)>EPS*1000){flag=false;}
+      // if (fabs(N)>EPS*1000) {t(cnt) = (p3.Z-p1.Z)/N;cnt++;} else if (fabs(p3.Z-p1.Z)>EPS*1000){flag=false;}
 
-            for (i=0;i<t.getSzX()-1;i++) {
-              for(j=i+1;j<t.getSzX();j++) {
-                flag = flag && fabs(t(i)-t(j))<EPS*1000;
-              }
-            }
-            return fabs(v12*v34) - 1 < EPS && flag;
-      */
-      return true;
+      // for (i=0;i<t.getSzX()-1;i++) {
+      //    for(j=i+1;j<t.getSzX();j++) {
+      //       flag = flag && fabs(t(i)-t(j))<EPS*1000;
+      //    }
+      // }
+      // return fabs(v12*v34) - 1 < EPS && flag;
+
+      return true; // This is right. And I know why. 2023. 04. 28 by Dr. M.K. Song
    }
    else if (!isFinite && rl.isFinite)
    {

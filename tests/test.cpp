@@ -245,6 +245,7 @@ bool read_file(std::string fname,MkLines &lines) {
             std::cout << sx << ", " << sy << ", " << ex << ", " << ey << "\n";
             MkPoint sp(sx,sy,0),ep(ex,ey,0);
             MkLine line(sp,ep);
+            line.SetFiniteness(true);
             lines.Add(line);
         }
     }
@@ -282,6 +283,10 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     rp += pnt;
 
     MkLine fl(pnt,fp),bl(pnt,bp),ll(pnt,lp),rl(pnt,rp);
+    fl.SetFiniteness(true);
+    bl.SetFiniteness(true);
+    ll.SetFiniteness(true);
+    rl.SetFiniteness(true);
     std::cout << "fl coord:" << fl[0].X << " " << " " << fl[0].Y << " " << fl[1].X << " " << fl[1].Y << std::endl;
 
     for (int i=0;i<lines.GetSize();i++) {
@@ -378,6 +383,7 @@ int main()
         double theta = -43; // counter clockwise
         std::string fname = "../wall_column.dat";
         read_file(fname,lines);
+        for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
         std::cout << "lines size: " << lines.GetSize() << "\n";
         res = get_fblr(theta, pnt, lines);
         std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
