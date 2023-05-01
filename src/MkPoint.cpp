@@ -595,12 +595,12 @@ int MkPoints::Shrink(int delta)
 
 bool MkPoints::Add(MkPoint &point)
 {
-   printf("MkPoint::Add size %d and capacity %d \n", FSize, FCapacity);
+   // printf("MkPoint::Add size %d and capacity %d \n", FSize, FCapacity);
    if (FSize <= FCapacity)
    {
       try
       {
-         printf("MkPoint::Add try %d \n", Mk::Delta);
+         // printf("MkPoint::Add try %d \n", Mk::Delta);
          Grow(Mk::Delta);
       }
       catch (Alloc &a)
@@ -617,12 +617,12 @@ bool MkPoints::Add(MkPoint &point)
 
 bool MkPoints::Add(MkPoint &&point)
 {
-   printf("MkPoint:: size %d and capacity %d \n", FSize, FCapacity);
+   // printf("MkPoint:: size %d and capacity %d \n", FSize, FCapacity);
    if (FSize <= FCapacity)
    {
       try
       {
-         printf("MkPoint::Add try %d \n", Mk::Delta);
+         // printf("MkPoint::Add try %d \n", Mk::Delta);
          Grow(Mk::Delta);
       }
       catch (Alloc &a)

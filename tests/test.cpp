@@ -10,6 +10,7 @@
 #include "MkMatrix.hpp"
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
+#include "MkRect.hpp"
 
 // #include "gltest.hpp"
 // int gl_main(int argc, char *argv[]);
@@ -257,7 +258,7 @@ bool read_file(std::string fname,MkLines &lines) {
 MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines) 
 {
 
-    std::cout << "get_fblr entered \n\n\n\n";
+    // std::cout << "get_fblr entered \n\n\n\n";
     static MkDouble fblr(4);
     double x = pnt.X;
     double y = pnt.Y;
@@ -287,41 +288,41 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     bl.SetFiniteness(true);
     ll.SetFiniteness(true);
     rl.SetFiniteness(true);
-    std::cout << "fl coord:" << fl[0].X << " " << " " << fl[0].Y << " " << fl[1].X << " " << fl[1].Y << std::endl;
+    // std::cout << "fl coord:" << fl[0].X << " " << " " << fl[0].Y << " " << fl[1].X << " " << fl[1].Y << std::endl;
 
     for (int i=0;i<lines.GetSize();i++) {
         MkLine line = lines[i];
-        std::cout << "line["<< i <<"] coord:" << line[0].X << " " << " " << line[0].Y << " " << line[1].X << " " << line[1].Y << std::endl;        
+        // std::cout << "line["<< i <<"] coord:" << line[0].X << " " << " " << line[0].Y << " " << line[1].X << " " << line[1].Y << std::endl;        
         if (fl.IsIntersect(line)) {
-            std::cout << "fl intersect before add "<< fpnts.GetSize() << std::endl;
+            // std::cout << "fl intersect before add "<< fpnts.GetSize() << std::endl;
             fpnt = fl.GetIntPoint(line);
-            std::cout << "fpnt coord:" << fpnt.X << " " << " " << fpnt.Y << std::endl;        
+            // std::cout << "fpnt coord:" << fpnt.X << " " << " " << fpnt.Y << std::endl;        
             fpnts.Add(fpnt);
-            std::cout << "fl intersect after  add "<< fpnts.GetSize() << std::endl;
+            // std::cout << "fl intersect after  add "<< fpnts.GetSize() << std::endl;
 
         }
         if (bl.IsIntersect(line)) {
-            std::cout << "bl intersect before add "<< bpnts.GetSize() << std::endl;
+            // std::cout << "bl intersect before add "<< bpnts.GetSize() << std::endl;
             bpnt = bl.GetIntPoint(line);
-            std::cout << "bpnt coord:" << bpnt.X << " " << " " << bpnt.Y << std::endl;        
+            // std::cout << "bpnt coord:" << bpnt.X << " " << " " << bpnt.Y << std::endl;        
             bpnts.Add(bpnt);
-            std::cout << "bl intersect after  add "<< bpnts.GetSize() << std::endl;            
+            // std::cout << "bl intersect after  add "<< bpnts.GetSize() << std::endl;            
             
         }
         if (ll.IsIntersect(line)) {
-            std::cout << "ll intersect before add "<< lpnts.GetSize() << std::endl;
+            // std::cout << "ll intersect before add "<< lpnts.GetSize() << std::endl;
             lpnt = ll.GetIntPoint(line);
-            std::cout << "lpnt coord:" << lpnt.X << " " << " " << lpnt.Y << std::endl;        
+            // std::cout << "lpnt coord:" << lpnt.X << " " << " " << lpnt.Y << std::endl;        
             lpnts.Add(lpnt);
-            std::cout << "ll intersect after  add "<< lpnts.GetSize() << std::endl;            
+            // std::cout << "ll intersect after  add "<< lpnts.GetSize() << std::endl;            
 
         }
         if (rl.IsIntersect(line)) {
-            std::cout << "rl intersect before add "<< rpnts.GetSize() << std::endl;
+            // std::cout << "rl intersect before add "<< rpnts.GetSize() << std::endl;
             rpnt = rl.GetIntPoint(line);
-            std::cout << "rpnt coord:" << rpnt.X << " " << " " << rpnt.Y << std::endl;        
+            // std::cout << "rpnt coord:" << rpnt.X << " " << " " << rpnt.Y << std::endl;        
             rpnts.Add(rpnt);
-            std::cout << "rl intersect after  add "<< rpnts.GetSize() << std::endl;
+            // std::cout << "rl intersect after  add "<< rpnts.GetSize() << std::endl;
         }
 
     }
@@ -354,6 +355,8 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     return fblr;
 }
 
+// simple test for MkPoint add member function
+// ridiculous error in the add member function found and corrected. 04/27/2023
 void pnts_tst()
 {
     MkPoint apnt(1,1,1);
@@ -361,6 +364,45 @@ void pnts_tst()
 
     pnts.Add(apnt);
     printf("%f %f %f\n",pnts[0].X,pnts[0].Y,pnts[0].Z);
+}
+
+// implementation trial for scanning algorithm with given angle,fr,br,lr,rr
+void scan_test(MkLines &lines,double ang, MkDouble &fblr)
+{
+   
+    MkDouble res;
+    MkDouble contour(10,10,4);
+
+    for (double fi=0.001;fi<100;fi+=10) {
+        for (double fj=0.001;fj<100;fj+=10) {
+            MkPoint pnt(fi,fj,0);
+            res = get_fblr(ang,pnt,lines);
+            contour(int(fi/10),int(fj/10),0) = fabs(res[0]-fblr[0]);
+            contour(int(fi/10),int(fj/10),1) = fabs(res[1]-fblr[1]);
+            contour(int(fi/10),int(fj/10),2) = fabs(res[2]-fblr[2]);
+            contour(int(fi/10),int(fj/10),3) = fabs(res[3]-fblr[3]);
+        }
+    }
+
+    printf("i:  j:  %f %f %f %f\n",fblr(0),fblr(1),fblr(2),fblr(3));
+
+    for (int i=0;i<contour.getSzX();i++) {
+        for (int j=0;j<contour.getSzY();j++) {
+            printf("i:%d j:%d \t %5.1f \t %5.1f \t %5.1f \t %5.1f \t %5.1f\n",i*10,j*10,(contour(i,j,0)+contour(i,j,1)+contour(i,j,2)+contour(i,j,3)),contour(i,j,0),contour(i,j,1),contour(i,j,2),contour(i,j,3));
+        }
+    }
+}
+// TODO:---------------------------------------------------------------------
+// implement random walk algorithm, that is, given a point, find the next point
+// where the next point is not in the columns but in the wall
+// therefore, those information should be given as input, 
+// so that read_file function should be revised accordingly
+// ---------------------------------------------------------------------------
+MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
+{
+    MkPoint nextpnt;
+
+    return nextpnt;
 }
 
 int main()
@@ -377,16 +419,22 @@ int main()
 
     // shared_test();
     {
+        MkPoints ori;
+        MkPoints trace;
         MkDouble res;
         MkLines lines;
-        MkPoint pnt(10,10,0);
-        double theta = -43; // counter clockwise
         std::string fname = "../wall_column.dat";
         read_file(fname,lines);
-        for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
-        std::cout << "lines size: " << lines.GetSize() << "\n";
-        res = get_fblr(theta, pnt, lines);
-        std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+
+        {
+            MkPoint pnt(50,50,0);
+            double theta = -43; // counter clockwise
+            for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
+            std::cout << "lines size: " << lines.GetSize() << "\n";
+            res = get_fblr(theta, pnt, lines);
+            std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+            scan_test(lines,theta,res);
+        }
     }
 
     // pnts_tst();
