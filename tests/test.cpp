@@ -6,6 +6,8 @@
 #include <fstream>
 #include <cstring>
 #include <vector>
+#include <random>
+#include <chrono>
 #include <boost/make_shared.hpp>
 #include "MkMatrix.hpp"
 #include "MkPoint.hpp"
@@ -400,7 +402,23 @@ void scan_test(MkLines &lines,double ang, MkDouble &fblr)
 // ---------------------------------------------------------------------------
 MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
 {
+    static double d_dist=0,d_ang=0;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> randis(0,1);
+
+
+    if (d_dist==0) {
+        d_dist = randis(gen);
+    }
+    if (d_ang==0) {
+        d_ang = randis(gen);
+    }
+
+    printf("%5.2f %5.2f \n",d_dist,d_ang);
+
     MkPoint nextpnt;
+    
 
     return nextpnt;
 }
@@ -419,6 +437,22 @@ int main()
 
     // shared_test();
     {
+        MkRect wall(MkPoint(0,0));
+        wall.SetHeight(100);
+        wall.SetWidth(100);
+        wall.SetCenter(MkPoint(50,50));
+
+        MkRects cols(4);
+        cols[0].SetOrigin(MkPoint(20,20)); cols[0].SetCenter(MkPoint(30,30));
+        cols[1].SetOrigin(MkPoint(60,20)); cols[1].SetCenter(MkPoint(70,30));
+        cols[2].SetOrigin(MkPoint(20,60)); cols[2].SetCenter(MkPoint(30,70));
+        cols[3].SetOrigin(MkPoint(60,60)); cols[3].SetCenter(MkPoint(70,70));
+
+        for (int i=0;i<4;i++)   {
+            cols[i].SetHeight(20);
+            cols[i].SetWidth(20);
+        }
+
         MkPoints ori;
         MkPoints trace;
         MkDouble res;
