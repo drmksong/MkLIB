@@ -19,6 +19,21 @@ public:
   MkRect(MkPoint &p);
   MkRect(MkPoint &&p);
   MkRect(double x, double y);
+  MkRect(MkRect &rect) : MkShape(rect)
+  {
+    Origin = rect.Origin;
+    Center = rect.Center;
+    Width = rect.Width;
+    Height = rect.Height;
+  }
+  MkRect(MkRect &&rect) : MkShape(rect)
+  {
+    Origin = rect.Origin;
+    Center = rect.Center;
+    Width = rect.Width;
+    Height = rect.Height;
+  }
+
 
 public:
   void SetOrigin(MkPoint &pnt) { Origin = pnt; }
@@ -87,6 +102,8 @@ public:
 
   MkPoint &operator[](int i);
   MkLine &operator()(int i);
+  MkPoint &GetPoint(int i) {return operator[](i);}
+  MkLine &GetLine(int i) {return operator()(i);}
 
   std::string ClassName() { return std::string("MkRect"); }
 

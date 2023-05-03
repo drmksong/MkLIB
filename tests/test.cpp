@@ -357,6 +357,121 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     return fblr;
 }
 
+MkDouble &get_fblr(double theta, MkPoint &pnt, MkRect &wall, MkRects &cols) 
+{
+
+    // std::cout << "get_fblr entered \n\n\n\n";
+    static MkDouble fblr(4);
+    double x = pnt.X;
+    double y = pnt.Y;
+    double z = pnt.Z;
+
+    MkPoint fp,bp,lp,rp;
+    MkPoints fpnts,bpnts,lpnts,rpnts;
+    MkPoint fpnt,bpnt,lpnt,rpnt;
+
+    MkLines lines;
+
+    for (int i=0;i<4;i++) {
+        lines.Add(wall.GetLine(i));
+    }
+
+    for (int j=0;j<cols.GetSize();j++) {
+        MkRect col = cols[j];
+        for (int i=0;i<4;i++) {
+            lines.Add(col.GetLine(i));
+        }
+    }
+
+    printf("\nlines size %d\n\n",lines.GetSize());
+
+    fp.X += 200;
+    bp.X -= 200;
+    lp.Y += 200;
+    rp.Y -= 200;
+
+    fp.RotateInZ(-theta);
+    bp.RotateInZ(-theta);
+    lp.RotateInZ(-theta);
+    rp.RotateInZ(-theta);
+
+    fp += pnt;
+    bp += pnt;
+    lp += pnt;
+    rp += pnt;
+
+    MkLine fl(pnt,fp),bl(pnt,bp),ll(pnt,lp),rl(pnt,rp);
+    fl.SetFiniteness(true);
+    bl.SetFiniteness(true);
+    ll.SetFiniteness(true);
+    rl.SetFiniteness(true);
+    // std::cout << "fl coord:" << fl[0].X << " " << " " << fl[0].Y << " " << fl[1].X << " " << fl[1].Y << std::endl;
+
+    for (int i=0;i<lines.GetSize();i++) {
+        MkLine line = lines[i];
+        // std::cout << "line["<< i <<"] coord:" << line[0].X << " " << " " << line[0].Y << " " << line[1].X << " " << line[1].Y << std::endl;        
+        if (fl.IsIntersect(line)) {
+            // std::cout << "fl intersect before add "<< fpnts.GetSize() << std::endl;
+            fpnt = fl.GetIntPoint(line);
+            // std::cout << "fpnt coord:" << fpnt.X << " " << " " << fpnt.Y << std::endl;        
+            fpnts.Add(fpnt);
+            // std::cout << "fl intersect after  add "<< fpnts.GetSize() << std::endl;
+
+        }
+        if (bl.IsIntersect(line)) {
+            // std::cout << "bl intersect before add "<< bpnts.GetSize() << std::endl;
+            bpnt = bl.GetIntPoint(line);
+            // std::cout << "bpnt coord:" << bpnt.X << " " << " " << bpnt.Y << std::endl;        
+            bpnts.Add(bpnt);
+            // std::cout << "bl intersect after  add "<< bpnts.GetSize() << std::endl;            
+            
+        }
+        if (ll.IsIntersect(line)) {
+            // std::cout << "ll intersect before add "<< lpnts.GetSize() << std::endl;
+            lpnt = ll.GetIntPoint(line);
+            // std::cout << "lpnt coord:" << lpnt.X << " " << " " << lpnt.Y << std::endl;        
+            lpnts.Add(lpnt);
+            // std::cout << "ll intersect after  add "<< lpnts.GetSize() << std::endl;            
+
+        }
+        if (rl.IsIntersect(line)) {
+            // std::cout << "rl intersect before add "<< rpnts.GetSize() << std::endl;
+            rpnt = rl.GetIntPoint(line);
+            // std::cout << "rpnt coord:" << rpnt.X << " " << " " << rpnt.Y << std::endl;        
+            rpnts.Add(rpnt);
+            // std::cout << "rl intersect after  add "<< rpnts.GetSize() << std::endl;
+        }
+
+    }
+
+    double dist = 1000;
+    for (int i=0;i<fpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,fpnts[i]));
+    }
+    fblr[0] = dist;
+
+    dist = 1000;
+    for (int i=0;i<bpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,bpnts[i]));
+    }
+    fblr[1] = dist;
+
+    dist = 1000;
+    for (int i=0;i<lpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,lpnts[i]));
+    }
+
+    fblr[2] = dist;
+
+    dist = 1000;
+    for (int i=0;i<rpnts.GetSize();i++) {
+        dist = min(dist,CalDist(pnt,rpnts[i]));
+    }
+    fblr[3] = dist;
+
+    return fblr;
+}
+
 // simple test for MkPoint add member function
 // ridiculous error in the add member function found and corrected. 04/27/2023
 void pnts_tst()
@@ -403,6 +518,8 @@ void scan_test(MkLines &lines,double ang, MkDouble &fblr)
 MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
 {
     static double d_dist=0,d_ang=0;
+    static MkPoint nextpnt;
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> randis(0,1);
@@ -417,7 +534,7 @@ MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
 
     printf("%5.2f %5.2f \n",d_dist,d_ang);
 
-    MkPoint nextpnt;
+    
     
 
     return nextpnt;
@@ -437,6 +554,7 @@ int main()
 
     // shared_test();
     {
+        //TODO: to revise read_file to setup wall and columns from the file
         MkRect wall(MkPoint(0,0));
         wall.SetHeight(100);
         wall.SetWidth(100);
@@ -458,14 +576,19 @@ int main()
         MkDouble res;
         MkLines lines;
         std::string fname = "../wall_column.dat";
-        read_file(fname,lines);
+        read_file(fname,lines); // -> read_file(fname, wall, cols);
+
 
         {
             MkPoint pnt(50,50,0);
             double theta = -43; // counter clockwise
             for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
             std::cout << "lines size: " << lines.GetSize() << "\n";
-            res = get_fblr(theta, pnt, lines);
+
+            // res = get_fblr(theta, pnt, wall, cols);
+            // res = get_fblr(theta, pnt, lines); // -> get_fblr(theta, pnt, wall, cols);
+            res = get_fblr(theta, pnt, wall, cols);
+
             std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
             scan_test(lines,theta,res);
         }
