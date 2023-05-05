@@ -232,7 +232,8 @@ void shared_test()
     // pnts.reset();
 }
 
-bool read_file(std::string fname,MkLines &lines) {
+bool read_file(std::string fname,MkLines &lines) 
+{
     bool flag=false;
     std::ifstream ifs;
     float sx,sy,ex,ey;
@@ -245,7 +246,7 @@ bool read_file(std::string fname,MkLines &lines) {
     else {
         while(!ifs.eof()) {
             ifs >> sx >> sy >> ex >> ey;
-            std::cout << sx << ", " << sy << ", " << ex << ", " << ey << "\n";
+            // std::cout << sx << ", " << sy << ", " << ex << ", " << ey << "\n";
             MkPoint sp(sx,sy,0),ep(ex,ey,0);
             MkLine line(sp,ep);
             line.SetFiniteness(true);
@@ -255,6 +256,15 @@ bool read_file(std::string fname,MkLines &lines) {
 
     ifs.close();
     return flag;
+}
+
+
+// TODO: make wall and column version read_file function
+
+bool read_file(std::string fname, MkRect &wall, MkRects &cols) 
+{
+    // TODO: should implement
+    return true;
 }
 
 MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines) 
@@ -357,6 +367,11 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkLines &lines)
     return fblr;
 }
 
+// This is MkRect version of get_fblr
+// 05-05-2023, made this correct, by debugging MkRect GetLine function
+// which uses the same static return and probally cause side effects
+// MkLine line(this[0],this[1]) <- this is the problem
+// sp = this[0]; ep = this[1]; MkLine line(sp,ep) <- this is the solution
 MkDouble &get_fblr(double theta, MkPoint &pnt, MkRect &wall, MkRects &cols) 
 {
 
@@ -383,7 +398,11 @@ MkDouble &get_fblr(double theta, MkPoint &pnt, MkRect &wall, MkRects &cols)
         }
     }
 
-    printf("\nlines size %d\n\n",lines.GetSize());
+    // printf("\nlines size %d\n\n",lines.GetSize());
+    for (int i=0;i<lines.GetSize();i++) {
+        lines[i].SetFiniteness(true);
+        // std::cout << lines[i][0].X << " " << lines[i][0].Y << " " << lines[i][1].X << " " << lines[i][1].Y << std::endl;
+    }
 
     fp.X += 200;
     bp.X -= 200;
@@ -515,29 +534,108 @@ void scan_test(MkLines &lines,double ang, MkDouble &fblr)
 // therefore, those information should be given as input, 
 // so that read_file function should be revised accordingly
 // ---------------------------------------------------------------------------
-MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_real_distribution<double> randis(0,1);
+std::uniform_real_distribution<double> ranang(-180,180);
+
+MkPoint & walk(MkPoint &ori, MkRect &wall, MkRects &cols)
 {
+
     static double d_dist=0,d_ang=0;
     static MkPoint nextpnt;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> randis(0,1);
-
 
     if (d_dist==0) {
         d_dist = randis(gen);
     }
     if (d_ang==0) {
-        d_ang = randis(gen);
+        d_ang = ranang(gen);
     }
 
-    printf("%5.2f %5.2f \n",d_dist,d_ang);
+    d_dist += 0.1 * randis(gen);
+    d_ang += 0.1 * ranang(gen);    
 
-    
-    
+    printf("%5.2f %5.2f : ",d_dist,d_ang);
+    nextpnt = ori + MkPoint(d_dist*cos(d_ang*3.14/180),d_dist*sin(d_ang*3.14/180),0);
 
     return nextpnt;
+}
+
+void setup_wall(MkRect &wall, MkRects &cols);
+
+void rw_test() 
+{
+    MkRect wall;
+    MkRects cols(4);
+    MkPoint pnt(50,50,0);
+    setup_wall(wall,cols);
+    for (int i=0;i<50;i++) {
+        pnt = walk(pnt,wall,cols);
+        printf("%5.2f %5.2f \n",pnt.X,pnt.Y);
+    }
+    return;
+}
+
+void setup_wall(MkRect &wall, MkRects &cols)
+{
+    // MkRect wall(MkPoint(0,0));
+    wall.SetHeight(100);
+    wall.SetWidth(100);
+    wall.SetCenter(MkPoint(50,50));
+    for (int i=0;i<4;i++) {
+        wall.GetLine(i).SetFiniteness(true);
+        MkLine line = wall.GetLine(i);
+        // std::cout << " wall " << line[0].X << "  " << line[0].Y << "  " << line[1].X << "  " << line[1].Y << std::endl;
+    }
+    
+    // MkRects cols(4);
+    cols[0].SetOrigin(MkPoint(20,20)); cols[0].SetCenter(MkPoint(30,30));
+    cols[1].SetOrigin(MkPoint(60,20)); cols[1].SetCenter(MkPoint(70,30));
+    cols[2].SetOrigin(MkPoint(20,60)); cols[2].SetCenter(MkPoint(30,70));
+    cols[3].SetOrigin(MkPoint(60,60)); cols[3].SetCenter(MkPoint(70,70));
+
+    for (int i=0;i<4;i++)   {
+        cols[i].SetHeight(20);
+        cols[i].SetWidth(20);
+    }
+
+    for (int i=0;i<4;i++) {
+        for (int j=0;j<4;j++) {
+            cols[i].GetLine(j).SetFiniteness(true);
+            MkLine line = cols[i].GetLine(j);
+            // std::cout << " cols " << line[0].X << "  " << line[0].Y << "  " << line[1].X << "  " << line[1].Y << std::endl;
+
+        }
+    }
+}
+
+void fblr_test()
+{
+    MkRect wall;
+    MkRects cols(4);
+    setup_wall(wall,cols);
+    //TODO: to revise read_file to setup wall and columns from the file
+    MkPoints ori;
+    MkPoints trace;
+    MkDouble res;
+    MkLines lines;
+    std::string fname = "../wall_column.dat";
+    read_file(fname,lines); // -> read_file(fname, wall, cols);
+
+
+    {
+        MkPoint pnt(50,50,0);
+        double theta = -43; // counter clockwise
+        for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
+        // std::cout << "lines size: " << lines.GetSize() << "\n";
+
+        // res = get_fblr(theta, pnt, wall, cols);
+        // res = get_fblr(theta, pnt, lines); // -> get_fblr(theta, pnt, wall, cols);
+        res = get_fblr(theta, pnt, wall, cols);
+
+        std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+        scan_test(lines,theta,res);
+    }
 }
 
 int main()
@@ -553,46 +651,10 @@ int main()
     // arr_test_move_op();
 
     // shared_test();
-    {
-        //TODO: to revise read_file to setup wall and columns from the file
-        MkRect wall(MkPoint(0,0));
-        wall.SetHeight(100);
-        wall.SetWidth(100);
-        wall.SetCenter(MkPoint(50,50));
 
-        MkRects cols(4);
-        cols[0].SetOrigin(MkPoint(20,20)); cols[0].SetCenter(MkPoint(30,30));
-        cols[1].SetOrigin(MkPoint(60,20)); cols[1].SetCenter(MkPoint(70,30));
-        cols[2].SetOrigin(MkPoint(20,60)); cols[2].SetCenter(MkPoint(30,70));
-        cols[3].SetOrigin(MkPoint(60,60)); cols[3].SetCenter(MkPoint(70,70));
+    // fblr_test();
 
-        for (int i=0;i<4;i++)   {
-            cols[i].SetHeight(20);
-            cols[i].SetWidth(20);
-        }
-
-        MkPoints ori;
-        MkPoints trace;
-        MkDouble res;
-        MkLines lines;
-        std::string fname = "../wall_column.dat";
-        read_file(fname,lines); // -> read_file(fname, wall, cols);
-
-
-        {
-            MkPoint pnt(50,50,0);
-            double theta = -43; // counter clockwise
-            for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
-            std::cout << "lines size: " << lines.GetSize() << "\n";
-
-            // res = get_fblr(theta, pnt, wall, cols);
-            // res = get_fblr(theta, pnt, lines); // -> get_fblr(theta, pnt, wall, cols);
-            res = get_fblr(theta, pnt, wall, cols);
-
-            std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
-            scan_test(lines,theta,res);
-        }
-    }
+    rw_test();
 
     // pnts_tst();
     
