@@ -14,6 +14,43 @@
 #include "MkLine.hpp"
 #include "MkRect.hpp"
 
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+// TODO: 
+// 1. Add test for drawing routines for the walls and columns 
+// 2. Add test for gl key input
+// 3. Add test for correct position of the camera
+// 4. Add test for candidate positions of the camera
+// 5. Add test for compare the correct and candidate positions of the camera
+// 6. Add test for ???
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT); // clear color buffer
+    glColor3f(1.0, 0.0, 0.0); // draw in red
+    glBegin(GL_POLYGON); // draw a polygon
+    glColor3f(1.0, 0.0, 0.0); glVertex3f(0.25, 0.25, 0.0);
+    glColor3f(0.0, 1.0, 0.0); glVertex3f(0.75, 0.25, 0.0);
+    glColor3f(1.0, 0.0, 0.0); glVertex3f(0.75, 0.75, 0.0);
+    glColor3f(0.0, 0.0, 1.0); glVertex3f(0.25, 0.75, 0.0);
+    glEnd();
+    glFlush(); // flush output to screen
+}
+
+int main(int argc,char **argv) // gl test
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(500, 500); // window size
+    glutInitWindowPosition(0, 0); // window position
+    glutCreateWindow("OpenGL Test"); // show window
+    glutDisplayFunc(display); // draw callback function
+    glutMainLoop(); // enter main loop
+    return 0;
+}
+
+
 // #include "gltest.hpp"
 // int gl_main(int argc, char *argv[]);
 
@@ -540,7 +577,7 @@ MkPoint & walk(MkPoints &ori, MkPoint &pnt, MkRects &cols, MkRects &wall)
     return nextpnt;
 }
 
-int main()
+int main_()
 {
     // TODO: to incorporate GLFW, GLAD for the testing
     // int argc;
@@ -589,7 +626,7 @@ int main()
             // res = get_fblr(theta, pnt, lines); // -> get_fblr(theta, pnt, wall, cols);
             res = get_fblr(theta, pnt, wall, cols);
 
-            std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
+            std::cout << "f: " << res[0] << ", b:" << res[1] << ", l:" << res[2] << ", r:" << res[3] << "\n";
             scan_test(lines,theta,res);
         }
     }
@@ -598,3 +635,4 @@ int main()
     
     return 0;
 }
+
