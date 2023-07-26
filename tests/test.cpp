@@ -692,33 +692,7 @@ int main_()
 
     // fblr_test();
 
-        for (int i=0;i<4;i++)   {
-            cols[i].SetHeight(20);
-            cols[i].SetWidth(20);
-        }
 
-        MkPoints ori;
-        MkPoints trace;
-        MkDouble res;
-        MkLines lines;
-        std::string fname = "../wall_column.dat";
-        read_file(fname,lines); // -> read_file(fname, wall, cols);
-
-
-        {
-            MkPoint pnt(50,50,0);
-            double theta = -43; // counter clockwise
-            for (int i=0;i<lines.GetSize();i++) {lines[i].SetFiniteness(true);}
-            std::cout << "lines size: " << lines.GetSize() << "\n";
-
-            // res = get_fblr(theta, pnt, wall, cols);
-            // res = get_fblr(theta, pnt, lines); // -> get_fblr(theta, pnt, wall, cols);
-            res = get_fblr(theta, pnt, wall, cols);
-
-            std::cout << "f: " << res[0] << ", b:" << res[1] << ", l:" << res[2] << ", r:" << res[3] << "\n";
-            scan_test(lines,theta,res);
-        }
-    }
 
     // pnts_tst();
     
