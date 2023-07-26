@@ -660,7 +660,11 @@ void fblr_test()
     std::string fname = "../wall_column.dat";
     read_file(fname,lines); // -> read_file(fname, wall, cols);
 
-
+    for (int i=0;i<4;i++)   {
+        cols[i].SetHeight(20);
+        cols[i].SetWidth(20);
+    }
+  
     {
         MkPoint pnt(50,50,0);
         double theta = -43; // counter clockwise
@@ -691,8 +695,6 @@ int main_()
     // shared_test();
 
     // fblr_test();
-
-
 
     // pnts_tst();
     
