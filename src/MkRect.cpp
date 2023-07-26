@@ -317,19 +317,16 @@ MkPoint &MkRect::operator[](int i)
 MkLine &MkRect::operator()(int i)
 {
   static MkLine l;
+  MkPoint sp, ep;
   if (i < 0 || i > 4)
     return NullLine;
 
-  l.SetLine((*this)[i], (*this)[(i == 3) ? 0 : i + 1]);
+  sp = (*this)[i];
+  ep = (*this)[(i == 3) ? 0 : i + 1];
 
-#ifdef __BCPLUSPLUS__
-  l.SetLine((*this)[i], (*this)[(i == 3) ? 0 : i + 1], Color);
-#endif
-
-#if defined(_MSC_VER) && defined(_WINDOWS_)
-  l.SetLine((*this)[i], (*this)[(i == 3) ? 0 : i + 1]);
-#endif
+  l.SetLine(sp, ep);
   l.SetFiniteness(true);
+
   return l;
 }
 

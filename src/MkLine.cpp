@@ -1781,7 +1781,7 @@ void MkLine::Draw(MkPaint *pb)
 
 MkLines::MkLines(int size)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkLines - MkLines(int size)");
       FRealLine.reset();
@@ -1808,7 +1808,7 @@ MkLines::MkLines(int size)
 // alternative implementation of simple copy of shared_ptr, not copying individual elements
 MkLines::MkLines(int size, boost::shared_ptr<MkLine[]> rl)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkLines - MkLines(int size)");
       FRealLine.reset();
