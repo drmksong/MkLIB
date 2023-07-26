@@ -9,6 +9,8 @@ SET( LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR} )
 SET( BINARY ${CMAKE_PROJECT_NAME} )
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+file(GLOB GLLIB "/opt/homebrew/Cellar/mesa/22.3.6_1/lib/*.dylib")
+file(GLOB GLUTLIB "/opt/homebrew/Cellar/freeglut/3.4.0/lib/*.dylib")
 
 # set sources
 SET (SRC_FILES 
@@ -38,6 +40,10 @@ ADD_DEFINITIONS(-DMKDEBUG)
 # ADD_EXECUTABLE(${BINARY}_RUN ${SRC_FILES})
 ADD_LIBRARY (${BINARY} ${SRC_FILES})
 
+# windows
 # TARGET_LINK_LIBRARIES(${BINARY} glu32 freeglut)
-TARGET_LINK_LIBRARIES(${BINARY} GL GLU glut)
+# macOS
+TARGET_LINK_LIBRARIES(${BINARY} ${GLLIB} ${GLUTLIB})
+# linux
+# TARGET_LINK_LIBRARIES(${BINARY} GL GLU glut)
 

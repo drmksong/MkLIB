@@ -2440,11 +2440,11 @@ void GetSubPolygon(double ymin, double ymax, MkPolygon &inpoly, MkPolygon &outpo
     }
   }
 
-  sprintf(str, "ymax = %10.5f, ymin = %10.5f \n", ymax, ymin);
+  snprintf(str, sizeof(str), "ymax = %10.5f, ymin = %10.5f \n", ymax, ymin);
   MkDebug("%s", str);
   for (k = 0; k < outpoly.GetSize(); k++)
   {
-    sprintf(str, "%d-th point of outpolyline is (%f, %f, %f)\n", k, outpoly[k].X, outpoly[k].Y, outpoly[k].Z);
+    snprintf(str,  sizeof(str), "%d-th point of outpolyline is (%f, %f, %f)\n", k, outpoly[k].X, outpoly[k].Y, outpoly[k].Z);
     MkDebug("%s", str);
   }
 }

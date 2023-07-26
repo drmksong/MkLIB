@@ -312,17 +312,17 @@ void MkMatrix4<T>::Out(char *fname)
 
     fp = fopen(fname, "a");
     fprintf(fp, "Output of Matrix ");
-    sprintf(str, "A-th row [%10.3f %10.3f %10.3f %10.3f ]", 0.0, 1.0, 2.0, 3.0);
+    snprintf(str, sizeof(str), "A-th row [%10.3f %10.3f %10.3f %10.3f ]", 0.0, 1.0, 2.0, 3.0);
     fprintf(fp, "%s",str);
     for (int i = 0; i < 4; i++)
     {
-        sprintf(str, "%d-th row [", i);
+        snprintf(str, sizeof(str), "%d-th row [", i);
         for (int j = 0; j < 4; j++)
         {
-            sprintf(s, "%10.3f ", FMatrix[i][j]);
+            snprintf(s, sizeof(s), "%10.3f ", FMatrix[i][j]);
             strcat(str, s);
         }
-        sprintf(s, "]");
+        snprintf(s, sizeof(s), "]");
         strcat(str, s);
         fprintf(fp, "%s",str);
     }
@@ -349,13 +349,13 @@ MkVector<T>::MkVector(int sz)
     }
     catch (Size s)
     {
-        sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
+        snprintf(str, sizeof(str), "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
         throw Size(std::string("Size Zero"),0);
     }
     catch (Alloc a)
     {
-        sprintf(str, "Vector::Allocation Error MkArray<T>");
+        snprintf(str, sizeof(str), "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
         throw Alloc(std::string("Vector Allocation Error"));
     }
@@ -374,13 +374,13 @@ MkVector<T>::MkVector(int sz, VectType vt)
     }
     catch (Size s)
     {
-        sprintf(str, "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
+        snprintf(str, sizeof(str), "Vector::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
         throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
-        sprintf(str, "Vector::Allocation Error MkArray<T>");
+        snprintf(str, sizeof(str), "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
         throw Alloc(std::string("Vector Allocation Error"));
     }
@@ -481,13 +481,13 @@ void MkVector<T>::Cross(MkVector &vect, MkVector &target) // not yet finished, b
     }
     catch (Size s)
     {
-        sprintf(str, "Vector::Cross Size error of MkArray<T> size(%d)\n", s.X);
+        snprintf(str, sizeof(str), "Vector::Cross Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
         throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
-        sprintf(str, "Vector::Allocation Error MkArray<T>");
+        snprintf(str, sizeof(str), "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
         throw Alloc(std::string("Vector Allocation Error"));
     }
@@ -609,10 +609,10 @@ void MkVector<T>::Out(char *fname)
 
     fp = fopen(fname, "a");
     fprintf(fp, "Output of Vector ");
-    sprintf(str, "vector [");
+    snprintf(str, sizeof(str), "vector [");
     for (int i = 0; i < FSize; i++)
     {
-        sprintf(s, "%10.6f ", FVector(i));
+        snprintf(s, sizeof(s), "%10.6f ", FVector(i));
         strcat(str, s);
         if (strlen(str) > 200)
         {
@@ -620,7 +620,7 @@ void MkVector<T>::Out(char *fname)
             break;
         }
     }
-    sprintf(s, "]\n");
+    snprintf(s, sizeof(s), "]\n");
     strcat(str, s);
     fprintf(fp, "%s",str);
     fclose(fp);
@@ -647,13 +647,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     }
     catch (Size s)
     {
-        sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d,%d)\n", s.X, s.Y);
+        snprintf(str, sizeof(str), "Matrix::Constructor Size error of MkArray<T> size(%d,%d)\n", s.X, s.Y);
         MkDebug("%s",str);
         throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
-        sprintf(str, "Vector::Allocation Error MkArray<T>");
+        snprintf(str, sizeof(str), "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
         throw Alloc(std::string("Vector Allocation Error"));
     }
@@ -665,13 +665,13 @@ MkMatrix<T>::MkMatrix(int sz_x, int sz_y)
     }
     catch (Size s)
     {
-        sprintf(str, "Matrix::Constructor Size error of MkArray<T> size(%d)\n", s.X);
+        snprintf(str, sizeof(str), "Matrix::Constructor Size error of MkArray<T> size(%d)\n", s.X);
         MkDebug("%s",str);
         throw Size(std::string("Size error zero"), 0);
     }
     catch (Alloc a)
     {
-        sprintf(str, "Vector::Allocation Error MkArray<T>");
+        snprintf(str, sizeof(str), "Vector::Allocation Error MkArray<T>");
         MkDebug("%s",str);
         throw Alloc(std::string("Vector Allocation Error"));
     }
@@ -1235,15 +1235,15 @@ void MkMatrix<T>::Out(TMemo *memo)
 {
     char str[256], s[256];
     memo->Lines->Add("Output of Matrix");
-    sprintf(str, " n [%10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f]",
+    snprintf(str, sizeof(str), " n [%10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f]",
             0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
     memo->Lines->Add(str);
     for (int i = 0; i < GetFI(); i++)
     {
-        sprintf(str, "%2d [", i);
+        snprintf(str, sizeof(str), "%2d [", i);
         for (int j = 0; j < GetFJ(); j++)
         {
-            sprintf(s, "%10.3f ", FMatrix(i, j));
+            snprintf(s, sizeof(s), "%10.3f ", FMatrix(i, j));
             strcat(str, s);
             if (strlen(str) > 200)
             {
@@ -1251,7 +1251,7 @@ void MkMatrix<T>::Out(TMemo *memo)
                 break;
             }
         }
-        sprintf(s, "]");
+        snprintf(s,  sizeof(s),"]");
         strcat(str, s);
         memo->Lines->Add(str);
     }
@@ -1266,15 +1266,15 @@ void MkMatrix<T>::Out(char *fname)
 
     fp = fopen(fname, "a");
     fprintf(fp, "Output of Matrix\n");
-    sprintf(str, " n [%10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f]\n",
+    snprintf(str, sizeof(str), " n [%10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f]\n",
             0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
     fprintf(fp, "%s",str);
     for (int i = 0; i < GetFI(); i++)
     {
-        sprintf(str, "%2d [", i);
+        snprintf(str, sizeof(str), "%2d [", i);
         for (int j = 0; j < GetFJ(); j++)
         {
-            sprintf(s, "%10.3f ", FMatrix(i, j));
+            snprintf(s, sizeof(s), "%10.3f ", FMatrix(i, j));
             strcat(str, s);
             if (strlen(str) > 200)
             {
@@ -1282,7 +1282,7 @@ void MkMatrix<T>::Out(char *fname)
                 break;
             }
         }
-        sprintf(s, "]\n");
+        snprintf(s, sizeof(s), "]\n");
         strcat(str, s);
         fprintf(fp, "%s",str);
     }

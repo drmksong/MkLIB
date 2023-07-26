@@ -11,7 +11,12 @@
 #define FTOL 1.0e-6
 #define EPS 1.0e-4
 #define TINY 1.0e-20
-#define PI 3.1415926535
+// #define PI 3.1415926535
+
+#ifndef M_PI 
+#define M_PI 3.14159265358979323846
+#endif
+
 
 // #define MPa2KPa 1.0e3
 // #define KPa2MPa 1.0e-3

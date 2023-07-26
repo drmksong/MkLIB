@@ -94,7 +94,7 @@ bool MkPoint::operator==(const MkPoint &rp) const
 {
    char str[256];
    // MkDebug("MkPoint::operator==() is called\n");
-   // sprintf(str, " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+   // snprintf(str, sizeof(str), " const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
    // MkDebug("%s",str);
    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
 }
@@ -102,7 +102,7 @@ bool MkPoint::operator==(const MkPoint &rp) const
 bool MkPoint::operator==(MkPoint &&rp)
 {
    char str[256];
-   sprintf(str, "MkPoint::operator==(), rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+   snprintf(str, sizeof(str), "MkPoint::operator==(), rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
    // MkDebug("MkPoint::operator==() is called\n");
    MkDebug("%s",str);
    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
@@ -111,7 +111,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 // bool MkPoint::operator==(const MkPoint &rp) const
 // {
 //    char str[256];
-//    sprintf(str, "MkPoint::operator==(), const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+//    snprintf(str, sizeof(str), "MkPoint::operator==(), const lvalue (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
 //    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
@@ -120,7 +120,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 // bool MkPoint::operator==(MkPoint &&rp) const
 // {
 //    char str[256];
-//    sprintf(str, " rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+//    snprintf(str, sizeof(str), " rvalue reference (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
 //    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);
@@ -129,7 +129,7 @@ bool MkPoint::operator==(MkPoint &&rp)
 // bool MkPoint::operator==(MkPoint &rp)
 // {
 //    char str[256];
-//    sprintf(str, " original (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
+//    snprintf(str, sizeof(str), " original (%f,%f,%f),(%f,%f,%f)\n", X, Y, Z, rp.X, rp.Y, rp.Z);
 //    // MkDebug("MkPoint::operator==() is called\n");
 //    MkDebug("%s",str);
 //    return (fabs(X - rp.X) < EPS) && (fabs(Y - rp.Y) < EPS) && (fabs(Z - rp.Z) < EPS);

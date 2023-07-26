@@ -1292,7 +1292,7 @@ bool MkLine::IsIn(double x, double y)
    double sx, sy, ex, ey;
    char str[256];
 
-   //   sprintf(str,"Tol of line is %f\n",Tol);
+   //   snprintf(str,"Tol of line is %f\n",Tol);
    //   MkDebug(str);
 
    sx = min(StartPoint.X, EndPoint.X) - Tol;
@@ -1740,7 +1740,7 @@ MkLine &MkLine::operator!()
 void MkLine::Out()
 {
    char str[256];
-   sprintf(str, "(%10.5f,%10.5f,%10.5f)-(%10.5f,%10.5f,%10.5f)\n", StartPoint.X, StartPoint.Y, StartPoint.Z, EndPoint.X, EndPoint.Y, EndPoint.Z);
+   snprintf(str,sizeof(str), "(%10.5f,%10.5f,%10.5f)-(%10.5f,%10.5f,%10.5f)\n", StartPoint.X, StartPoint.Y, StartPoint.Z, EndPoint.X, EndPoint.Y, EndPoint.Z);
    MkDebug("%s",str);
 }
 
