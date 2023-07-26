@@ -677,7 +677,6 @@ void fblr_test()
 }
 
 int main_()
-
 {
     // TODO: to incorporate GLFW, GLAD for the testing
     // int argc;
