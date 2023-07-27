@@ -142,8 +142,8 @@ typedef class MkArray<int> MkInt;
 typedef class MkArray<float> MkFloat;
 typedef class MkArray<double> MkDouble;
 
-template class MkArray<int>;
-template class MkArray<float>;
-template class MkArray<double>;
+extern template class MkArray<int>;
+extern template class MkArray<float>;
+extern template class MkArray<double>;
 
 #endif

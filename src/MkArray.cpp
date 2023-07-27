@@ -605,3 +605,7 @@ bool MkArray<T>::operator!=(MkArray<T> &a)
 //   return c;
 // }
 //---------------------------------------------------------------------------
+
+template class MkArray<int>;
+template class MkArray<float>;
+template class MkArray<double>;
