@@ -14,9 +14,8 @@
 #include "MkLine.hpp"
 #include "MkRect.hpp"
 
-#include <GL/freeglut.h>
+#include <GL/glut.h>
 #include <GL/gl.h>
-//#include <GL/glu.h>
 
 // TODO: 
 // 1. Add test for drawing routines for the walls and columns 
