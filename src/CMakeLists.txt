@@ -14,6 +14,7 @@ file(GLOB GLUTLIB "/opt/homebrew/lib/libglut.dylib")
 
 # set sources
 SET (SRC_FILES 
+        glLib.cpp
         MkArray.cpp 
         MkColor.cpp
         MkCircle.cpp
