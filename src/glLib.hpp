@@ -3,6 +3,6 @@
 
 #include <GL/glut.h>
 #include <GL/gl.h>
-void display() ;
+void display();
 
 #endif
