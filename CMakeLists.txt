@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.15.0)
 
-SET(proj_name "MkLib")
+SET(proj_name "MkLIB")
 PROJECT(${proj_name})
 
 SET(CMAKE_CXX_STANDARD 20)
@@ -8,6 +8,39 @@ SET(CMAKE_CXX_STANDARD 20)
 # -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg
 SET(CMAKE_CXX_FLAGS -pg)
 SET(CMAKE_EXE_LINKER_FLAGS -pg)
+
+SET (INC_FILES
+        src/MkArray.hpp 
+        src/MkColor.hpp
+        src/MkCircle.hpp
+        src/MkCylinder.hpp
+        src/MkCube.hpp
+        src/MkLine.hpp 
+        src/MkMatrix.hpp
+        src/MkMisc.hpp 
+        src/MkPlane.hpp
+        src/MkPoint.hpp 
+        src/MkPointData.hpp 
+        src/MkPolygon.hpp
+        src/MkRect.hpp
+        src/MkShape.hpp
+        src/MkSphere.hpp
+        src/MkTriangle.hpp    
+
+)
+
+# set(dir ${CMAKE_CURRENT_SOURCE_DIR}/../Compile/)
+# set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+# set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${dir})
+# set(CMAKE_BUILD_FILES_DIRECTORY ${dir})
+# set(CMAKE_BUILD_DIRECTORY ${dir})
+# set(CMAKE_BINARY_DIR  ${dir})
+# SET(EXECUTABLE_OUTPUT_PATH ${dir})l
+# SET(LIBRARY_OUTPUT_PATH ${dir}lib)
+# SET(CMAKE_CACHEFILE_DIR ${dir})
+
+# set(LIBRARY_OUTPUT_PATH lib CACHE PATH "Build directory" FORCE)
 
 # for mac
 INCLUDE_DIRECTORIES(src) 
@@ -20,6 +53,11 @@ ADD_SUBDIRECTORY(tests)
 
 LINK_DIRECTORIES(/opt/homebrew/lib)
 
+set_target_properties(MkLIB PROPERTIES PUBLIC_HEADER "${INC_FILES}")
+INSTALL(TARGETS MkLIB
+        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/../MkLib
+        PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/../MkInclude
+)
 
 # ADD_SUBDIRECTORY(googletest)
 

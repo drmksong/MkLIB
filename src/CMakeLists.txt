@@ -4,8 +4,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.15.0)
 # SET(proj_name "CMake MkLib")
 # SET(CMAKE_CXX_STANDARD 20)
 
-SET( EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR} )
-SET( LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR} )
+SET( EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build )
+SET( LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/../MkLIB )
 SET( BINARY ${CMAKE_PROJECT_NAME} )
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
@@ -33,6 +33,26 @@ SET (SRC_FILES
         MkTriangle.cpp    
     )
 
+SET (INC_FILES
+        MkArray.hpp 
+        MkColor.hpp
+        MkCircle.hpp
+        MkCylinder.hpp
+        MkCube.hpp
+        MkLine.hpp 
+        MkMatrix.hpp
+        MkMisc.hpp 
+        MkPlane.hpp
+        MkPoint.hpp 
+        MkPointData.hpp 
+        MkPolygon.hpp
+        MkRect.hpp
+        MkShape.hpp
+        MkSphere.hpp
+        MkTriangle.hpp    
+
+)
+
 # SET(SRC_FILES ${SCOURCES}) 
 
 ADD_DEFINITIONS(-DMKDEBUG)
@@ -48,3 +68,8 @@ ADD_LIBRARY (${BINARY} ${SRC_FILES})
 # linux
 # TARGET_LINK_LIBRARIES(${BINARY} GL glut)
 
+# set_target_properties(MkLIB PROPERTIES PUBLIC_HEADER "${INC_FILES}")
+# INSTALL(TARGETS MkLIB
+#         LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/../MkLib
+#         PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/../MkInclude
+# )
