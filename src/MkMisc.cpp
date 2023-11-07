@@ -90,6 +90,26 @@ bool ExtractFileExt(std::string &ext, const std::string &str)
     return false;
 }
 
+bool ExtractFileExt(std::string &&ext, const std::string &&str)
+{
+  auto pos = str.find('.');
+  auto e = str.substr(pos);
+
+  ext = std::move(e);
+
+  // sprintf(s, "Extension of %s is %s\n", str.c_str(), ext.c_str());
+  std::string s;
+  s = "Extension of ";
+  s += str + std::string("is ") + ext;
+  // s = std::string("Extension of ") + str + std::string("is ") + ext + std::endl;
+
+  MkDebug("%s",s.c_str());
+  if (ext.size() != 0)
+    return true;
+  else
+    return false;
+}
+
 bool TrimLeft(std::string &dest, const std::string src)
 {
   if (src.size() == 0)

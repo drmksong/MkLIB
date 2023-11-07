@@ -10,6 +10,7 @@ SET(CMAKE_CXX_FLAGS -pg)
 SET(CMAKE_EXE_LINKER_FLAGS -pg)
 
 SET (INC_FILES
+        src/MkAbstract.hpp
         src/MkArray.hpp 
         src/MkColor.hpp
         src/MkCircle.hpp
@@ -55,7 +56,7 @@ LINK_DIRECTORIES(/opt/homebrew/lib)
 
 set_target_properties(MkLIB PROPERTIES PUBLIC_HEADER "${INC_FILES}")
 INSTALL(TARGETS MkLIB
-        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/../MkLib
+        LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/../MkLIB
         PUBLIC_HEADER DESTINATION ${CMAKE_SOURCE_DIR}/../MkInclude
 )
 

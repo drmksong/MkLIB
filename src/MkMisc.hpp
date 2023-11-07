@@ -106,6 +106,7 @@ void Swap(TObject *Sender, int i, int j);
 
 int delta(int a, int b);
 bool ExtractFileExt(std::string &ext, const std::string &str); // ext must have a memory
+bool ExtractFileExt(std::string &&ext, const std::string &&str); // ext must have a memory
 bool TrimLeft(std::string &dest, const std::string src);
 bool ToLower(std::string str);
 bool ToUpper(std::string str);

@@ -55,6 +55,7 @@ public:
   void Initialize(int s_x);
 
   T &operator()(int, int, int);
+  // T &operator()(int, int);
   T &operator()(int &, int &);
   T &operator()(int &&, int &&);
   T &operator()(int);
