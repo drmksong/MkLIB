@@ -49,7 +49,7 @@ SET (INC_FILES
 # for mac
 INCLUDE_DIRECTORIES(src) 
 INCLUDE_DIRECTORIES(/opt/homebrew/include)
-# for windows
+# for windows/Users/myungkyusong/Documents/Develop/01_THMBEMSPH/01_MkLIB/src/MkMisc.hpp
 # INCLUDE_DIRECTORIES(src)
 
 ADD_SUBDIRECTORY(src)
