@@ -7,9 +7,8 @@
 #include <iostream>
 #include <boost/shared_array.hpp>
 #include <boost/make_shared.hpp>
-#include <GL/gl.h>
-//#include <GL/glu.h>
-#include <GL/freeglut.h>
+// #include <GL/gl.h>
+// #include <GL/freeglut.h>
 #include "MkColor.hpp"
 
 #include "MkMisc.hpp"

@@ -30,7 +30,6 @@ SET (INC_FILES
         src/MkShape.hpp
         src/MkSphere.hpp
         src/MkTriangle.hpp    
-
 )
 
 # set(dir ${CMAKE_CURRENT_SOURCE_DIR}/../Compile/)

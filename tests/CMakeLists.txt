@@ -13,6 +13,13 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.15.0)
 # ADD_EXECUTABLE(test ${srcs})
 # TARGET_LINK_LIBRARIES(test ../build/MkLib glu32 freeglut)
 
+INCLUDE_DIRECTORIES(/opt/homebrew/include)
+LINK_DIRECTORIES(/opt/homebrew/lib)
+
+file(GLOB GLLIB "/opt/homebrew/lib/libGL.dylib")
+file(GLOB GLEWLIB "/opt/homebrew/lib/libGLEW.dylib")
+file(GLOB GLUTLIB "/opt/homebrew/lib/libglfw.dylib")
+
 SET(TESTER ${CMAKE_PROJECT_NAME}_test)
 SET( DYNAMIC_LIB ${CMAKE_PROJECT_NAME} )
 SET( STATIC_LIB ${CMAKE_PROJECT_NAME}_static )
@@ -22,11 +29,10 @@ SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build )
 
 # file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
 # SET(SOURCES ${TEST_SOURCES})
-SET(TEST_SOURCES test.cpp)
+# SET(TEST_SOURCES test.cpp)
+SET(TEST_SOURCES test.cpp ../src/glLib.cpp ../src/Shader.cpp)
 
 add_executable(${TESTER} ${TEST_SOURCES})
 add_test(NAME ${TESTER} COMMAND ${TESTER})
 # target_link_libraries(${TESTER} PUBLIC ${CMAKE_PROJECT_NAME} )
-target_link_libraries(${TESTER} PUBLIC ${DYNAMIC_LIB} )
-
-
+target_link_libraries(${TESTER} PUBLIC ${DYNAMIC_LIB} ${GLLIB} ${GLEWLIB} ${GLUTLIB} )

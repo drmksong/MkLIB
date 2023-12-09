@@ -11,12 +11,12 @@ SET( STATIC_LIB ${CMAKE_PROJECT_NAME}_static )
 SET( DYNAMIC_LIB ${CMAKE_PROJECT_NAME} )
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
-file(GLOB GLLIB "/opt/homebrew/lib/libGL.dylib")
-file(GLOB GLUTLIB "/opt/homebrew/lib/libglut.dylib")
+file(GLOB GLLIB "/opt/homebrew/lib/libGLEW.dylib")
+file(GLOB GLUTLIB "/opt/homebrew/lib/libglfw.dylib")
 
 # set sources
 SET (SRC_FILES 
-        glLib.cpp
+        # glLib.cpp
         MkArray.cpp 
         MkColor.cpp
         MkCircle.cpp

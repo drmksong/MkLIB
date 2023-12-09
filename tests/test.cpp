@@ -1,25 +1,9 @@
 // #define BOOST_TEST_MODULE your_test_module
 // #include <boost/test/included/unit_test.hpp>
-
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <vector>
-#include <random>
-#include <chrono>
-#include <boost/make_shared.hpp>
-#include "MkMatrix.hpp"
-#include "MkPoint.hpp"
-#include "MkLine.hpp"
-#include "MkRect.hpp"
-
-#include <GL/glut.h>
-#include <GL/gl.h>
-
-#include "glLib.hpp"
-
+// #define GLEW_STATIC
+// #include "GL/glew.h"
 #include "test.hpp"
+
 // TODO:
 // 1. Add test for drawing routines for the walls and columns
 // 2. Add test for gl key input
@@ -40,33 +24,40 @@
 //     glFlush(); // flush output to screen
 // }
 
-int main_(int argc, char **argv) // gl test
-{
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(500, 500);    // window size
-    glutInitWindowPosition(0, 0);    // window position
-    glutCreateWindow("OpenGL Test"); // show window
-    glutDisplayFunc(display);        // draw callback function
-    glutMainLoop();                  // enter main loop
-    return 0;
-}
+
+// int main_(int argc, char **argv) // gl test
+// {
+//     glutInit(&argc, argv);
+//     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+//     glutInitWindowSize(500, 500);    // window size
+//     glutInitWindowPosition(0, 0);    // window position
+//     glutCreateWindow("OpenGL Test"); // show window
+//     glutDisplayFunc(display);        // draw callback function
+//     glutMainLoop();                  // enter main loop
+//     return 0;
+// }
 
 // #include "gltest.hpp"
 // int gl_main(int argc, char *argv[]);
 
 int main()
 {
-    point_test();
-    array_test();
+    std::unique_ptr<glLib> glib(new glLib());
+    glib->init();
+    glib->loop();
+    glib->terminate();
 
-    arr_test_move_op();
+    // point_test();
 
-    shared_test();
+    // array_test();
 
-    fblr_test();
+    // arr_test_move_op();
 
-    pnts_test();
+    // shared_test();
+
+    // fblr_test();
+
+    // pnts_test();
 
     return 0;
 }
