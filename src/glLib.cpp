@@ -26,7 +26,7 @@ void glLib::init() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // MacOS
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // new OpenGL
-    window = glfwCreateWindow(1024, 768, "OpenGL", NULL, NULL);
+    window = glfwCreateWindow(1024, 768, "Learn OpenGL", NULL, NULL);
     if (window == NULL) {
         throw std::runtime_error("Failed to open GLFW window");
     }
@@ -35,10 +35,13 @@ void glLib::init() {
     glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 
     glfwMakeContextCurrent(window); // initialize GLEW
-    glewExperimental = true; // needed in core profile
+    glewExperimental = GL_TRUE; // needed in core profile
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("Failed to initialize GLEW");
     }
+
+    glViewport(0, 0, screenWidth, screenHeight);
+
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     // glClearColor(0.0f, 0.0f, 0.4f, 0.0f); // dark blue background, not working??? obsolete to be removed
 
@@ -77,7 +80,7 @@ void glLib::terminate() {
 }
 
 void glLib::display() {
-    glClearColor(1.0f, 0.0f, 0.4f, 0.0f); // dark blue background, not working??? obsolete to be removed
+    glClearColor(1.0f, 0.0f, 0.4f, 1.0f); // dark blue background, not working??? obsolete to be removed
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLES, 0, 3);
