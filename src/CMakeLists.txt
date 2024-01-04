@@ -10,9 +10,16 @@ SET( EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build )
 SET( STATIC_LIB ${CMAKE_PROJECT_NAME}_static )
 SET( DYNAMIC_LIB ${CMAKE_PROJECT_NAME} )
 
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
-file(GLOB GLLIB "/opt/homebrew/lib/libGLEW.dylib")
-file(GLOB GLUTLIB "/opt/homebrew/lib/libglfw.dylib")
+if(APPLE)
+    file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+    file(GLOB GLLIB "/opt/homebrew/lib/libGLEW.dylib")
+    file(GLOB GLUTLIB "/opt/homebrew/lib/libglfw.dylib")
+elseif(UNIX)
+    # linux
+    file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+    file(GLOB GLLIB "/usr/local/lib/libGLEW.so")
+    file(GLOB GLUTLIB "/usr/local/lib/libglfw.so")
+endif()
 
 # set sources
 SET (SRC_FILES 

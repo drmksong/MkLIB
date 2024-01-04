@@ -12,6 +12,20 @@ SET(CMAKE_EXE_LINKER_FLAGS -pg)
 SET( STATIC_LIB ${CMAKE_PROJECT_NAME}_static )
 SET( DYNAMIC_LIB ${CMAKE_PROJECT_NAME} )
 
+# Add Dependecy Library Directory
+if(APPLE)
+	MESSAGE(STATUS "OS : APPLE")
+	SET(OS macos)
+elseif(WIN32)
+	MESSAGE(STATUS "OS : WINDOWS")
+	SET(OS windows)
+elseif(UNIX)
+	MESSAGE(STATUS "OS : LINUX")
+	SET(OS linux)
+else()
+	MESSAGE(FATAL_ERROR "your system is not supported")
+endif()
+
 SET (INC_FILES
         src/MkAbstract.hpp
         src/MkArray.hpp 
@@ -47,14 +61,19 @@ SET (INC_FILES
 
 # for mac
 INCLUDE_DIRECTORIES(src) 
-INCLUDE_DIRECTORIES(/opt/homebrew/include)
+if(APPLE)
+        INCLUDE_DIRECTORIES(/opt/homebrew/include)
+        LINK_DIRECTORIES(/opt/homebrew/lib)
+elseif(UNIX)
+        INCLUDE_DIRECTORIES(/usr/local/include)
+        LINK_DIRECTORIES(/usr/local/lib)
+endif()
+
 # for windows/Users/myungkyusong/Documents/Develop/01_THMBEMSPH/01_MkLIB/src/MkMisc.hpp
 # INCLUDE_DIRECTORIES(src)
 
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(tests)
-
-LINK_DIRECTORIES(/opt/homebrew/lib)
 
 set_target_properties(${DYNAMIC_LIB} PROPERTIES PUBLIC_HEADER "${INC_FILES}")
 
@@ -71,6 +90,7 @@ INSTALL(TARGETS ${STATIC_LIB}
         LIBRARY DESTINATION /usr/local/lib
         PUBLIC_HEADER DESTINATION /usr/local/include
 )
+
 
 # ADD_SUBDIRECTORY(googletest)
 
