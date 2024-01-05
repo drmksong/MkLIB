@@ -2019,7 +2019,7 @@ bool MkJointPlane::operator!=(MkJointPlane &&j)
 //---------------------------------------------------------------------------
 MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]> jp)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkJointPlanes - MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]>jp)");
       FJoint.reset();
@@ -2051,7 +2051,7 @@ MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]> jp)
 
 MkJointPlanes::MkJointPlanes(int size)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkJointPlanes - MkJointPlanes(int size)");
       FJoint.reset();
@@ -3425,7 +3425,7 @@ void MkPennyJoint::Draw(MkPaint *pb)
 //---------------------------------------------------------------------------
 MkPennyJoints::MkPennyJoints(int size, boost::shared_ptr<MkPennyJoint[]> jp)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
       FPenny.reset();
@@ -3454,7 +3454,7 @@ MkPennyJoints::MkPennyJoints(int size, boost::shared_ptr<MkPennyJoint[]> jp)
 
 MkPennyJoints::MkPennyJoints(int size)
 {
-   if (size <= 0)
+   if (size < 0)
    {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size:%d) where size is less than zero", size);
       FPenny.reset();
