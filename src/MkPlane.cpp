@@ -210,21 +210,23 @@ MkPointsPlanes::MkPointsPlanes(int size)
    }
 
    FSize = size;
-   try {
+   try
+   {
       FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
-      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size) - bad_alloc caught: %s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPointsPlanes - MkPointsPlanes(int size) - bad_alloc caught: %s", e.what());
       FPoints.reset();
       return;
    }
-   catch (...) {
+   catch (...)
+   {
       MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
       MkDebug("Unknown error");
       FPoints.reset();
       return;
    }
-   
 }
 
 MkPointsPlanes::MkPointsPlanes(int size, boost::shared_ptr<MkPointsPlane[]> jp)
@@ -237,15 +239,18 @@ MkPointsPlanes::MkPointsPlanes(int size, boost::shared_ptr<MkPointsPlane[]> jp)
    }
 
    FSize = size;
-   try {
+   try
+   {
       FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
-      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(int size,boost::shared<MkPointPlane[]>) - bad_alloc caught: %s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(int size,boost::shared<MkPointPlane[]>) - bad_alloc caught: %s", e.what());
       FPoints.reset();
       return;
    }
-   catch (...) {
+   catch (...)
+   {
       MkDebug("::MkPointsPlanes - MkPointsPlanes(int size)");
       MkDebug("Unknown error");
       FPoints.reset();
@@ -266,15 +271,18 @@ MkPointsPlanes::MkPointsPlanes(const MkPointsPlanes &pp)
       return;
    }
 
-   try {
+   try
+   {
       FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
-      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(MkPointPlanes &) - bad_alloc caught: %s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPointsPlanes - MkMkPointsPlanes(MkPointPlanes &) - bad_alloc caught: %s", e.what());
       FPoints.reset();
       return;
    }
-   catch (...) {
+   catch (...)
+   {
       MkDebug("::MkPointsPlanes - MkPointsPlanes(const MkPointsPlanes &pp)");
       MkDebug("Unknown error");
       FPoints.reset();
@@ -310,15 +318,18 @@ void MkPointsPlanes::Initialize(int size)
 
    if (FPoints != NULL)
       FPoints.reset();
-   try {
+   try
+   {
       FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
-      MkDebug("::MkPointsPlanes - Initialize(int size) - bad_alloc caught: %s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPointsPlanes - Initialize(int size) - bad_alloc caught: %s", e.what());
       FPoints.reset();
       return;
    }
-   catch (...) {
+   catch (...)
+   {
       MkDebug("::MkPointsPlanes - Initialize(int size)");
       MkDebug("Unknown error");
       FPoints.reset();
@@ -344,15 +355,18 @@ void MkPointsPlanes::Initialize(int size, boost::shared_ptr<MkPointsPlane[]> jp)
 
    if (FPoints != NULL)
       FPoints.reset();
-   try {
+   try
+   {
       FPoints = boost::make_shared<MkPointsPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkPointsPlanes - Initialize(int size, MkPointsPlane *jp) - bad_alloc caught: %s", e.what());
       FPoints.reset();
       return;
    }
-   catch (...) {
+   catch (...)
+   {
       MkDebug("::MkPointsPlanes - Initialize(int size, MkPointsPlane *jp)");
       MkDebug("Unknown error");
       FPoints.reset();
@@ -1729,7 +1743,7 @@ MkPlane &MkPlane::operator=(MkPlane &&rp)
    return *this;
 }
 //---------------------------------------------------------------------------
-MkPlanes::MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)
+MkPlanes::MkPlanes(int size, boost::shared_ptr<MkPlane[]> jp)
 {
    if (size <= 0)
    {
@@ -1739,15 +1753,18 @@ MkPlanes::MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)
    }
 
    FSize = size;
-   try {
+   try
+   {
       FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkPlanes - MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)");
       FPlane.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkPlanes - MkPlanes(int size, boost::shared_ptr<MkPlane[]>jp)");
       FPlane.reset();
       return;
@@ -1767,15 +1784,18 @@ MkPlanes::MkPlanes(int size)
    }
 
    FSize = size;
-   try {
+   try
+   {
       FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkPlanes - MkPlanes(int size)");
       FPlane.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkPlanes - MkPlanes(int size)");
       FPlane.reset();
       return;
@@ -1804,22 +1824,25 @@ void MkPlanes::Initialize(int size)
       return;
    }
 
-   try {
+   try
+   {
       FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkPlanes - Initialize(int size)");
       FPlane.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkPlanes - Initialize(int size)");
       FPlane.reset();
       return;
    }
 }
 
-void MkPlanes::Initialize(int size, boost::shared_ptr<MkPlane[]>jp)
+void MkPlanes::Initialize(int size, boost::shared_ptr<MkPlane[]> jp)
 {
    if (size <= 0)
    {
@@ -1830,15 +1853,18 @@ void MkPlanes::Initialize(int size, boost::shared_ptr<MkPlane[]>jp)
 
    FSize = size;
 
-   try {
+   try
+   {
       FPlane = boost::shared_ptr<MkPlane[]>(new MkPlane[FSize]);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkPlanes - Initialize(int size, boost::shared_ptr<MkPlane[]>jp)");
       FPlane.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkPlanes - Initialize(int size, boost::shared_ptr<MkPlane[]>jp)");
       FPlane.reset();
       return;
@@ -1991,7 +2017,7 @@ bool MkJointPlane::operator!=(MkJointPlane &&j)
 }
 
 //---------------------------------------------------------------------------
-MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]>jp)
+MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]> jp)
 {
    if (size <= 0)
    {
@@ -2002,15 +2028,18 @@ MkJointPlanes::MkJointPlanes(int size, boost::shared_ptr<MkJointPlane[]>jp)
 
    FSize = size;
 
-   try {
+   try
+   {
       FJoint = boost::make_shared<MkJointPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
       FJoint.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
       FJoint.reset();
       return;
@@ -2031,15 +2060,18 @@ MkJointPlanes::MkJointPlanes(int size)
 
    FSize = size;
 
-   try {
+   try
+   {
       FJoint = boost::make_shared<MkJointPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size)");
       FJoint.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size)");
       FJoint.reset();
       return;
@@ -2063,22 +2095,25 @@ void MkJointPlanes::Initialize(int size)
 
    FSize = size;
 
-   try {
+   try
+   {
       FJoint = boost::make_shared<MkJointPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size)");
       FJoint.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size)");
       FJoint.reset();
       return;
    }
 }
 
-void MkJointPlanes::Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)
+void MkJointPlanes::Initialize(int size, boost::shared_ptr<MkJointPlane[]> jp)
 {
    if (size <= 0)
    {
@@ -2089,15 +2124,18 @@ void MkJointPlanes::Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)
 
    FSize = size;
 
-   try {
+   try
+   {
       FJoint = boost::make_shared<MkJointPlane[]>(FSize);
    }
-   catch (std::bad_alloc &e) {
+   catch (std::bad_alloc &e)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
       FJoint.reset();
       return;
    }
-   catch(...) {
+   catch (...)
+   {
       MkDebug("::MkJointPlanes - Initialize(int size, boost::shared_ptr<MkJointPlane[]>jp)");
       FJoint.reset();
       return;
@@ -2327,7 +2365,8 @@ bool MkPennyJoint::IsIntersect(MkPennyJoint &pj)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -2410,7 +2449,8 @@ bool MkPennyJoint::IsIntersect(MkPennyJoint &&pj)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -2495,7 +2535,8 @@ bool MkPennyJoint::IsIntersect(MkPlane &rp)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -2580,7 +2621,8 @@ bool MkPennyJoint::IsIntersect(MkPlane &&rp)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -2888,7 +2930,8 @@ MkLine &MkPennyJoint::CalcIntLine(MkPennyJoint &pj)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -2981,7 +3024,8 @@ MkLine &MkPennyJoint::CalcIntLine(MkPennyJoint &&pj)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -3077,7 +3121,8 @@ MkLine &MkPennyJoint::CalcIntLine(MkPlane &rp)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -3181,7 +3226,8 @@ MkLine &MkPennyJoint::CalcIntLine(MkPlane &&rp)
    {
       res = mat * vec;
    }
-   else {
+   else
+   {
       MkDebug("MkPennyJoint::IsIntersect member func - Something went wrong\n");
       exit(-1);
    }
@@ -3377,7 +3423,7 @@ void MkPennyJoint::Draw(MkPaint *pb)
 #endif
 
 //---------------------------------------------------------------------------
-MkPennyJoints::MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint[]> jp)
+MkPennyJoints::MkPennyJoints(int size, boost::shared_ptr<MkPennyJoint[]> jp)
 {
    if (size <= 0)
    {
@@ -3387,18 +3433,21 @@ MkPennyJoints::MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint[]> jp)
    }
 
    FSize = size;
-   try{
+   try
+   {
       FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
    }
-   catch(std::bad_alloc &e){
-      MkDebug("::MkPennyJoints - MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s", e.what());
       return;
    }
-   catch(...){
+   catch (...)
+   {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size,boost::shared_ptr<MkPennyJoint> jp)");
       return;
    }
-   
+
    for (int i = 0; i < FSize; i++)
       FPenny[i] = jp[i];
 }
@@ -3407,20 +3456,23 @@ MkPennyJoints::MkPennyJoints(int size)
 {
    if (size <= 0)
    {
-      MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size:%d) where size is less than zero", size);
       FPenny.reset();
       return;
    }
 
    FSize = size;
-   try{
+   try
+   {
       FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
    }
-   catch(std::bad_alloc &e){
-      MkDebug("::MkPennyJoints - MkPennyJoints(int size) - %s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPennyJoints - MkPennyJoints(int size) - %s", e.what());
       return;
    }
-   catch(...){
+   catch (...)
+   {
       MkDebug("::MkPennyJoints - MkPennyJoints(int size)");
       return;
    }
@@ -3442,15 +3494,18 @@ void MkPennyJoints::Initialize(int size)
    }
 
    FSize = size;
-   
-   try{
+
+   try
+   {
       FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
    }
-   catch(std::bad_alloc &e){
-      MkDebug("::MkPennyJoints - Initialize(int size) - bad_alloc caught:%s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPennyJoints - Initialize(int size) - bad_alloc caught:%s", e.what());
       return;
    }
-   catch(...){
+   catch (...)
+   {
       MkDebug("::MkPennyJoints - Initialize(int size)");
       return;
    }
@@ -3466,18 +3521,21 @@ void MkPennyJoints::Initialize(int size, boost::shared_ptr<MkPennyJoint[]> jp)
    }
 
    FSize = size;
-   try{
+   try
+   {
       FPenny = boost::make_shared<MkPennyJoint[]>(FSize);
    }
-   catch(std::bad_alloc &e){
-      MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s",e.what());
+   catch (std::bad_alloc &e)
+   {
+      MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp) - bad_alloc caught:%s", e.what());
       return;
    }
-   catch(...){
+   catch (...)
+   {
       MkDebug("::MkPennyJoints - Initialize(int size, boost::shared_ptr<MkPennyJoint> jp)");
       return;
    }
-   
+
    for (int i = 0; i < FSize; i++)
       FPenny[i] = jp[i];
 }
