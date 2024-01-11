@@ -316,7 +316,42 @@ MkArray<T> &MkArray<T>::operator=(MkArray<T> &&value)
 }
 
 template <class T>
-T &MkArray<T>::operator()(int i, int j, int k)
+T &MkArray<T>::operator()(int &i, int &j, int &k)
+{
+  // Commented out on 23.02.07 as all the array is three dim
+  // if (FDimension != 3)
+  // {
+  //   char str[256];
+  //   sprintf(str, "MkArray::(i,j,k) called whereas Dim is %d ", FDimension);
+  //   throw std::logic_error(std::string(str));
+  // }
+
+  if (FDimension <= 0)
+  {
+    MkDebug("Possibly Memory dosen't allocated!\n");
+    throw Alloc(std::string("MkArray<T>"));
+  }
+
+  if (i < 0 || sz_x <= i)
+  {
+    MkDebug("MkArray index out of range\n");
+    throw Range(std::string("sz_x"), i);
+  }
+  if (j < 0 || sz_y <= j)
+  {
+    MkDebug("MkArray index out of range\n");
+    throw Range(std::string("sz_y"), j);
+  }
+  if (k < 0 || sz_z <= k)
+  {
+    MkDebug("MkArray index out of range\n");
+    throw Range(std::string("sz_z"), k);
+  }
+  return F[long(i) + long(j) * sz_x + long(k) * sz_x * sz_y];
+}
+
+template <class T>
+T &MkArray<T>::operator()(int &&i, int &&j, int &&k)
 {
   // Commented out on 23.02.07 as all the array is three dim
   // if (FDimension != 3)
@@ -405,19 +440,19 @@ T &MkArray<T>::operator()(int &&i, int &&j)
 
   if (i < 0 || sz_x <= i)
   {
-    MkDebug("MkArray index out of range\n");
+    MkDebug("MkArray index i (%d) out of range\n",i);
     throw Range("sz_x", i);
   }
   if (j < 0 || sz_y <= j)
   {
-    MkDebug("MkArray index out of range\n");
+    MkDebug("MkArray index j (%d) out of range\n",j);
     throw Range(std::string("sz_y"), j);
   }
   return F[long(i) + long(j) * sz_x];
 }
 
 template <class T>
-T &MkArray<T>::operator()(int i)
+T &MkArray<T>::operator()(int &i)
 {
   if (FDimension <= 0)
   {
@@ -427,7 +462,24 @@ T &MkArray<T>::operator()(int i)
 
   if (i < 0 || sz_x <= i)
   {
-    MkDebug("MkArray index out of range\n");
+    MkDebug("MkArray index i (%d) out of range\n",i);
+    throw Range(std::string("sz_x"), i);
+  }
+  return F[long(i)];
+}
+
+template <class T>
+T &MkArray<T>::operator()(int &&i)
+{
+  if (FDimension <= 0)
+  {
+    MkDebug("Possibly Memory dosen't allocated!\n");
+    throw Alloc(std::string("MkArray<T>"));
+  }
+
+  if (i < 0 || sz_x <= i)
+  {
+    MkDebug("MkArray index i (%d) out of range\n",i);
     throw Range(std::string("sz_x"), i);
   }
   return F[long(i)];
