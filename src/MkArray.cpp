@@ -383,12 +383,12 @@ T &MkArray<T>::operator()(int &i, int &j)
 
   if (i < 0 || sz_x <= i)
   {
-    MkDebug("MkArray index out of range\n");
+    MkDebug("MkArray index i (%d) out of range\n",i);
     throw Range("sz_x", i);
   }
   if (j < 0 || sz_y <= j)
   {
-    MkDebug("MkArray index out of range\n");
+    MkDebug("MkArray index j (%d) out of range\n",j);
     throw Range(std::string("sz_y"), j);
   }
   return F[long(i) + long(j) * sz_x];
