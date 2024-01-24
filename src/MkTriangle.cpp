@@ -196,6 +196,7 @@ void MkTriangle::CalNormal()
     v2.Normalize();
 
     v1.Cross(v2, FNormal);
+    FNormal.Normalize();
 }
 
 double MkTriangle::GetXGrad()
