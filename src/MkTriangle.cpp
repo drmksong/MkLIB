@@ -105,11 +105,8 @@ void MkTriangle::Translate(double x, double y, double z)
 
 void MkTriangle::CalArea()
 {
-    CalArea2D(); // TODO: this is temporary, check code below if it does not cause any side effect
-    // if (StartPoint.Z == 0 && MidPoint.Z == 0 && EndPoint.Z == 0)
-    //     CalArea2D();
-    // else
-    //     CalArea3D();
+    CalArea2D(); 
+    CalArea3D();
 }
 
 void MkTriangle::CalArea2D()
@@ -160,13 +157,7 @@ void MkTriangle::CalArea3D() // TODO: implement this !!!
     uy = x1*z2 - x2*z1;
     uz = x1*y2 - x2*y1;
 
-    FArea = sqrt(ux*ux + uy*uy + uz*uz)/2;
-}
-
-
-double MkTriangle::GetArea()
-{
-    return FArea;
+    FArea3D = sqrt(ux*ux + uy*uy + uz*uz)/2;
 }
 
 void MkTriangle::CalGrad()

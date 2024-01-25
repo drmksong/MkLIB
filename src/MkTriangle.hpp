@@ -16,6 +16,7 @@ class MkTriangle : public MkShape
 private:
   MkPoint StartPoint, MidPoint, EndPoint;
   double FArea;
+  double FArea3D;
   double FRadius;
   MkVector<double> FNormal;
   double A[3], B[3], C[3], AR2, GradX, GradY;
@@ -44,7 +45,9 @@ public:
   void Translate(MkPoint &rp);
   void Translate(MkPoint &&rp);
   void Translate(double x, double y, double z);
-  double GetArea();
+  double GetArea() { return FArea; }
+  double GetArea2D() { return FArea; }
+  double GetArea3D() { return FArea3D; };
   double GetXGrad(); // x-direction gradient to z value
   double GetYGrad(); // y-direction gradient to z value
   double GetRadius();
@@ -77,7 +80,7 @@ public:
   MkLine &LastLine();
 
   MkPoint &operator[](int);
-  MkLine & operator()(int);
+  MkLine &operator()(int);
   double operator()(double, double);
   bool operator&&(MkTriangle &rt);
   bool operator&&(MkTriangle &&rt);
@@ -101,14 +104,14 @@ public:
 class MkTriangles : public MkShape, public MkAbstract
 {
 protected:
-  boost::shared_ptr<MkTriangle[]>FTriangle;
+  boost::shared_ptr<MkTriangle[]> FTriangle;
   int FSize;
   int FSizeOfArray;
 #ifdef __BCPLUSPLUS__
   TColor Color;
 #endif
 public:
-    MkTriangles()
+  MkTriangles()
   {
     FSize = 0;
     FSizeOfArray = 0;
@@ -128,12 +131,12 @@ public:
   bool Initialize(MkTriangles &Triangles);
   void Clear();
 
-  bool Add(MkTriangle &tri);    // change of size of tri
+  bool Add(MkTriangle &tri);     // change of size of tri
   bool Add(MkTriangle &&tri);    // change of size of tri
-  bool Delete(MkTriangle &tri); // change of size of tri
+  bool Delete(MkTriangle &tri);  // change of size of tri
   bool Delete(MkTriangle &&tri); // change of size of tri
-  int Grow(int Delta);         // change of size of array
-  int Shrink(int Delta);       // change of size of array
+  int Grow(int Delta);           // change of size of array
+  int Shrink(int Delta);         // change of size of array
 
   int GetSize() { return FSize; }
   int SaveUCD(char *filename);
