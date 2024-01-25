@@ -105,6 +105,15 @@ void MkTriangle::Translate(double x, double y, double z)
 
 void MkTriangle::CalArea()
 {
+    CalArea2D(); // TODO: this is temporary, check code below if it does not cause any side effect
+    // if (StartPoint.Z == 0 && MidPoint.Z == 0 && EndPoint.Z == 0)
+    //     CalArea2D();
+    // else
+    //     CalArea3D();
+}
+
+void MkTriangle::CalArea2D()
+{
     double a, b, c, s;
 
     a = sqrt(pow(StartPoint.X - MidPoint.X, 2) + pow(StartPoint.Y - MidPoint.Y, 2));
@@ -126,6 +135,34 @@ void MkTriangle::CalArea()
     else
         FArea = 0;
 }
+
+// ref: https://math.stackexchange.com/questions/128991/how-to-calculate-the-area-of-a-3d-triangle
+// u =(y1z2−y2z1)i−(x1z2−x2z1)j+(x1y2−x2y1)k
+// area = |u|/2 = sqrt((y1z2−y2z1)^2+(x1z2−x2z1)^2+(x1y2−x2y1)^2)/2
+
+void MkTriangle::CalArea3D() // TODO: implement this !!!
+{
+    double x1, y1, z1, x2, y2, z2, x3, y3, z3, ux,uy,uz;
+    
+    x1 = StartPoint.X;
+    y1 = StartPoint.Y;
+    z1 = StartPoint.Z;
+
+    x2 = MidPoint.X;
+    y2 = MidPoint.Y;
+    z2 = MidPoint.Z;
+
+    x3 = EndPoint.X;
+    y3 = EndPoint.Y;
+    z3 = EndPoint.Z;
+    
+    ux = y1*z2 - y2*z1;
+    uy = x1*z2 - x2*z1;
+    uz = x1*y2 - x2*y1;
+
+    FArea = sqrt(ux*ux + uy*uy + uz*uz)/2;
+}
+
 
 double MkTriangle::GetArea()
 {

@@ -21,6 +21,8 @@ private:
   double A[3], B[3], C[3], AR2, GradX, GradY;
 
   void CalArea();
+  void CalArea2D();
+  void CalArea3D();
   void CalGrad();
   void CalRadius();
   void CalNormal();
