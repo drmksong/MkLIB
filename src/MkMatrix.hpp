@@ -9,7 +9,7 @@
 #include "MkMisc.hpp"
 // #include "MkSparseMatrix.h"
 
-#ifndef M_PI 
+#ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
@@ -156,7 +156,8 @@ public:
     void Normalize() { Unify(); }
 
     T Dot(MkVector<T> &);
-    void Cross(MkVector<T> &v2, MkVector<T> &target); // target = *this & v2
+    void Cross(MkVector<T> &v2, MkVector<T> &target); // target = *this & v2 , peculier syntax...isn't it?
+    // MkVector<T> &Cross(MkVector<T> &v2); // target = *this & v2 , much clear...isn't it?
 
     int GetFI() { return FSize; }
     int GetSize() { return FSize; }
@@ -363,8 +364,6 @@ public:
     T &operator()(int i, int j);
 
     void Out(char *);
-
-
 };
 
 //---------------------------------------------------------------------------
