@@ -45,9 +45,9 @@ public:
   void Translate(MkPoint &rp);
   void Translate(MkPoint &&rp);
   void Translate(double x, double y, double z);
-  double GetArea() { return FArea; }
-  double GetArea2D() { return FArea; }
-  double GetArea3D() { return FArea3D; };
+  double GetArea() { CalArea(); return FArea; }
+  double GetArea2D() { CalArea2D(); return FArea; }
+  double GetArea3D() { CalArea3D(); return FArea3D; };
   double GetXGrad(); // x-direction gradient to z value
   double GetYGrad(); // y-direction gradient to z value
   double GetRadius();
