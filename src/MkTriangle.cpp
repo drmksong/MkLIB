@@ -146,8 +146,8 @@ void MkTriangle::CalArea3D() // TODO: implement this !!!
     MkLine l1, l2;
     l1.SetLine(StartPoint, MidPoint);
     l2.SetLine(StartPoint, EndPoint);
-    v1 = l1.GetVector();
-    v2 = l2.GetVector();
+    v1 = l1.GetVector()*l1.GetLength();
+    v2 = l2.GetVector()*l2.GetLength();
     
     v1.Cross(v2, u); // u = v1 x v2
     FArea3D = u.GetLength() / 2;

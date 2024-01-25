@@ -169,7 +169,8 @@ public:
         T sum = 0;
         for (int i = 0; i < FSize; i++)
             sum += FVector(i) * FVector(i);
-        return sum > 0 ? sqrt(sum) / FSize : 0;
+        // return sum > 0 ? sqrt(sum) / FSize : 0; // TODO: check why it is divided by FSize and what is the impact if omitted, sure it is a bug...
+        return sum > 0 ? sqrt(sum) : 0;        
     }
 
     T &operator()(int i);

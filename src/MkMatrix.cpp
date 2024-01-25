@@ -471,7 +471,7 @@ T MkVector<T>::Dot(MkVector &vect)
 }
 
 template <class T>
-void MkVector<T>::Cross(MkVector &vect, MkVector &target) // not yet finished, because I do not find general cross product
+void MkVector<T>::Cross(MkVector &vect, MkVector &target) // TODO: not yet finished, because I do not find general cross product
 {
     char str[256];
     try
