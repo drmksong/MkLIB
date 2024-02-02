@@ -279,6 +279,7 @@ MkArray<T> &MkArray<T>::operator=(const MkArray<T> &value)
       sz_x = value.sz_x;
       sz_y = value.sz_y;
       sz_z = value.sz_z;
+      Zero = value.Zero;
     }
     catch (Alloc &a)
     {
