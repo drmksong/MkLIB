@@ -24,7 +24,6 @@
 //     glFlush(); // flush output to screen
 // }
 
-
 // int main_(int argc, char **argv) // gl test
 // {
 //     glutInit(&argc, argv);
@@ -42,10 +41,43 @@
 
 void gl_test()
 {
-  
 }
 
-int main() {
+void copiable()
+{
+
+    std::vector<MkObject> v;
+    // MkObject a("Test", 1);
+    // v.emplace_back(a);
+    // MkObject a2("Test", 1);
+    // v.emplace_back(a2);
+    v.emplace_back("Hello", 100);
+    v.emplace_back("World", 200);
+
+    // std::cout << std::format("v[0].str: {}, v[0].parr: {}\n", v[0].str, v[0].parr);
+    MkObject &a = v[1];
+    a.db.Initialize(10);
+    for (int i = 0; i < 10; i++)
+    {
+        a.db[i] = i;
+    }
+    a.str += " Myung Kyu";
+
+    // a.str = "Hello World";
+    // std::cout << std::format("a.str: {}", a.str);
+    // std::cout << "address : " << a.parr << std::endl;
+    std::cout << std::format("v[0].str: {} \n", v[0].str);
+    std::cout << std::format("v[1].str: {} \n", v[1].str);
+    for (int i = 0; i < 10; i++)
+    {
+        std::cout << std::format("v[1].db[{}]: {} \n", i, v[1].db[i]);
+    }
+
+    // std::cout << "address : " << v[0].parr << std::endl;
+}
+
+int main()
+{
     // std::unique_ptr<glLib> glib(new glLib());
     // glib->init();
     // glib->loop();
@@ -57,65 +89,73 @@ int main() {
     // glib.terminate();
 
     gl_test();
+    copiable();
 
-    GLFWwindow* window;
-    int screenWidth, screenHeight;
+    // GLFWwindow *window;
+    // int screenWidth, screenHeight;
 
-    try {    
-        if (!glfwInit()) {
-            throw std::runtime_error("Failed to initialize GLFW");
-        }
-        glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // OpenGL 3.3
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // new OpenGL
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // MacOS
-        
-        window = glfwCreateWindow(1024, 768, "Learn OpenGL", NULL, NULL);
-        if (window == NULL) {
-            throw std::runtime_error("Failed to open GLFW window");
-        }
-        
-        glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
+    // try
+    // {
+    //     if (!glfwInit())
+    //     {
+    //         throw std::runtime_error("Failed to initialize GLFW");
+    //     }
+    //     glfwWindowHint(GLFW_SAMPLES, 4);               // 4x antialiasing
+    //     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // OpenGL 3.3
+    //     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    //     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // new OpenGL
+    //     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);           // MacOS
 
-        glfwMakeContextCurrent(window); // initialize GLEW
-        glewExperimental = GL_TRUE; // needed in core profile
-        if (glewInit() != GLEW_OK) {
-            throw std::runtime_error("Failed to initialize GLEW");
-        }
-        glViewport(0, 0, screenWidth, screenHeight);
-        glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    } catch (std::exception &e) {
-        std::cout << e.what() << std::endl;
-        if (NULL != window) {
-            glfwDestroyWindow(window);  
-        } 
-        glfwTerminate();
-        return -1;
-    }
+    //     window = glfwCreateWindow(1024, 768, "Learn OpenGL", NULL, NULL);
+    //     if (window == NULL)
+    //     {
+    //         throw std::runtime_error("Failed to open GLFW window");
+    //     }
 
-    // glClearColor(0.0f, 0.0f, 0.4f, 0.0f); // dark blue background, not working??? obsolete to be removed
-    while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0) {
-        glfwPollEvents();
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
-        glClear(GL_COLOR_BUFFER_BIT); // clear color buffer
-        glfwSwapBuffers(window);
-        
-    } 
+    //     glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 
-    glfwTerminate();
-    // point_test();
+    //     glfwMakeContextCurrent(window); // initialize GLEW
+    //     glewExperimental = GL_TRUE;     // needed in core profile
+    //     if (glewInit() != GLEW_OK)
+    //     {
+    //         throw std::runtime_error("Failed to initialize GLEW");
+    //     }
+    //     glViewport(0, 0, screenWidth, screenHeight);
+    //     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    // }
+    // catch (std::exception &e)
+    // {
+    //     std::cout << e.what() << std::endl;
+    //     if (NULL != window)
+    //     {
+    //         glfwDestroyWindow(window);
+    //     }
+    //     glfwTerminate();
+    //     return -1;
+    // }
 
-    // array_test();
+    // // glClearColor(0.0f, 0.0f, 0.4f, 0.0f); // dark blue background, not working??? obsolete to be removed
+    // while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0)
+    // {
+    //     glfwPollEvents();
+    //     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    //     glClear(GL_COLOR_BUFFER_BIT); // clear color buffer
+    //     glfwSwapBuffers(window);
+    // }
 
-    // arr_test_move_op();
+    // glfwTerminate();
+    // // point_test();
 
-    // shared_test();
+    // // array_test();
 
-    // fblr_test();
+    // // arr_test_move_op();
 
-    // pnts_test();
+    // // shared_test();
 
+    // // fblr_test();
+
+    // // pnts_test();
+    std::cout << "program end..." << std::endl;
     return 0;
 }
 
@@ -148,7 +188,7 @@ int main() {
 
 // bool array_test()
 // {
-//     MkArray<float> a(10, 10);
+//     MkArray<float> v[0](10, 10);
 
 //     for (int i = 0; i < 10; i++)
 //     {

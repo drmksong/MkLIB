@@ -115,6 +115,21 @@ MkArray<T>::MkArray(int s_x)
 }
 
 template <class T>
+MkArray<T>::MkArray(const MkArray<T> &a)
+{
+  Zero = 0;
+  FDimension = 0;
+  FI = FJ = FK = 0;
+
+  sz_x = 0;
+  sz_y = 0;
+  sz_z = 0;
+  F.reset();
+
+  operator=(a);
+}
+
+template <class T>
 MkArray<T>::MkArray()
 {
   Zero = 0;
@@ -124,6 +139,7 @@ MkArray<T>::MkArray()
   sz_x = 0;
   sz_y = 0;
   sz_z = 0;
+  F.reset();
 }
 
 template <class T>
@@ -300,6 +316,7 @@ MkArray<T> &MkArray<T>::operator=(MkArray<T> &&value)
       sz_x = value.sz_x;
       sz_y = value.sz_y;
       sz_z = value.sz_z;
+      Zero = value.Zero;
     }
     catch (Alloc &a)
     {

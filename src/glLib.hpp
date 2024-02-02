@@ -16,6 +16,8 @@
 
 #include "Shader.hpp"
 
+// abandond this class
+
 class glLib {
     public:
         glLib();

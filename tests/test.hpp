@@ -13,6 +13,8 @@
 #include "MkPoint.hpp"
 #include "MkLine.hpp"
 #include "MkRect.hpp"
+#include "MkObject.hpp"
+#include "MkArray.hpp"
 
 #include "glLib.hpp"
 

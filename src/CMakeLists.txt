@@ -41,6 +41,7 @@ SET (SRC_FILES
         MkLine.cpp 
         MkMatrix.cpp
         MkMisc.cpp 
+        MkObject.cpp
         MkPlane.cpp
         MkPoint.cpp 
         MkPointData.cpp 
@@ -60,6 +61,7 @@ SET (INC_FILES
         MkLine.hpp 
         MkMatrix.hpp
         MkMisc.hpp 
+        MkObject.hpp
         MkPlane.hpp
         MkPoint.hpp 
         MkPointData.hpp 

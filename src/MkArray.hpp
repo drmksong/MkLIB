@@ -37,7 +37,7 @@ class MkArray : MkAbstract
 private:
   int FDimension;
   int FI, FJ, FK;
-  T Zero;
+  T Zero=0;
 
   // T *F;
   long sz_x, sz_y, sz_z;
@@ -47,6 +47,7 @@ public:
   MkArray(int, int, int);
   MkArray(int, int);
   MkArray(int);
+  MkArray(const MkArray<T> &a);
   MkArray();
   ~MkArray();
   void Clear();
