@@ -63,6 +63,17 @@ void copiable()
     }
     a.str += " Myung Kyu";
 
+#ifdef APPLE
+    // a.str = "Hello World";
+    // std::cout << "a.str: " << a.str << std::endl;
+    // std::cout << "address : " << a.parr << std::endl;
+    std::cout << "v[0].str: " << v[0].str << std::endl;
+    std::cout << "v[1].str: " << v[1].str << std::endl;
+    for (int i = 0; i < 10; i++)
+    {
+        std::cout << "v[1].db[" << i << "]: " << v[1].db[i] << std::endl;
+    }
+#else 
     // a.str = "Hello World";
     // std::cout << std::format("a.str: {}", a.str);
     // std::cout << "address : " << a.parr << std::endl;
@@ -72,6 +83,7 @@ void copiable()
     {
         std::cout << std::format("v[1].db[{}]: {} \n", i, v[1].db[i]);
     }
+#endif
 
     // std::cout << "address : " << v[0].parr << std::endl;
 }
