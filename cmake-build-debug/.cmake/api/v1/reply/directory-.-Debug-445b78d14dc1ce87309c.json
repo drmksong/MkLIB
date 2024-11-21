@@ -1,0 +1,89 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"INSTALL"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 80,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 87,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "/usr/local/lib",
+			"paths" : 
+			[
+				"src/libMkLIB.so"
+			],
+			"targetId" : "MkLIB::@145eef247bfb46b6828c",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "/usr/local/include",
+			"paths" : 
+			[
+				"src/MkAbstract.hpp",
+				"src/MkArray.hpp",
+				"src/MkColor.hpp",
+				"src/MkCircle.hpp",
+				"src/MkCylinder.hpp",
+				"src/MkCube.hpp",
+				"src/MkLine.hpp",
+				"src/MkMatrix.hpp",
+				"src/MkMisc.hpp",
+				"src/MkPlane.hpp",
+				"src/MkPoint.hpp",
+				"src/MkPointData.hpp",
+				"src/MkPolygon.hpp",
+				"src/MkRect.hpp",
+				"src/MkShape.hpp",
+				"src/MkSphere.hpp",
+				"src/MkTriangle.hpp"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"src/libMkLIB_static.a"
+			],
+			"targetId" : "MkLIB_static::@145eef247bfb46b6828c",
+			"targetIndex" : 1,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}

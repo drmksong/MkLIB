@@ -46,6 +46,7 @@ MkCircle::MkCircle(MkPoint &&cp, double radius)
     FCP = cp;
     FRadius = radius;
     CalArea();
+
 }
 
 #ifdef __BCPLUSPLUS__
