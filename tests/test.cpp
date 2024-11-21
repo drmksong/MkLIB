@@ -171,8 +171,8 @@ int main()
     return 0;
 }
 
-// bool point_test()
-// {
+bool point_test()
+{
 //     MkPoints pnts(10);
 
 //     try
@@ -195,11 +195,11 @@ int main()
 //     printf("pnts2 (%f, %f, %f)\n", pnts2[10].X, pnts2[10].Y, pnts2[10].Z);
 //     pnts2.Reserve(10);
 //     puts("");
-//     return true;
-// }
+    return true;
+}
 
-// bool array_test()
-// {
+bool array_test()
+{
 //     MkArray<float> v[0](10, 10);
 
 //     for (int i = 0; i < 10; i++)
@@ -266,8 +266,8 @@ int main()
 
 //     puts(" arr test 2 --------------------\n");
 
-//     return true;
-// }
+    return true;
+}
 
 // // BOOST_AUTO_TEST_CASE(pnt_test_case_01)
 // // {
@@ -299,8 +299,8 @@ int main()
 //     // printf("a == b? ,4 %s\n", (a != b) ? "true" : "false");
 // }
 
-// void arr_test_move_op()
-// {
+void arr_test_move_op()
+{
 
 //     MkArray<int> a;
 //     MkArray<int> b(5, 10);
@@ -365,10 +365,10 @@ int main()
 //     {
 //         printf("a != b \n");
 //     }
-// }
+}
 
-// void shared_test()
-// {
+void shared_test()
+{
 
 //     boost::shared_ptr<MkPoint[]> pnts;
 //     pnts = boost::make_shared<MkPoint[]>(100);
@@ -386,7 +386,7 @@ int main()
 //     }
 
 //     // pnts.reset();
-// }
+}
 
 // bool read_file(std::string fname, MkLines &lines)
 // {
@@ -535,11 +535,11 @@ int main()
 // // which uses the same static return and probally cause side effects
 // // MkLine line(this[0],this[1]) <- this is the problem
 // // sp = this[0]; ep = this[1]; MkLine line(sp,ep) <- this is the solution
-// MkDouble &get_fblr(double theta, MkPoint &pnt, MkRect &wall, MkRects &cols)
-// {
+MkDouble &get_fblr(double theta, MkPoint &pnt, MkRect &wall, MkRects &cols)
+{
 
 //     // std::cout << "get_fblr entered \n\n\n\n";
-//     static MkDouble fblr(4);
+    static MkDouble fblr(4);
 //     double x = pnt.X;
 //     double y = pnt.Y;
 //     double z = pnt.Z;
@@ -660,19 +660,19 @@ int main()
 //     }
 //     fblr[3] = dist;
 
-//     return fblr;
-// }
+    return fblr;
+}
 
 // // simple test for MkPoint add member function
 // // ridiculous error in the add member function found and corrected. 04/27/2023
-// void pnts_test()
-// {
+void pnts_test()
+{
 //     MkPoint apnt(1, 1, 1);
 //     MkPoints pnts;
 
 //     pnts.Add(apnt);
 //     printf("%f %f %f\n", pnts[0].X, pnts[0].Y, pnts[0].Z);
-// }
+}
 
 // // implementation trial for scanning algorithm with given angle,fr,br,lr,rr
 // void scan_test(MkLines &lines, double ang, MkDouble &fblr)
@@ -795,8 +795,8 @@ int main()
 //     }
 // }
 
-// void fblr_test()
-// {
+void fblr_test()
+{
 //     MkRect wall;
 //     MkRects cols(4);
 //     setup_wall(wall, cols);
@@ -830,4 +830,4 @@ int main()
 //         std::cout << "fblr: " << res[0] << ", " << res[1] << ", " << res[2] << ", " << res[3] << "\n";
 //         scan_test(lines, theta, res);
 //     }
-// }
+}
